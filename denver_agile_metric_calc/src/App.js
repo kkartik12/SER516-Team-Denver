@@ -1,13 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage'
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-          <h1>Agile Metrics</h1>
-      </header>
+    <div className='container'>
+        <LoginPage />
     </div>
+
   );
 }
 
