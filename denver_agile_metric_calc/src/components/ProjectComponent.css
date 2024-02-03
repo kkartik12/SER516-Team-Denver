@@ -1,0 +1,21 @@
+/* ProjectComponent.css */
+.project-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .project-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .project-image {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+  }
+  
+  .project-details {
+    flex: 1;
+  }
