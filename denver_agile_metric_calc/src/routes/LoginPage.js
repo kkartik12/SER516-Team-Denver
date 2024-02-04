@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { redirect } from 'react-router-dom';
+
 
 function AuthenticationForm() {
   const [username, setUsername] = useState('')
@@ -7,7 +9,7 @@ function AuthenticationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
+  
     //backend call
 
     const response = await fetch('/api/login', {
@@ -18,7 +20,7 @@ function AuthenticationForm() {
 
     const data = await response.text()
     if(data !== 'Invalid Credentials') {
-      
+      redirect("/projects")
     } else {
       setErrorMessage('Invalid username or password')
     }
