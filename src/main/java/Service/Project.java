@@ -1,7 +1,12 @@
+package Service;
+
+import Service.Authentication;
+import Util.HTTPRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import models.ProjectDTO;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
 
@@ -50,7 +55,7 @@ public class Project {
                 int projectId = projectInfo.has("id") ? projectInfo.get("id").asInt() : -1;
 
                 if (projectId != -1) {
-                    System.out.println("Project details retrieved successfully.");
+                    System.out.println("Service.Project details retrieved successfully.");
                     return projectId;
                 } else {
                     System.out.println("Invalid project slug. Please try again.");
@@ -65,7 +70,7 @@ public class Project {
 
     // This method returns list of Projects related to member who has logged in.
     public static List<ProjectDTO> getPojectList(String authToken, String TAIGA_API_ENDPOINT) {
-        String endpoint = TAIGA_API_ENDPOINT + "/projects?member="+Authentication.memberID;
+        String endpoint = TAIGA_API_ENDPOINT + "/projects?member="+ Authentication.memberID;
         HttpGet request = new HttpGet(endpoint);
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");

@@ -1,7 +1,13 @@
+import Service.Authentication;
+import Service.Project;
+import Service.Tasks;
+import Util.GlobalData;
+import Util.HTTPRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import models.ProjectDTO;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
 import java.time.Duration;
@@ -27,7 +33,7 @@ public class Main {
         String taigaPassword = promptUserPassword("Enter your Taiga password: ");
         String authToken = Authentication.authenticate(taigaUsername, taigaPassword);
         if (authToken != null) {
-            System.out.println("Authentication successful.");
+            System.out.println("Service.Authentication successful.");
             // Calling Taiga API to get project details
             List<ProjectDTO> projects = Project.getPojectList(authToken,TAIGA_API_ENDPOINT);
 
