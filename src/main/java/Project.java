@@ -5,6 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Project {
@@ -59,5 +61,35 @@ public class Project {
         }
 
         return -1;
+    }
+
+    // This method returns list of Projects related to member who has logged in.
+    public static List<ProjectDTO> getPojectList(String authToken, String TAIGA_API_ENDPOINT) {
+        String endpoint = TAIGA_API_ENDPOINT + "/projects?member="+Authentication.memberID;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        String responseJson = HTTPRequest.sendHttpRequest(request);
+
+        if (responseJson != null) {
+            try {
+                JsonNode projects = objectMapper.readTree(responseJson);
+                if(projects.isArray()) {
+                    List<ProjectDTO> projectList = new ArrayList<>();
+                    for(JsonNode project: projects) {
+                        ProjectDTO p = new ProjectDTO(
+                                project.get("id").asInt(),
+                                project.get("name").asText(),
+                                project.get("slug").asText());
+                        projectList.add(p);
+                    }
+                    return projectList;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 }

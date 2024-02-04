@@ -28,12 +28,14 @@ public class Main {
         String authToken = Authentication.authenticate(taigaUsername, taigaPassword);
         if (authToken != null) {
             System.out.println("Authentication successful.");
-
             // Calling Taiga API to get project details
-            int projectId = Project.getProjectId(authToken,TAIGA_API_ENDPOINT);
+            List<ProjectDTO> projects = Project.getPojectList(authToken,TAIGA_API_ENDPOINT);
 
-            if (projectId != -1) {
-                handleUserAction(projectId, authToken, scanner);
+            if (projects != null) {
+//                handleUserAction(projectId, authToken, scanner);
+                for(ProjectDTO project: projects){
+                    System.out.println(project.toString());
+                }
             }
         }
     }

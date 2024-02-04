@@ -14,6 +14,7 @@ import java.util.Base64;
 
 public class Authentication {
     private static final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
+    static Integer memberID;
     public static String authenticate(String username, String password) {
 
         // Endpoint to authenticate taiga's username and password
@@ -35,7 +36,6 @@ public class Authentication {
             while ((line = reader.readLine()) != null) {
                 result.append(line);
             }
-
             return parseAuthToken(result.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,10 +47,12 @@ public class Authentication {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseJson);
+            memberID = rootNode.path("id").asInt();
             return rootNode.path("auth_token").asText();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 }
