@@ -1,30 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 function AuthenticationForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     //backend call
 
-    const response = await fetch('/api/authenticate', {
+    const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
 
-    const data = await response.json();
-
-    if (data.authToken) {
-      localStorage.setItem('authToken', data.authToken);
-
-      // Redirect to the main application page
-      window.location.href = '/main';
+    const data = await response.text()
+    if(data !== 'Invalid Credentials') {
+      
     } else {
-      setErrorMessage('Invalid username or password');
+      setErrorMessage('Invalid username or password')
     }
   };
 

@@ -11,8 +11,8 @@ public class Controller {
 
     @PostMapping("/login")
     @ResponseBody
-    public String login(@RequestParam String username, @RequestParam String passoword) {
-        String authToken = Authentication.authenticate(username, passoword);
+    public String login(@RequestParam String username, @RequestParam String password) {
+        String authToken = Authentication.authenticate(username, password);
         if(authToken != null) {
             return authToken;
         } else {
