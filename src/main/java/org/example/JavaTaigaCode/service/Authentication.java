@@ -1,6 +1,5 @@
-package Service;
+package org.example.JavaTaigaCode.service;
 
-import Util.GlobalData;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
@@ -9,15 +8,19 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.example.JavaTaigaCode.util.GlobalData;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Base64;
 
+@Service
 public class Authentication {
     private static final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
     public static Integer memberID;
+
+    public static String authToken;
     public static String authenticate(String username, String password) {
 
         // Endpoint to authenticate taiga's username and password
@@ -51,6 +54,7 @@ public class Authentication {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseJson);
             memberID = rootNode.path("id").asInt();
+            authToken = rootNode.path("auth_token").asText();
             return rootNode.path("auth_token").asText();
         } catch (Exception e) {
             e.printStackTrace();

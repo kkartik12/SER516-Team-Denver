@@ -1,4 +1,4 @@
-package models;
+package org.example.JavaTaigaCode.models;
 
 public class ProjectDTO {
     Integer projectID;
