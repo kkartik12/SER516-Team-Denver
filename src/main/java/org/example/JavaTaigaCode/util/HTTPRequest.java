@@ -1,4 +1,4 @@
-package Util;
+package org.example.JavaTaigaCode.util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
