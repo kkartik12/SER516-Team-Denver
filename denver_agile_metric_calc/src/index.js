@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom"
 import  ReactDOM  from 'react-dom/client';
+import ProjectDetails from './routes/ProjectDetails';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/projects",
     element: <ProjectsPage />,
+  },
+  {
+    path: "/projects/:projectId",
+    element: <ProjectDetails />,
   }
 ])
 
