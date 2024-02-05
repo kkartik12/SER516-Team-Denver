@@ -5,6 +5,11 @@ import { projects } from '../components/data.js';
 import { getImageUrl } from '../components/utils.js';
 
 export default function ProjectsPage() {
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   const listItems = projects.map(project => (
     <Fragment key={project.id}>
         <div className="project-item">
@@ -12,6 +17,7 @@ export default function ProjectsPage() {
             <div className="project-details">
             <b>{project.name}</b>
             <p>{project.description}</p>
+            <p>Created on: {formatDate(project.created_date)}</p>
             </div>
         </div>
     </Fragment>
