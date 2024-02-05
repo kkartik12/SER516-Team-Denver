@@ -13,12 +13,14 @@ const ProjectDetails = () => {
   }
 
   return (
+    <div>
+    <div className="project-list-heading">{selectedProject.name}</div>
     <div className="project-details-container">
       <img src={getImageUrl(selectedProject)} alt={selectedProject.name} />
       <div className="project-details">
-        <h2>{selectedProject.name}</h2>
         <p>{selectedProject.description}</p>
       </div>
+    </div>
     </div>
   );
 };
