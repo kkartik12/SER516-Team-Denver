@@ -1,4 +1,4 @@
-/* ProjectComponent.css */
+/* ProjectComponent.css
 .project-list {
   list-style: none;
   padding: 0;
@@ -25,6 +25,43 @@
   text-align: center;
   font-size: 24px;
   margin-bottom: 20px;
+  padding: 10px;
+  background-color: #e0ebeb;
+} */
+/* ProjectComponent.css */
+.project-list {
+  list-style: none;
+  padding: 0;
+  background-color: #e0ebeb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  margin-top: 5px; /* Adjust the margin as needed */
+}
+
+.project-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.project-image {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.project-details {
+  flex: 1;
+}
+
+.project-list-heading {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 5px;
   padding: 10px;
   background-color: #e0ebeb;
 }
