@@ -1,3 +1,5 @@
+package models;
+
 public class ProjectDTO {
     Integer projectID;
     String projectName;

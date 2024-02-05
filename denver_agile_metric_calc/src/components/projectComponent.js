@@ -16,5 +16,11 @@ export default function ProjectComponent() {
       </div>
     </Fragment>
   ));
-  return <div className="project-list">{listItems}</div>;
+
+  return (
+    <div>
+      <div className="project-list-heading">User Projects</div>
+      <div className="project-list">{listItems}</div>
+    </div>
+  );
 }

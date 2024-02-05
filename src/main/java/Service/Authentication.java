@@ -1,3 +1,6 @@
+package Service;
+
+import Util.GlobalData;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
@@ -14,7 +17,7 @@ import java.util.Base64;
 
 public class Authentication {
     private static final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
-    static Integer memberID;
+    public static Integer memberID;
     public static String authenticate(String username, String password) {
 
         // Endpoint to authenticate taiga's username and password
