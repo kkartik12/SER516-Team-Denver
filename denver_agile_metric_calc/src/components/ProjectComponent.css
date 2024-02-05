@@ -1,21 +1,30 @@
 /* ProjectComponent.css */
 .project-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .project-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .project-image {
-    width: 100px;
-    height: auto;
-    margin-right: 20px;
-  }
-  
-  .project-details {
-    flex: 1;
-  }
+  list-style: none;
+  padding: 0;
+  background-color: #e0ebeb; 
+}
+
+.project-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.project-image {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.project-details {
+  flex: 1;
+}
+
+.project-list-heading {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #e0ebeb;
+}
