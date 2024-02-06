@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 import '../styles/LoginPage.css';
 
 function AuthenticationForm() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [memberId, setMemberId] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const loginUrl = `http://localhost:8080/api/login?username=${username}&password=${password}`
-		const loginResponse = await fetch(loginUrl, {method: 'POST'})
-		if (loginResponse.ok) {
-			const memberID = await loginResponse.text()
-			const projectsUrl = `http://localhost:8080/api/projects/${memberID}`
-			const projectsResponse = await fetch(projectsUrl, {method: 'GET'})
-			console.log(projectsResponse)
-			if (projectsResponse.ok) {
-				const projects = await projectsResponse.json()
-				console.log(projects)
+
+		//backend call
+
+		const response = await fetch(
+			`${process.env.REACT_APP_LOCAL_BASE_URL}/api/login?username=${username}&password=${password}`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			}
-		}
-		if (loginResponse !== 'Invalid Credentials') {
-			navigate('/projects')
+		);
+
+		const data = await response.text();
+		if (data !== 'Invalid Credentials') {
+			navigate({
+				pathname: '/projects',
+				search: `?${createSearchParams({ memberId }).toString()}`,
+			});
 		} else {
 			setErrorMessage('Invalid username or password')
 		}
@@ -57,6 +63,13 @@ function AuthenticationForm() {
 					onChange={(e) => setPassword(e.target.value)}
 				/>
 				<br />
+				<input
+					type='text'
+					placeholder='Member ID'
+					id='memberID'
+					value={memberId}
+					onChange={(e) => setMemberId(e.target.value)}
+				/>
 				{errorMessage && <p className='error'>{errorMessage}</p>}
 				<button type='submit'>LOG IN</button>
 			</form>
