@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api")
 public class ProjectController {
     @Autowired
     ProjectService projectService;
-    @GetMapping("/getProjectList/{memberID}")
+    @GetMapping("/projects/{memberID}")
     @ResponseBody
     public List<ProjectDTO> getProjectList(@PathVariable("memberID") Integer memberID) {
         List<ProjectDTO> projects = projectService.getPojectList(memberID);

@@ -11,24 +11,22 @@ function AuthenticationForm() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		//backend call
-
-		const response = await fetch(
-			`${process.env.REACT_APP_LOCAL_BASE_URL}/api/login?username=${username}&password=${password}`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+		const loginUrl = `http://localhost:8080/api/login?username=${username}&password=${password}`
+		const loginResponse = await fetch(loginUrl, {method: 'POST'})
+		if (loginResponse.ok) {
+			const memberID = await loginResponse.text()
+			const projectsUrl = `http://localhost:8080/api/projects/${memberID}`
+			const projectsResponse = await fetch(projectsUrl, {method: 'GET'})
+			console.log(projectsResponse)
+			if (projectsResponse.ok) {
+				const projects = await projectsResponse.json()
+				console.log(projects)
 			}
-		);
-
-		const data = await response.text();
-		if (data !== 'Invalid Credentials') {
-			navigate('/projects');
+		}
+		if (loginResponse !== 'Invalid Credentials') {
+			navigate('/projects')
 		} else {
-			setErrorMessage('Invalid username or password');
+			setErrorMessage('Invalid username or password')
 		}
 	};
 
