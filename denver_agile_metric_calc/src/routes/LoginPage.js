@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/LoginPage.css';
 
 function AuthenticationForm() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -24,7 +26,7 @@ function AuthenticationForm() {
 
 		const data = await response.text();
 		if (data !== 'Invalid Credentials') {
-			redirect('/projects');
+			navigate('/projects');
 		} else {
 			setErrorMessage('Invalid username or password');
 		}
