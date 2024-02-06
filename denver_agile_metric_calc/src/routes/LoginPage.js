@@ -15,14 +15,9 @@ function AuthenticationForm() {
 		const loginResponse = await fetch(loginUrl, {method: 'POST'})
 		if (loginResponse.ok) {
 			const memberID = await loginResponse.text()
-			sessionStorage.setItem('memberID', memberID)
+			navigate(`/projects/${memberID}`)
 		} else {
-			throw loginResponse
-		}
-		if (loginResponse !== 'Invalid Credentials') {
-			navigate('/projects')
-		} else {
-			setErrorMessage('Invalid username or password')
+			setErrorMessage("Invalid Username or Password");
 		}
 	};
 

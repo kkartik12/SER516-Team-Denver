@@ -1,14 +1,29 @@
 // ProjectsPage.js
 import React, { Fragment, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../components/ProjectComponent.css';
 import { getImageUrl } from '../components/utils.js';
 
-export default function ProjectsPage() {
-	const [projects, setProjects] = useState([]);
-	let [searchParams] = useSearchParams();
+const ProjectsPage = () => {
+	/* const [projects, setProjects] = useState([]);
+	let [searchParams] = useSearchParams(); */
+	const { memberID } = useParams()
+  	console.log("memberID= " + memberID);
+  	const getProjects = async () => {
+    const projectsUrl = `http://localhost:8080/api/projects/${memberID}`
+      const projectsResponse = await fetch(projectsUrl, {method: 'GET'})
+      if (projectsResponse.ok) {
+        const projects = await projectsResponse.json()
+        return projects
+      } else {
+        throw projectsResponse
+      }
+  	}
+	const projectList = getProjects()
+	console.log(projectList)
 
-	useEffect(() => {
+/* 	useEffect(() => {
 		fetch(
 			`${
 				process.env.REACT_APP_LOCAL_BASE_URL
@@ -46,7 +61,7 @@ export default function ProjectsPage() {
 				// Handle errors
 				console.error('Error fetching data:', error);
 			});
-	}, []);
+	}, []); */
 
 	const formatDate = (dateString) => {
 		const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -57,7 +72,9 @@ export default function ProjectsPage() {
 	return (
 		<div>
 			<div className='project-list-heading'>User Projects</div>
-			<div className='project-list'>{projects}</div>
+			{/* <div className='project-list'>{projectList}</div> */}
 		</div>
 	);
 }
+
+export default ProjectsPage

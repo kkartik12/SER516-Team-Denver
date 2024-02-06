@@ -12,7 +12,7 @@ const router = createBrowserRouter([
 		element: <App />,
 	},
 	{
-		path: '/projects',
+		path: '/projects/:memberID',
 		element: <ProjectsPage />,
 	},
 	{
