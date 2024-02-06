@@ -5,32 +5,22 @@ import '../styles/LoginPage.css';
 function AuthenticationForm() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [memberId, setMemberId] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		//backend call
-
-		const response = await fetch(
-			`${process.env.REACT_APP_LOCAL_BASE_URL}/api/login?username=${username}&password=${password}`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);
-
-		const data = await response.text();
-		if (data !== 'Invalid Credentials') {
-			navigate({
-				pathname: '/projects',
-				search: `?${createSearchParams({ memberId }).toString()}`,
-			});
+		const loginUrl = `http://localhost:8080/api/login?username=${username}&password=${password}`
+		const loginResponse = await fetch(loginUrl, {method: 'POST'})
+		if (loginResponse.ok) {
+			const memberID = await loginResponse.text()
+			sessionStorage.setItem('memberID', memberID)
+		} else {
+			throw loginResponse
+		}
+		if (loginResponse !== 'Invalid Credentials') {
+			navigate('/projects')
 		} else {
 			setErrorMessage('Invalid username or password')
 		}
@@ -61,14 +51,6 @@ function AuthenticationForm() {
 					id='password'
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
-				/>
-				<br />
-				<input
-					type='text'
-					placeholder='Member ID'
-					id='memberID'
-					value={memberId}
-					onChange={(e) => setMemberId(e.target.value)}
 				/>
 				{errorMessage && <p className='error'>{errorMessage}</p>}
 				<button type='submit'>LOG IN</button>

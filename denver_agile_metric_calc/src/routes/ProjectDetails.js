@@ -5,6 +5,18 @@ import { projects } from '../components/data';
 import { getImageUrl } from '../components/utils';
 
 const ProjectDetails = () => {
+  const getProjects = async ()=> {
+    memberID = sessionStorage.getItem('memberID')
+    const projectsUrl = `http://localhost:8080/api/projects/${memberID}`
+			const projectsResponse = await fetch(projectsUrl, {method: 'GET'})
+			if (projectsResponse.ok) {
+				const projects = await projectsResponse.json()
+        return projects
+			} else {
+        throw projectsResponse
+      }
+  }
+  
   const { projectId } = useParams();
   const selectedProject = projects.find(project => project.id === parseInt(projectId, 10));
 
