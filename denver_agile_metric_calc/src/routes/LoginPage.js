@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 import '../styles/LoginPage.css';
 
 function AuthenticationForm() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [memberId, setMemberId] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 
 	const navigate = useNavigate();
@@ -26,7 +27,10 @@ function AuthenticationForm() {
 
 		const data = await response.text();
 		if (data !== 'Invalid Credentials') {
-			navigate('/projects');
+			navigate({
+				pathname: '/projects',
+				search: `?${createSearchParams({ memberId }).toString()}`,
+			});
 		} else {
 			setErrorMessage('Invalid username or password');
 		}
@@ -59,6 +63,13 @@ function AuthenticationForm() {
 					onChange={(e) => setPassword(e.target.value)}
 				/>
 				<br />
+				<input
+					type='text'
+					placeholder='Member ID'
+					id='memberID'
+					value={memberId}
+					onChange={(e) => setMemberId(e.target.value)}
+				/>
 				{errorMessage && <p className='error'>{errorMessage}</p>}
 				<button type='submit'>LOG IN</button>
 			</form>
