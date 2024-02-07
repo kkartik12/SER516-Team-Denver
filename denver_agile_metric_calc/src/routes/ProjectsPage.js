@@ -134,7 +134,7 @@
 
 // Updated ProjectsPage.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../components/ProjectComponent.css';
 
 const ProjectsPage = () => {
@@ -182,7 +182,10 @@ const ProjectsPage = () => {
           {projectList.map((project) => (
             <tr key={project.projectID}>
               <td>{project.projectID}</td>
-              <td>{project.projectName}</td>
+              <td className="project-name">
+                <Link to={`/projects/${memberID}/${project.projectID}`}>{project.projectName}</Link>
+              </td>
+              {/* <td>{project.projectName}</td> */}
               <td>{project.slug}</td>
               {/* Add more cells as needed */}
             </tr>

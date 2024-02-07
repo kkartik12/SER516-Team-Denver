@@ -95,3 +95,13 @@ ProjectComponent.css
 .project-table th {
   background-color: #e0ebeb;
 }
+
+.project-name a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.project-name a:hover {
+  color: #007bff;
+}
