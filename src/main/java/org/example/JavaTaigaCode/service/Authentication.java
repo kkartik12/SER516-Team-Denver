@@ -21,7 +21,7 @@ public class Authentication {
     public static Integer memberID;
 
     public static String authToken;
-    public static String authenticate(String username, String password) {
+    public static Integer authenticate(String username, String password) {
 
         // Endpoint to authenticate taiga's username and password
         String authEndpoint = TAIGA_API_ENDPOINT + "/auth";
@@ -49,13 +49,13 @@ public class Authentication {
         }
     }
 
-    private static String parseAuthToken(String responseJson) {
+    private static Integer parseAuthToken(String responseJson) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseJson);
             memberID = rootNode.path("id").asInt();
             authToken = rootNode.path("auth_token").asText();
-            return rootNode.path("auth_token").asText();
+            return memberID;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
