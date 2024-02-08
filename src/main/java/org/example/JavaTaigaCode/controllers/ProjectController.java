@@ -13,7 +13,7 @@ import java.util.List;
 public class ProjectController {
     @Autowired
     ProjectService projectService;
-    @GetMapping("/projects/{memberID}")
+    @GetMapping("/projectList/{memberID}")
     @ResponseBody
     public List<ProjectDTO> getProjectList(@PathVariable("memberID") Integer memberID) {
         List<ProjectDTO> projects = projectService.getPojectList(memberID);
@@ -26,5 +26,16 @@ public class ProjectController {
                 throw new RuntimeException("Unable to get Project List for user");
             }
             return projects;
+    }
+
+    @GetMapping("/projects/{projectID}")
+    @ResponseBody
+    public ProjectDTO getProjectDetails(@PathVariable("projectID") Integer projectID) {
+        ProjectDTO project = projectService.getPojectDetails(projectID);
+
+        if (project == null) {
+            throw new RuntimeException("Unable to get Project List for user");
+        }
+        return project;
     }
 }

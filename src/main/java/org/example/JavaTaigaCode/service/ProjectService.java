@@ -1,5 +1,7 @@
 package org.example.JavaTaigaCode.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -102,4 +104,47 @@ public class ProjectService {
 
         return null;
     }
+
+    public ProjectDTO getPojectDetails(int projectID) {
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/projects/"+ projectID;
+            HttpGet request = new HttpGet(endpoint);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            String responseJson = HTTPRequest.sendHttpRequest(request);
+            ProjectDTO project = new ProjectDTO();
+            if (responseJson != null) {
+                JsonNode projectJSON = objectMapper.readTree(responseJson);
+                project.setProjectID(projectJSON.get("id").asInt());
+                project.setProjectName(projectJSON.get("name").asText());
+                project.setSlug(projectJSON.get("slug").asText());
+                project.setDescription(projectJSON.get("description").asText());
+                project.setCreatedDate(LocalDate.parse(projectJSON.get("created_date").asText(), DateTimeFormatter.ISO_DATE_TIME));
+                JsonNode owner = projectJSON.get("owner");
+                project.setOwner(owner.get("full_name_display").asText());
+                JsonNode membersJSON = projectJSON.get("members");
+                if(membersJSON.isArray()) {
+                    List<String> members = new ArrayList<>();
+                    for(JsonNode member: membersJSON) {
+                        members.add(member.get("full_name").asText());
+                    }
+                    project.setMembers(members);
+                }
+                JsonNode milestonesJSON = projectJSON.get("milestones");
+                if(milestonesJSON.isArray()) {
+                    List<String> milestones = new ArrayList<>();
+                    for(JsonNode milestone: milestonesJSON) {
+                        milestones.add(milestone.get("name").asText());
+                    }
+                    project.setMilestones(milestones);
+                }
+            }
+            return project;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
