@@ -1,9 +1,9 @@
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\Util\GlobalData.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\controllers\ProjectController.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\Service\Authentication.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\Service\ProjectService.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\Util\HTTPRequest.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\models\ProjectDTO.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\controllers\AuthController.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\util\GlobalData.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\util\HTTPRequest.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\service\ProjectService.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\service\Tasks.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\controllers\AuthController.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\controllers\ProjectController.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\service\Authentication.java
 D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\Main.java
-D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\Service\Tasks.java
+D:\Course Materials\Agile\Project\SER516-Team-Denver\src\main\java\org\example\JavaTaigaCode\models\ProjectDTO.java
