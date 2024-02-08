@@ -1,9 +1,13 @@
 package org.example.JavaTaigaCode.models;
 
+import java.time.LocalDate;
+
 public class ProjectDTO {
     Integer projectID;
     String projectName;
     String slug;
+    LocalDate createdDate;
+    String description;
 
     public Integer getProjectID() {
         return projectID;
@@ -15,6 +19,14 @@ public class ProjectDTO {
 
     public String getSlug() {
         return slug;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setProjectID(Integer projectID) {
@@ -29,7 +41,23 @@ public class ProjectDTO {
         this.slug = slug;
     }
 
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public ProjectDTO() {
+    }
+
+    public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description) {
+        this.projectID = projectID;
+        this.projectName = projectName;
+        this.slug = slug;
+        this.description = description;
+        this.createdDate = createdDate;
     }
 
     public ProjectDTO(Integer projectID, String projectName, String slug) {

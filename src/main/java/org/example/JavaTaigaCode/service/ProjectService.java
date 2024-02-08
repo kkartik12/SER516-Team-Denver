@@ -1,20 +1,20 @@
 package org.example.JavaTaigaCode.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.HttpGet;
 import org.example.JavaTaigaCode.models.ProjectDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.example.JavaTaigaCode.util.HTTPRequest;
 import org.springframework.stereotype.Service;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.HttpGet;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class ProjectService {
