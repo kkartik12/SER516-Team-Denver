@@ -80,10 +80,11 @@ public class ProjectDTO {
     public ProjectDTO() {
     }
 
-    public ProjectDTO(Integer projectID, String projectName, String slug) {
+    public ProjectDTO(Integer projectID, String projectName, String slug, String description) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.slug = slug;
+        this.description = description;
     }
 
     public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description, String owner, List<String> members, List<String> milestones) {
@@ -101,6 +102,7 @@ public class ProjectDTO {
     public String toString() {
         return "projectID=" + projectID +
                 ", projectName='" + projectName + '\'' +
+                ", description='" + description + '\'' +
                 ", slug='" + slug + '\'';
    }
 }

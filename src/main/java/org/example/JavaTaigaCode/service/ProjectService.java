@@ -92,7 +92,8 @@ public class ProjectService {
                         ProjectDTO p = new ProjectDTO(
                                 project.get("id").asInt(),
                                 project.get("name").asText(),
-                                project.get("slug").asText());
+                                project.get("slug").asText(),
+                                project.get("description").asText());
                         projectList.add(p);
                     }
                     return projectList;

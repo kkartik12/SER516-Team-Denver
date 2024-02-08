@@ -1,138 +1,3 @@
-// // ProjectsPage.js
-// import React from 'react';
-// import { useParams } from 'react-router-dom';
-// import '../components/ProjectComponent.css';
-
-// const ProjectsPage = () => {
-// 	/* const [projects, setProjects] = useState([]);
-// 	let [searchParams] = useSearchParams(); */
-// 	const { memberID } = useParams()
-//   	console.log("memberID= " + memberID);
-//   	const getProjects = async () => {
-//     const projectsUrl = `http://localhost:8080/api/projects/${memberID}`
-//       const projectsResponse = await fetch(projectsUrl, {method: 'GET'})
-//       if (projectsResponse.ok) {
-//         const projects = await projectsResponse.json()
-//         return projects
-//       } else {
-//         throw projectsResponse
-//       }
-//   	}
-// 	const projectList = getProjects()
-// 	console.log(projectList)
-
-// /* 	useEffect(() => {
-// 		fetch(
-// 			`${
-// 				process.env.REACT_APP_LOCAL_BASE_URL
-// 			}/api/getProjectList/${searchParams.get('memberId')}`
-// 		)
-// 			.then((response) => response.json())
-// 			.then((data) => {
-// 				// Handle the fetched data
-// 				console.log(data);
-
-// 				setProjects(
-// 					data.map((project) => (
-// 						<Fragment key={project.projectId}>
-// 							<div className='project-item'>
-// 								<img
-// 									className='project-image'
-// 									src={getImageUrl(project)}
-// 									alt={project.projectName}
-// 								/>
-// 								<div className='project-details'>
-// 									<Link
-// 										to={`/projects/${project.projectName}`}
-// 										className='project-link'
-// 									>
-// 										<b>{project.projectName}</b>
-// 									</Link>
-// 									<p>{project.slug}</p>
-// 								</div>
-// 							</div>
-// 						</Fragment>
-// 					))
-// 				);
-// 			})
-// 			.catch((error) => {
-// 				// Handle errors
-// 				console.error('Error fetching data:', error);
-// 			});
-// 	}, []); */
-
-// 	const formatDate = (dateString) => {
-// 		const options = { year: 'numeric', month: 'long', day: 'numeric' };
-// 		return new Date(dateString).toLocaleDateString(undefined, options);
-// 	};
-
-
-// 	return (
-// 		<div>
-// 			<div className='project-list-heading'>User Projects</div>
-// 			{/* <div className='project-list'>{projectList}</div> */}
-// 		</div>
-// 	);
-// }
-
-// export default ProjectsPage
-
-
-
-
-// // ProjectsPage.js
-// import React, { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
-// import '../components/ProjectComponent.css';
-
-// const ProjectsPage = () => {
-//   const { memberID } = useParams();
-//   const [projectList, setProjectList] = useState([]);
-
-//   useEffect(() => {
-//     const getProjects = async () => {
-//       try {
-//         const projectsUrl = `http://localhost:8080/api/projects/${memberID}`;
-//         const projectsResponse = await fetch(projectsUrl, { method: 'GET' });
-
-//         if (projectsResponse.ok) {
-//           const projects = await projectsResponse.json();
-//           setProjectList(projects);
-//         } else {
-//           throw projectsResponse;
-//         }
-//       } catch (error) {
-//         console.error('Error fetching projects:', error);
-//       }
-//     };
-
-//     getProjects();
-//   }, [memberID]);
-
-//   const formatDate = (dateString) => {
-//     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-//     return new Date(dateString).toLocaleDateString(undefined, options);
-//   };
-
-//   return (
-//     <div>
-//       <div className='project-list-heading'>User Projects</div>
-//       <div className='project-list'>
-//         {projectList.map((project) => (
-//           <div key={project.projectID}>
-//             <div>Project ID: {project.projectID}</div>
-//             <div>Project Name: {project.projectName}</div>
-//             <div>Slug: {project.slug}</div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProjectsPage;
-
-// Updated ProjectsPage.js
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import '../components/ProjectComponent.css';
@@ -149,7 +14,25 @@ const ProjectsPage = () => {
 
         if (projectsResponse.ok) {
           const projects = await projectsResponse.json();
-          setProjectList(projects);
+
+          // Fetch project details for all projects
+          const projectsWithDetails = await Promise.all(
+            projects.map(async (project) => {
+              const response = await fetch(`http://localhost:8080/api/projects/${project.projectID}`);
+              if (response.ok) {
+                const projectDetails = await response.json();
+                return { ...project, details: projectDetails };
+              } else {
+                console.error(`Error fetching project details for project ID ${project.projectID}`);
+                return null;
+              }
+            })
+          );
+
+          // Remove projects with null details
+          const validProjects = projectsWithDetails.filter((project) => project !== null);
+
+          setProjectList(validProjects);
         } else {
           throw projectsResponse;
         }
@@ -161,39 +44,27 @@ const ProjectsPage = () => {
     getProjects();
   }, [memberID]);
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
   return (
     <div>
       <div className='project-list-heading'>User Projects</div>
-      <table className='project-table'>
-        <thead>
-          <tr>
-            <th>Project ID</th>
-            <th>Project Name</th>
-            <th>Slug</th>
-            {/* Add more headers as needed */}
-          </tr>
-        </thead>
-        <tbody>
-          {projectList.map((project) => (
-            <tr key={project.projectID}>
-              <td>{project.projectID}</td>
-              <td className="project-name">
-                <Link to={`/projects/${project.projectID}`}>{project.projectName}</Link>
-              </td>
-              {/* <td>{project.projectName}</td> */}
-              <td>{project.slug}</td>
-              {/* Add more cells as needed */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ul className='project-list'>
+        {projectList.map((project) => (
+          <li key={project.details.projectID} className="project-list-item">
+            <div className="project-details">
+              <h3 className="project-name">
+                <Link to={`/projects/${project.details.projectID}`} className="project-link">
+                  {project.details.projectName}
+                </Link>
+              </h3>
+              <p className="project-description">{project.details.description}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
+
   );
 };
 
 export default ProjectsPage;
+

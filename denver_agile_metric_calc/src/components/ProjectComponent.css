@@ -1,111 +1,50 @@
-ProjectComponent.css
 .project-list {
   list-style: none;
   padding: 0;
-  background-color: #e0ebeb;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  margin-top: 5px;
-}
-
-.project-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-
-.project-image {
-  width: 100px;
-  height: auto;
-  margin-right: 20px;
-}
-
-.project-details {
-  flex: 1;
-}
-
-.project-list-heading {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 5px;
-  padding: 10px;
-  background-color: #e0ebeb;
-}
-
-.project-details-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #e0ebeb;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 20px;
-}
-
-.project-details img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 20px;
-}
-
-.project-details h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.project-details p {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #555;
-}
-
-.project-link {
-  text-decoration: none;
-  color: #333;
-  transition: color 0.3s ease;
-  &:hover {
-    color: #007bff;
-  }
 }
 
 .project-list-heading {
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 24px;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #568c8c;
+  color: #fff;
 }
 
-.project-table {
-  width: 80%;
-  margin: 0 auto;
-  border-collapse: collapse;
-}
-
-.project-table th, .project-table td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd;
-}
-
-.project-table th {
-  background-color: #e0ebeb;
+.project-list-item {
+  background-color: #ffffff;
+  margin: 15px 0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .project-name a {
   text-decoration: none;
-  color: #333;
+  color: #568c8c;
   transition: color 0.3s ease;
 }
 
 .project-name a:hover {
-  color: #007bff;
+  color: #83d7d7;
 }
 
-.project-details-page {
-  color: black;
+.project-description {
+  color: #555;
+  margin-top: 10px;
+}
+
+.project-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
 }
