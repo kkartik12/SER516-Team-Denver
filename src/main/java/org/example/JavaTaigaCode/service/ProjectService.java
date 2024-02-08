@@ -22,22 +22,22 @@ public class ProjectService {
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    private static String promptUser(String prompt) {
-        System.out.print(prompt);
-        return scanner.nextLine();
-    }
+//    private static String promptUser(String prompt) {
+//        System.out.print(prompt);
+//        return scanner.nextLine();
+//    }
 
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
-    private static String promptUserPassword(String prompt) {
-        if (System.console() != null) {
-            char[] passwordChars = System.console().readPassword(prompt);
-            return new String(passwordChars);
-        } else {
-            System.out.print(prompt);
-            return scanner.nextLine();
-        }
-    }
+//    private static String promptUserPassword(String prompt) {
+//        if (System.console() != null) {
+//            char[] passwordChars = System.console().readPassword(prompt);
+//            return new String(passwordChars);
+//        } else {
+//            System.out.print(prompt);
+//            return scanner.nextLine();
+//        }
+//    }
 
 //    public static int getProjectId(String authToken,String TAIGA_API_ENDPOINT) {
 //

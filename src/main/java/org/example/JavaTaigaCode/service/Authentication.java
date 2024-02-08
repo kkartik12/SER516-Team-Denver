@@ -34,7 +34,10 @@ public class Authentication {
         try {
             HttpClient httpClient = HttpClients.createDefault();
             HttpResponse response = httpClient.execute(request);
-
+            int httpStatus = response.getStatusLine().getStatusCode();
+            if(httpStatus<200 || httpStatus>=300) {
+                throw new RuntimeException(response.getStatusLine().toString());
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuilder result = new StringBuilder();
             String line;
@@ -43,7 +46,7 @@ public class Authentication {
                 result.append(line);
             }
             return parseAuthToken(result.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
