@@ -144,7 +144,7 @@ const ProjectsPage = () => {
   useEffect(() => {
     const getProjects = async () => {
       try {
-        const projectsUrl = `http://localhost:8080/api/projects/${memberID}`;
+        const projectsUrl = `http://localhost:8080/api/projectList/${memberID}`;
         const projectsResponse = await fetch(projectsUrl, { method: 'GET' });
 
         if (projectsResponse.ok) {
@@ -183,7 +183,7 @@ const ProjectsPage = () => {
             <tr key={project.projectID}>
               <td>{project.projectID}</td>
               <td className="project-name">
-                <Link to={`/projects/${memberID}/${project.projectID}`}>{project.projectName}</Link>
+                <Link to={`/projects/${project.projectID}`}>{project.projectName}</Link>
               </td>
               {/* <td>{project.projectName}</td> */}
               <td>{project.slug}</td>

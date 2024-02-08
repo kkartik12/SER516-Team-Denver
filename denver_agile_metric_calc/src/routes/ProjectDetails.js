@@ -1,69 +1,44 @@
 // ProjectDetails.js
-import React, {useState, useEffect, Fragment, Link} from 'react';
-
-import { useParams, useSearchParams } from 'react-router-dom';
-import { projects } from '../components/data';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { getImageUrl } from '../components/utils';
 
 const ProjectDetails = () => {
-  const [projects, setProjects] = useState([]);
-	let [searchParams] = useSearchParams();
-
-	useEffect(() => {
-		fetch(
-			`${
-				process.env.REACT_APP_LOCAL_BASE_URL
-			}/api/getProjectList/${searchParams.get('memberId')}`
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				// Handle the fetched data
-				console.log(data);
-
-				setProjects(
-					data.map((project) => (
-						<Fragment key={project.projectId}>
-							<div className='project-item'>
-								<img
-									className='project-image'
-									src={getImageUrl(project)}
-									alt={project.projectName}
-								/>
-								<div className='project-details'>
-									<Link
-										to={`/projects/${project.projectName}`}
-										className='project-link'
-									>
-										<b>{project.projectName}</b>
-									</Link>
-									<p>{project.slug}</p>
-								</div>
-							</div>
-						</Fragment>
-					))
-				);
-			})
-			.catch((error) => {
-				// Handle errors
-				console.error('Error fetching data:', error);
-			});
-	}, []);
+  const [project, setProject] = useState(null);
   const { projectId } = useParams();
-  const selectedProject = projects.find(project => project.id === parseInt(projectId, 10));
 
-  if (!selectedProject) {
-    return <div>No project found with the given ID.</div>;
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/projects/${projectId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProject(data);
+        } else {
+          throw new Error('Failed to fetch project details');
+        }
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    };
+
+    fetchProjectDetails();
+  }, [projectId]);
+
+  if (!project) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <div>
-    <div className="project-list-heading">{selectedProject.name}</div>
-    <div className="project-details-container">
-      <img src={getImageUrl(selectedProject)} alt={selectedProject.name} />
-      <div className="project-details">
-        <p>{selectedProject.description}</p>
+    <div className="project-details-page">
+      <div className="project-list-heading">{project.projectName}</div>
+      <div className="project-details-container">
+        <div className="project-details">
+          <p>Description: {project.description}</p>
+          <p>Slug: {project.slug}</p>
+          {/* Add more project details as needed */}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

@@ -15,7 +15,7 @@ function AuthenticationForm() {
 		const loginResponse = await fetch(loginUrl, {method: 'POST'})
 		if (loginResponse.ok) {
 			const memberID = await loginResponse.text()
-			navigate(`/projects/${memberID}`)
+			navigate(`/projectList/${memberID}`)
 		} else {
 			setErrorMessage("Invalid Username or Password");
 		}

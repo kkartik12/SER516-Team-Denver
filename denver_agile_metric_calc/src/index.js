@@ -12,11 +12,11 @@ const router = createBrowserRouter([
 		element: <App />,
 	},
 	{
-		path: '/projects/:memberID',
+		path: '/projectList/:memberID',
 		element: <ProjectsPage />,
 	},
 	{
-		path: '/projects/:memberID/:projectId',
+		path: '/projects/:projectId',
 		element: <ProjectDetails />,
 	},
 ]);

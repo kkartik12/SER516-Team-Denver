@@ -105,3 +105,7 @@ ProjectComponent.css
 .project-name a:hover {
   color: #007bff;
 }
+
+.project-details-page {
+  color: black;
+}
