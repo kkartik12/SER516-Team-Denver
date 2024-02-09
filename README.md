@@ -26,7 +26,7 @@ Go to the project root and compile the Maven project
 Now, run the project using following command
 
 ```bash
-   mvn compile exec:java -Dexec.mainClass=Main
+   mvn compile exec:java -Dexec.mainClass=org.example.JavaTaigaCode.Main
    ```
 
 ### NOTE

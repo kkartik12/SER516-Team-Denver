@@ -21,18 +21,12 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
