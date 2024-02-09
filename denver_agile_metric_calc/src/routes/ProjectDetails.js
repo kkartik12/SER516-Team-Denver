@@ -2,8 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getImageUrl } from '../components/utils';
+import '../styles/ProjectDetails.css'
+
 
 const ProjectDetails = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const [project, setProject] = useState(null);
   const { projectId } = useParams();
 
@@ -30,15 +33,36 @@ const ProjectDetails = () => {
   }
 
   return (
-    <div className="project-details-page">
-      <div className="project-list-heading">{project.projectName}</div>
-      <div className="project-details-container">
-        <div className="project-details">
-          <p>Description: {project.description}</p>
-          <p>Slug: {project.slug}</p>
-          {/* Add more project details as needed */}
-        </div>
-      </div>
+    <div className="app">
+      <header>
+        <h1>{project.projectName}</h1>
+      </header>
+      <main>
+          {/* isLoading ? (
+            <div className="loading">
+              <div className="spinner"></div>
+            </div>
+          ) : */ (
+          <div className="content-container">
+            <div className="content">
+              Description: {project.description}
+              
+            </div>
+            {/* <div className="sidebar">
+              
+              </div> */}
+              <div className="buttons-container">
+          <button className="button">View Burndown Chart</button>
+            </div>
+              
+          </div>
+        )}
+        
+      </main>
+      
+      <footer>
+        
+      </footer>
     </div>
   );
 };
