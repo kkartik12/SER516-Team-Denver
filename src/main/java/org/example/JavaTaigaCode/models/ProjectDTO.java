@@ -12,6 +12,9 @@ public class ProjectDTO {
     String owner;
     List<String> members;
     List<String> milestones;
+    Double businessValue = 0.0;
+    Double partialRunningSum = 0.0;
+    Double totalRunningSum = 0.0;
 
     public Integer getProjectID() {
         return projectID;
@@ -75,6 +78,30 @@ public class ProjectDTO {
 
     public void setMilestones(List<String> milestones) {
         this.milestones = milestones;
+    }
+
+    public double getBusinessValue() {
+        return businessValue;
+    }
+
+    public void setBusinessValue(double businessValue) {
+        this.businessValue = businessValue;
+    }
+
+    public double getPartialRunningSum() {
+        return partialRunningSum;
+    }
+
+    public void setPartialRunningSum(double partialRunningSum) {
+        this.partialRunningSum = partialRunningSum;
+    }
+
+    public double getTotalRunningSum() {
+        return totalRunningSum;
+    }
+
+    public void setTotalRunningSum(double totalRunningSum) {
+        this.totalRunningSum = totalRunningSum;
     }
 
     public ProjectDTO() {
