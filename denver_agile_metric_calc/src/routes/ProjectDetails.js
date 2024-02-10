@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom';
 import { getImageUrl } from '../components/utils';
 import '../styles/ProjectDetails.css'
 import SsidChartIcon from '@mui/icons-material/SsidChart';
-import { Button, Icon } from '@mui/material';
+import { Button, CircularProgress, Icon } from '@mui/material';
+import BurndownPopup from './BurndownPopup';
 
 
 const ProjectDetails = () => {
@@ -33,10 +34,11 @@ const ProjectDetails = () => {
 
   if (!project) {
     return (
-      <div className="app">
-        <header>
-          {isLoading && <div className="loading"><div className="spinner"></div></div>}
-        </header>
+      <div style = {{position: 'absolute', 
+      top: '50%', 
+      left: '50%', 
+      transform: 'translate(-50%, -50%)',}}>
+          {isLoading && <CircularProgress />}
       </div>
     )
   }
@@ -46,13 +48,25 @@ const ProjectDetails = () => {
       <header>
         <div className="title-container">
           <h1 style={{ fontWeight: 'bold', textAlign: 'left' }} className='project-title'>{project.projectName}</h1>
-          <p style={{ backgroundColor: '#568c8c', padding: '10px', margin: '0', textAlign: 'left' }}>
+          <p style={{ 
+            backgroundColor: '#568c8c', 
+            padding: '10px', 
+            margin: '0', 
+            textAlign: 'left' }}>
             {project.description}
           </p>
-          <p style={{ backgroundColor: '#568c8c', padding: '10px', margin: '0', textAlign: 'left' }}>
+          <p style={{ 
+            backgroundColor: '#568c8c', 
+            padding: '10px', 
+            margin: '0', 
+            textAlign: 'left' }}>
             Created At: {project.createdDate}
           </p>
-          <p style={{ backgroundColor: '#568c8c', padding: '10px', margin: '0', textAlign: 'left' }}>
+          <p style={{ 
+            backgroundColor: '#568c8c', 
+            padding: '10px', 
+            margin: '0', 
+            textAlign: 'left' }}>
             Owner: {project.owner}
           </p>
         </div>
@@ -72,19 +86,8 @@ const ProjectDetails = () => {
                 <li key={milestone}>{milestone}</li>
               ))}
               </ul>            
-              <Button  
-                variant='contained' 
-                startIcon={<SsidChartIcon />}
-                sx={{
-                  backgroundColor: '#568c8c',
-                  marginTop: '2em',
-                  ":hover":{
-                    backgroundColor: '#3b6363',
-                  }
-                }}>View Burndown Chart</Button>
-              {/* Rest of your content */}
+              <BurndownPopup />
             </div>
-            {/* ... */}
           </div>
       </main>
     </div>
