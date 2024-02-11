@@ -55,13 +55,13 @@ const ProjectDetails = () => {
       <header>
         <div className="title-container">
           <h1 className='project-title'>{project.projectName}</h1>
-          <p className='project-details'>
+          <p className='project-subtitle'>
             {project.description}
           </p>
-          <p className='project-details'>
+          <p className='project-subtitle'>
             Created At: {project.createdDate}
           </p>
-          <p className='project-details'>
+          <p className='project-subtitle'>
             Owner: {project.owner}
           </p>
         </div>

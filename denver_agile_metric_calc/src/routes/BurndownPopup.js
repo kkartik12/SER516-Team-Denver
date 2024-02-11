@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import {Modal, Button, Box} from '@mui/material'
 import SsidChartIcon from '@mui/icons-material/SsidChart';
-import IconButton from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const BurndownPopup = () => {
