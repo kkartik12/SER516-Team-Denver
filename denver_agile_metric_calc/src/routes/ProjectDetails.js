@@ -1,11 +1,18 @@
 // ProjectDetails.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getImageUrl } from '../components/utils';
 import '../styles/ProjectDetails.css'
-import SsidChartIcon from '@mui/icons-material/SsidChart';
-import { Button, CircularProgress, Icon } from '@mui/material';
+import { 
+  CircularProgress, 
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+  Stack,
+  Divider } from '@mui/material';
 import BurndownPopup from './BurndownPopup';
+import PersonIcon from '@mui/icons-material/Person';
 
 
 const ProjectDetails = () => {
@@ -47,48 +54,47 @@ const ProjectDetails = () => {
     <div className="app">
       <header>
         <div className="title-container">
-          <h1 style={{ fontWeight: 'bold', textAlign: 'left' }} className='project-title'>{project.projectName}</h1>
-          <p style={{ 
-            backgroundColor: '#568c8c', 
-            padding: '10px', 
-            margin: '0', 
-            textAlign: 'left' }}>
+          <h1 className='project-title'>{project.projectName}</h1>
+          <p className='project-details'>
             {project.description}
           </p>
-          <p style={{ 
-            backgroundColor: '#568c8c', 
-            padding: '10px', 
-            margin: '0', 
-            textAlign: 'left' }}>
+          <p className='project-details'>
             Created At: {project.createdDate}
           </p>
-          <p style={{ 
-            backgroundColor: '#568c8c', 
-            padding: '10px', 
-            margin: '0', 
-            textAlign: 'left' }}>
+          <p className='project-details'>
             Owner: {project.owner}
           </p>
         </div>
       </header>
       <main>
-          <div className="content-container">
-              <div className="content">
-              <p style={{marginLeft: '2em'}}>Members:</p>
-              <ul style={{marginLeft: '2em'}}>
+        <div className="content-container">
+          <div className="content">
+          <h4>Members:</h4>          
+            <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
               {project.members.map((member) => (
-                <li key={member}>{member}</li>
+                <ListItem key={member}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={member} />
+                </ListItem>
               ))}
-              </ul>
-              <p style={{marginTop: '2em', marginLeft: '2em'}}>Milestones:</p>
-              <ul style={{marginLeft: '2em'}}>
+            </Stack>
+            <h4 style={{ marginTop: '2em', marginLeft: '2em' }}>Milestones:</h4>
+            <List style={{ marginLeft: '2em' }}>
               {project.milestones.map((milestone) => (
-                <li key={milestone}>{milestone}</li>
+                <ListItem key={milestone} sx={{ 
+                  ":hover": { backgroundColor: '#97c9c9' },
+                  width: '40vh' }}>
+                  <ListItemText primary={milestone} />
+                </ListItem>
               ))}
-              </ul>            
-              <BurndownPopup />
-            </div>
+            </List>
+            <BurndownPopup />
           </div>
+        </div>
       </main>
     </div>
   );
