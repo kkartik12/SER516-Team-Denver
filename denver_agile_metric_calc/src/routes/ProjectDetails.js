@@ -4,14 +4,13 @@ import { useParams } from 'react-router-dom';
 import '../styles/ProjectDetails.css'
 import { 
   CircularProgress, 
-  List,
   ListItem,
   ListItemAvatar,
   Avatar,
   ListItemText,
   Stack,
   Divider } from '@mui/material';
-import BurndownPopup from './BurndownPopup';
+import MetricsSection from '../components/Metrics';
 import PersonIcon from '@mui/icons-material/Person';
 
 
@@ -82,17 +81,9 @@ const ProjectDetails = () => {
                 </ListItem>
               ))}
             </Stack>
-            <h4 style={{ marginTop: '2em', marginLeft: '2em' }}>Milestones:</h4>
-            <List style={{ marginLeft: '2em' }}>
-              {project.milestones.map((milestone) => (
-                <ListItem key={milestone} sx={{ 
-                  ":hover": { backgroundColor: '#97c9c9' },
-                  width: '40vh' }}>
-                  <ListItemText primary={milestone} />
-                </ListItem>
-              ))}
-            </List>
-            <BurndownPopup />
+            <h2 style={{marginBottom: '2em'}}>Metrics:</h2>
+            <Divider />
+            <MetricsSection project={project}/>
           </div>
         </div>
       </main>
