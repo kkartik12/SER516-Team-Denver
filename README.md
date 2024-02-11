@@ -24,14 +24,11 @@ Go to the project root and compile the Maven project
    mvn compile spring:boot-run
    ```
 
-### Run the frontend
+#### Run the frontend
 
 
 ```bash
    cd denver_agile_metric_calc
    npm start
    ```
-
-### NOTE
-
 
