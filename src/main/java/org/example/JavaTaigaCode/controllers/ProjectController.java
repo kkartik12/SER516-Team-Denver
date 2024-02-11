@@ -1,6 +1,8 @@
 package org.example.JavaTaigaCode.controllers;
 
+import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
+import org.example.JavaTaigaCode.service.BurndownChart;
 import org.example.JavaTaigaCode.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ import java.util.Map;
 public class ProjectController {
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    BurndownChart burndownChart;
     @GetMapping("/projectList/{memberID}")
     @ResponseBody
     public List<ProjectDTO> getProjectList(@PathVariable("memberID") Integer memberID) {
@@ -62,11 +67,8 @@ public class ProjectController {
     
     @GetMapping("/projects/{projectID}/totalRunningSum")
     @ResponseBody
-    public Map<String, Double> getTotalRunningSum(@PathVariable("projectID") Integer projectID) {
-        Map<String, Double> trs = new HashMap<>();
-        double totalRunningSum = projectService.calculateTotalRunningSum(projectID);
-        trs.put("totalRunningSum", totalRunningSum);
-        return trs;
+    public List<MilestoneDTO> getTotalRunningSum(@PathVariable("projectID") Integer projectID) {
+        return burndownChart.calculateTotalRunningSum(projectID);
     }
 
 }
