@@ -1,5 +1,6 @@
 package org.example.JavaTaigaCode.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -47,7 +48,27 @@ public class BurndownChart {
             if(responseEntity!=null) {
                 response = EntityUtils.toString(responseEntity);
             }
-            System.out.println(response);
+            JsonNode rootNode = objectMapper.readTree(response);
+            if(rootNode.isArray()) {
+                for(JsonNode milestoneJSON: rootNode) {
+                    MilestoneDTO milestone = new MilestoneDTO();
+                    milestone.setMilestoneID(milestoneJSON.get("id").asInt());
+                    milestone.setMilestoneName(milestoneJSON.get("name").asText());
+                    JsonNode userStories = milestoneJSON.get("user_stories");
+                    double totalSum = 0;
+                    if(userStories.isArray()) {
+                        for(JsonNode us: userStories) {
+                            if(us.get("status_extra_info").get("name").asText().equals("Done")) {
+                                totalSum = totalSum + us.get("total_points").asDouble();
+                            }
+                        }
+                    }
+                    milestone.setTotalSumValue(totalSum);
+                    milestones.add(milestone);
+                }
+            } else {
+                throw new RuntimeException(response);
+            }
             return milestones;
         } catch (Exception e) {
             e.printStackTrace();
