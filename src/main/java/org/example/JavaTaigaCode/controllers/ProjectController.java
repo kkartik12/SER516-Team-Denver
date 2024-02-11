@@ -42,23 +42,31 @@ public class ProjectController {
         return project;
     }
 
-    @GetMapping("/projects/{projectID}/metrics")
+    @GetMapping("/projects/{projectID}/businessValue")
     @ResponseBody
-    public Map<String, Double> getMetrics(@PathVariable("projectID") Integer projectID) {
-    Map<String, Double> metrics = new HashMap<>();
-
-    // Calculate business value
-    double businessValue = projectService.calculateBusinessValue(projectID);
-    metrics.put("businessValue", businessValue);
-
-    // Calculate partial running sum
-    double partialRunningSum = projectService.calculatePartialRunningSum(projectID);
-    metrics.put("partialRunningSum", partialRunningSum);
-
-    // Calculate total running sum
-    double totalRunningSum = projectService.calculateTotalRunningSum(projectID);
-    metrics.put("totalRunningSum", totalRunningSum);
-
-    return metrics;
+    public Map<String, Double> getBusinessValue(@PathVariable("projectID") Integer projectID) {
+        Map<String, Double> bv = new HashMap<>();
+        double businessValue = projectService.calculateBusinessValue(projectID);
+        bv.put("businessValue", businessValue);
+        return bv;
     }
+    
+    @GetMapping("/projects/{projectID}/partialRunningSum")
+    @ResponseBody
+    public Map<String, Double> getPartialRunningSum(@PathVariable("projectID") Integer projectID) {
+        Map<String, Double> prs = new HashMap<>();
+        double partialRunningSum = projectService.calculatePartialRunningSum(projectID);
+        prs.put("partialRunningSum", partialRunningSum);
+        return prs;
+    }
+    
+    @GetMapping("/projects/{projectID}/totalRunningSum")
+    @ResponseBody
+    public Map<String, Double> getTotalRunningSum(@PathVariable("projectID") Integer projectID) {
+        Map<String, Double> trs = new HashMap<>();
+        double totalRunningSum = projectService.calculateTotalRunningSum(projectID);
+        trs.put("totalRunningSum", totalRunningSum);
+        return trs;
+    }
+
 }

@@ -149,16 +149,16 @@ public class ProjectService {
 
     public double calculateBusinessValue(Integer projectID) {
         // Implement the logic to calculate the business value metric parameter
-        return 1.0; // Placeholder, replace with actual calculation
+        return 0.0; // Placeholder, replace with actual calculation
     }
 
     public double calculatePartialRunningSum(Integer projectID) {
         // Implement logic to calculate the partial running sum
-        return 1.0; // Placeholder, replace with actual calculation
+        return 0.0; // Placeholder, replace with actual calculation
     }
 
     public double calculateTotalRunningSum(Integer projectID) {
         // Implement logic to calculate the total running sum
-        return 1.0; // Placeholder, replace with actual calculation
+        return 0.0; // Placeholder, replace with actual calculation
     }
 }
