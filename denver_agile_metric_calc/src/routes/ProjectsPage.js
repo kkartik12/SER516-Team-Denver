@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import '../components/ProjectComponent.css';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  CircularProgress, 
+ } from '@mui/material';
 
 const ProjectsPage = () => {
   const { memberID } = useParams();
@@ -46,7 +53,15 @@ const ProjectsPage = () => {
 
   return (
     <div>
-      <div className='project-list-heading'>User Projects</div>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx = {{backgroundColor: ' #568c8c'}}>
+          <Toolbar>
+            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+              User Projects
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </Box>
       <ul className='project-list'>
         {projectList.map((project) => (
           <li key={project.details.projectID} className="project-list-item">

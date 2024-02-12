@@ -11,6 +11,7 @@
   font-size: 24px;
   margin-bottom: 15px;
   padding: 15px;
+  width: 100vh;
   background-color: #568c8c;
   color: #fff;
 }
@@ -54,6 +55,7 @@
 }
 
 .project-details-container {
+  
   display: flex;
   flex-direction: column;
   align-items: center;

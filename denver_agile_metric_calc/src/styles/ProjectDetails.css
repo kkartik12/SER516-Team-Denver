@@ -1,0 +1,47 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  header {
+    color: white;
+    padding: 20px;
+    background-color: #568c8c;
+    text-align: center;
+  }
+
+  .project-title {
+    font-size: 4em;
+    font-weight: bold;
+    text-align: left;
+  }
+  .project-subtitle {
+    background-color: #568c8c; 
+    padding: 10px; 
+    margin: 0; 
+    text-align: left;
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+  }
+  
+  .content-container {
+    display: flex;
+    flex-direction:row;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
