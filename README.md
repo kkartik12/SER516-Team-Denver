@@ -11,26 +11,25 @@ This project is a Java application for interacting with the Taiga API to perform
 
 
    ```bash
-   git clone https://github.com/ser516asu/SER516-Team-Boston.git
-   cd SER516-Team-Boston
+   git clone https://github.com/ser516asu/SER516-Team-Denver.git
+   cd SER516-Team-Denver
    ```
 
 ### 2) Compile and Run the application
 
+#### Compile and Run the backend
 Go to the project root and compile the Maven project
 
 ```bash
-   mvn compile
+   mvn compile spring:boot-run
    ```
 
-Now, run the project using following command
+#### Run the frontend
+
 
 ```bash
    mvn compile exec:java -Dexec.mainClass=org.example.JavaTaigaCode.Main
+   
+   cd denver_agile_metric_calc
+   npm start
    ```
-
-### NOTE
-
-In case you don't have Maven installed, please refer to following tutorial
-
-https://phoenixnap.com/kb/install-maven-windows
