@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
 import { ToggleButton,
-ToggleButtonGroup } from '@mui/material'
+ToggleButtonGroup, Box } from '@mui/material'
+import GraphPlaceholder from './GraphComponent'
 
 const Burndown = () => {
     const [paramter, setParameter] = useState('')
     return (
-        <ToggleButtonGroup
+        <Box>
+            <ToggleButtonGroup
                 exclusive
                 sx={{ mt: 2 }}
                 value={paramter}
@@ -21,6 +23,9 @@ const Burndown = () => {
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
+            <GraphPlaceholder sx = {{marginY: 2}}/>
+        </Box>
+        
     )
 }
 

@@ -1,67 +1,16 @@
-/* Overall container for the login form */
-.login-container {
-    
-    height: 60vh;
-    width: 350px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Form elements */
-  .login-container form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-  }
-  
-  .login-container input[type="text"],
-  .login-container input[type="password"] {
+
+  .login-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+    height: 100%;
+    background-image: url('https://64.media.tumblr.com/ab12702cfb4ffd0fe440255291e3fbb6/tumblr_op29ivy44r1st0dt8o1_500.gif');
+    background-attachment: fixed; 
+    background-size: cover; 
+    background-position: center; 
+    
   }
   
-  .login-container button {
-    background-color: #007bff; /* Primary blue */
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .login-container button:hover {
-    background-color: #0062cc; /* Darker shade on hover */
-  }
-  
-  /* Optional styling for additional elements */
-  .login-container label {
-    text-align: end;
-    margin-bottom: 20px;
-  }
-  
-  .login-container .forgot-password {
-    text-align: right;
-    margin-top: 10px;
-    font-size: 14px;
-  }
-  .profile-picture {
-    width: 100px; /* Adjust width as needed */
-    height: 100px; /* Adjust height as needed */
-    border-radius: 50%; /* Create a circular shape */
-    object-fit: cover; /* Ensure the image fills the circle */
-    margin: 0 auto;
-  }
-  .image-container {
-    display: grid;
-    place-items: center;
-    margin-bottom: 2em;
-  }
   
   
