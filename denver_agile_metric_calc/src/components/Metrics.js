@@ -26,16 +26,16 @@ const MetricsSection = ({ project }) => {
                             </ListItemIcon>
                             <ListItemText primary={milestone} />
                             </ListItemButton>
-                        </ListItem>
+                        </ListItem> 
                     ))}
                 </List>
         </Box>
         <Box sx={{ flex: 3, padding: 2, display: 'flex', flexDirection: 'column' }}>
             <ToggleButtonGroup
-            exclusive
-            aria-label="metrics-selection"
-            sx={{ mt: 2 }}
-            >
+                exclusive
+                aria-label="metrics-selection"
+                sx={{ mt: 2 }}
+                >
                 <ToggleButton key="Burndown Chart" value="Burndown Chart">
                     Burndown Chart
                 </ToggleButton>
@@ -50,9 +50,9 @@ const MetricsSection = ({ project }) => {
                 </ToggleButton>
             </ToggleButtonGroup>
             <ToggleButtonGroup
-            exclusive
-            sx={{ mt: 2 }}
-            >
+                exclusive
+                sx={{ mt: 2 }}
+                >
                 <ToggleButton key="Partial Running Sum" value="Partial Running Sum">
                     Partial Running Sum
                 </ToggleButton>
