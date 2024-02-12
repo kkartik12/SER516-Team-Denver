@@ -1,5 +1,6 @@
 package org.example.JavaTaigaCode.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -27,11 +28,12 @@ public class BurndownChart {
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
+
     public List<MilestoneDTO> calculateTotalRunningSum(Integer projectID) {
         // Implement logic to calculate the total running sum
         String response = "";
-        try{
-            String endpoint = TAIGA_API_ENDPOINT + "/milestones?project="+ projectID;
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/milestones?project=" + projectID;
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -40,11 +42,11 @@ public class BurndownChart {
             HttpResponse httpResponse = httpClient.execute(request);
             List<MilestoneDTO> milestones = new ArrayList<>();
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
-            if(httpStatus<200 || httpStatus>=300) {
+            if (httpStatus < 200 || httpStatus >= 300) {
                 throw new RuntimeException(httpResponse.getStatusLine().toString());
             }
             HttpEntity responseEntity = httpResponse.getEntity();
-            if(responseEntity!=null) {
+            if (responseEntity != null) {
                 response = EntityUtils.toString(responseEntity);
             }
             System.out.println(response);
@@ -54,6 +56,35 @@ public class BurndownChart {
             return null;
         }
 
+    }
 
+    public Integer getBusinessValueForUserStory(Integer userStoryID) {
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/userstories/custom-attributes-values/" + userStoryID;
+            HttpClient httpClient = HttpClients.createDefault();
+            HttpGet request = new HttpGet(endpoint);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+            HttpResponse httpResponse = httpClient.execute(request);
+
+            int httpStatus = httpResponse.getStatusLine().getStatusCode();
+            if (httpStatus < 200 || httpStatus >= 300) {
+                throw new RuntimeException(httpResponse.getStatusLine().toString());
+            }
+
+            HttpEntity responseEntity = httpResponse.getEntity();
+            
+            if (responseEntity != null) {
+                String response = EntityUtils.toString(responseEntity);
+                // TODO - Fix. Currently assumes the only custom attribute is the business value
+                JsonNode node = objectMapper.readTree(response).path("attributes_values");
+                String bvKey = node.fieldNames().next();
+                return node.get(bvKey).asInt();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

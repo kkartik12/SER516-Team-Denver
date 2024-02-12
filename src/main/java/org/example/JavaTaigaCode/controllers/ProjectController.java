@@ -47,13 +47,11 @@ public class ProjectController {
         return project;
     }
 
-    @GetMapping("/projects/{projectID}/businessValue")
+    @GetMapping("/projects/{projectID}/businessValue/{userStoryID}")
     @ResponseBody
-    public Map<String, Double> getBusinessValue(@PathVariable("projectID") Integer projectID) {
-        Map<String, Double> bv = new HashMap<>();
-        double businessValue = projectService.calculateBusinessValue(projectID);
-        bv.put("businessValue", businessValue);
-        return bv;
+    public Integer getBusinessValueForUserStory(@PathVariable("userStoryID") Integer userStoryID) {
+        return burndownChart.getBusinessValueForUserStory(userStoryID);
+        
     }
     
     @GetMapping("/projects/{projectID}/partialRunningSum")
