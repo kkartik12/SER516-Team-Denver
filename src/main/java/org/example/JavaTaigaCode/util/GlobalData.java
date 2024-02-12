@@ -1,4 +1,7 @@
-import java.io.FileInputStream;
+package org.example.JavaTaigaCode.util;
+
+import com.sun.tools.javac.Main;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

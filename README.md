@@ -28,7 +28,8 @@ Go to the project root and compile the Maven project
 
 
 ```bash
+   mvn compile exec:java -Dexec.mainClass=org.example.JavaTaigaCode.Main
+   
    cd denver_agile_metric_calc
    npm start
    ```
-

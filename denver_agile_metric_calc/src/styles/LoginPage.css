@@ -1,0 +1,16 @@
+
+  .login-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://64.media.tumblr.com/ab12702cfb4ffd0fe440255291e3fbb6/tumblr_op29ivy44r1st0dt8o1_500.gif');
+    background-attachment: fixed; 
+    background-size: cover; 
+    background-position: center; 
+    
+  }
+  
+  
+  
