@@ -15,6 +15,7 @@ public class ProjectDTO {
     Double businessValue = 0.0;
     Double partialRunningSum = 0.0;
     Double totalRunningSum = 0.0;
+    Integer bvCustomAttributeID;
 
     public Integer getProjectID() {
         return projectID;
@@ -104,6 +105,14 @@ public class ProjectDTO {
         this.totalRunningSum = totalRunningSum;
     }
 
+    public Integer getBvCustomAttributeID() {
+        return bvCustomAttributeID;
+    }
+
+    public void setBvCustomAttributeID(Integer bvCustomAttributeID) {
+        this.bvCustomAttributeID = bvCustomAttributeID;
+    }
+
     public ProjectDTO() {
     }
 
@@ -114,7 +123,8 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description, String owner, List<String> members, List<String> milestones) {
+    public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description,
+            String owner, List<String> members, List<String> milestones) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.slug = slug;
@@ -131,5 +141,5 @@ public class ProjectDTO {
                 ", projectName='" + projectName + '\'' +
                 ", description='" + description + '\'' +
                 ", slug='" + slug + '\'';
-   }
+    }
 }
