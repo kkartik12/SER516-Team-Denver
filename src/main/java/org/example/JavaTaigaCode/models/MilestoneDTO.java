@@ -4,6 +4,7 @@ public class MilestoneDTO {
     private Integer milestoneID;
     private String milestoneName;
     private Double totalSumValue;
+    private Double partialSumValue;
 
     public Integer getMilestoneID() {
         return milestoneID;
@@ -27,6 +28,14 @@ public class MilestoneDTO {
 
     public void setTotalSumValue(Double totalSumValue) {
         this.totalSumValue = totalSumValue;
+    }
+
+    public Double getPartialSumValue() {
+        return partialSumValue;
+    }
+
+    public void setPartialSumValue(Double partialSumValue) {
+        this.partialSumValue = partialSumValue;
     }
 
     public MilestoneDTO() {
