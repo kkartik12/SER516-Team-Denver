@@ -1,8 +1,6 @@
 package org.example.JavaTaigaCode.controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
@@ -56,6 +54,12 @@ public class ProjectController {
     public Integer getBusinessValueForUserStory(@PathVariable("userStoryID") Integer userStoryID) {
         return burndownChart.getBusinessValueForUserStory(userStoryID);
         
+    }
+
+    @GetMapping("/projects/{milestoneID}/businessValue")
+    @ResponseBody
+    public MilestoneDTO getTotalBusinessValue(@PathVariable("milestoneID") Integer milestoneID) {
+        return burndownChart.getTotalBusinessValue(milestoneID);
     }
     
     // @GetMapping("/projects/{projectID}/partialRunningSum")

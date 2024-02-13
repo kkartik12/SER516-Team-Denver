@@ -71,4 +71,15 @@ public class MilestoneDTO {
 
     public MilestoneDTO() {
     }
+
+    public MilestoneDTO(Integer milestoneID, String milestoneName, LocalDate start_date, LocalDate end_date,
+            List<BurndownChartDTO> totalSumValue, Double partialSumValue, Double totalPoints) {
+        this.milestoneID = milestoneID;
+        this.milestoneName = milestoneName;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.totalSumValue = totalSumValue;
+        this.partialSumValue = partialSumValue;
+        this.totalPoints = totalPoints;
+    }
 }
