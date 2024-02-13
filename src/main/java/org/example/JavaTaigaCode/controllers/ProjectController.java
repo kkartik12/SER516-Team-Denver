@@ -73,10 +73,10 @@ public class ProjectController {
         return burndownChart.calculatePartialRunningSum(projectID);
     }
     
-    @GetMapping("/projects/{projectID}/totalRunningSum")
+    @GetMapping("/burndownchart/{milestoneID}/totalRunningSum")
     @ResponseBody
-    public List<MilestoneDTO> getTotalRunningSum(@PathVariable("projectID") Integer projectID) {
-        return burndownChart.calculateTotalRunningSum(projectID);
+    public MilestoneDTO getTotalRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
+        return burndownChart.calculateTotalRunningSum(milestoneID);
     }
 
 }

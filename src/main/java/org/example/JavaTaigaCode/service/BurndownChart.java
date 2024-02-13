@@ -1,8 +1,11 @@
 package org.example.JavaTaigaCode.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
+import com.fasterxml.jackson.databind.node.DoubleNode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -10,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.example.JavaTaigaCode.models.BurndownChartDTO;
 import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.springframework.stereotype.Service;
@@ -28,18 +32,19 @@ public class BurndownChart {
 
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
-    public List<MilestoneDTO> calculateTotalRunningSum(Integer projectID) {
+    String datePattern = "yyyy-MM-dd";
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
+    HttpClient httpClient = HttpClients.createDefault();
+
+    public MilestoneDTO calculateTotalRunningSum(Integer milestoneID) {
         // Implement logic to calculate the total running sum
         String response = "";
         try {
-            String endpoint = TAIGA_API_ENDPOINT + "/milestones?project=" + projectID;
-            HttpClient httpClient = HttpClients.createDefault();
+            String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            // String responseJson = HTTPRequest.sendHttpRequest(request);
             HttpResponse httpResponse = httpClient.execute(request);
-            List<MilestoneDTO> milestones = new ArrayList<>();
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
                 throw new RuntimeException(httpResponse.getStatusLine().toString());
@@ -48,8 +53,36 @@ public class BurndownChart {
             if (responseEntity != null) {
                 response = EntityUtils.toString(responseEntity);
             }
-            System.out.println(response);
-            return milestones;
+            JsonNode milestoneJSON = objectMapper.readTree(response);
+            MilestoneDTO milestone = new MilestoneDTO();
+            milestone.setMilestoneID(milestoneJSON.get("id").asInt());
+            milestone.setMilestoneName(milestoneJSON.get("name").asText());
+            milestone.setTotalPoints(milestoneJSON.get("total_points").asDouble());
+            milestone.setStart_date(LocalDate.parse(milestoneJSON.get("estimated_start").asText(), dateFormatter));
+            milestone.setEnd_date(LocalDate.parse(milestoneJSON.get("estimated_finish").asText(), dateFormatter));
+            JsonNode userStories = milestoneJSON.get("user_stories");
+            double totalSum = milestone.getTotalPoints();
+            List<BurndownChartDTO> totalRunningSum = new ArrayList<>();
+            totalRunningSum.add(new BurndownChartDTO(LocalDate.parse(milestoneJSON.get("estimated_start").asText(), dateFormatter)
+                    , totalSum));
+            Map<LocalDate, Double> pointsMap = new TreeMap<>();
+            if(userStories.isArray()) {
+                for(JsonNode us: userStories) {
+                    if(us.get("status_extra_info").get("name").asText().equals("Done")) {
+                        LocalDateTime dateTime = LocalDateTime.parse(us.get("finish_date").asText(), DateTimeFormatter.ISO_DATE_TIME);
+                        pointsMap.put(dateTime.toLocalDate(),
+                                us.get("total_points").asDouble());
+                    }
+                }
+
+                for(LocalDate key: pointsMap.keySet()) {
+                    totalSum = totalSum - pointsMap.get(key);
+                    totalRunningSum.add(new BurndownChartDTO(key, totalSum));
+                }
+            }
+            milestone.setTotalSumValue(totalRunningSum);
+
+            return milestone;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
