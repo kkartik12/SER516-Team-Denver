@@ -14,6 +14,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.example.JavaTaigaCode.models.BurndownChartDTO;
 import org.example.JavaTaigaCode.models.MilestoneDTO;
+import org.example.JavaTaigaCode.models.TaskDTO;
 import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,8 @@ public class BurndownChart {
             HttpEntity responseEntity = httpResponse.getEntity();
             if (responseEntity != null) {
                 response = EntityUtils.toString(responseEntity);
+            } else {
+                throw new RuntimeException("Response body is NULL");
             }
             JsonNode milestoneJSON = objectMapper.readTree(response);
             MilestoneDTO milestone = new MilestoneDTO();
@@ -90,17 +93,14 @@ public class BurndownChart {
         }
     }
 
-    public List<MilestoneDTO> calculatePartialRunningSum(Integer projectID) {
+    public MilestoneDTO calculatePartialRunningSum(Integer milestoneID) {
         String response = "";
         try {
-            String endpoint = TAIGA_API_ENDPOINT + "/milestones?project=" + projectID;
-            HttpClient httpClient = HttpClients.createDefault();
+            String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            // String responseJson = HTTPRequest.sendHttpRequest(request);
             HttpResponse httpResponse = httpClient.execute(request);
-            List<MilestoneDTO> milestones = new ArrayList<>();
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
                 throw new RuntimeException(httpResponse.getStatusLine().toString());
@@ -109,35 +109,85 @@ public class BurndownChart {
             if (responseEntity != null) {
                 response = EntityUtils.toString(responseEntity);
             }
-            JsonNode rootNode = objectMapper.readTree(response);
-            if (rootNode.isArray()) {
-                for (JsonNode milestoneJSON : rootNode) {
-                    MilestoneDTO milestone = new MilestoneDTO();
-                    milestone.setMilestoneID(milestoneJSON.get("id").asInt());
-                    milestone.setMilestoneName(milestoneJSON.get("name").asText());
-                    JsonNode userStories = milestoneJSON.get("user_stories");
-                    double totalSum = 0;
-                    if (userStories.isArray()) {
-                        for (JsonNode us : userStories) {
-                            // write login for partial sum
-                            // if(us.get("status_extra_info").get("name").asText().equals("Done")) {
-                            // totalSum = totalSum + us.get("total_points").asDouble();
-                            // }
-                        }
+            JsonNode milestoneJSON = objectMapper.readTree(response);
+            MilestoneDTO milestone = new MilestoneDTO();
+            milestone.setMilestoneID(milestoneJSON.get("id").asInt());
+            milestone.setMilestoneName(milestoneJSON.get("name").asText());
+            milestone.setTotalPoints(milestoneJSON.get("total_points").asDouble());
+            milestone.setStart_date(LocalDate.parse(milestoneJSON.get("estimated_start").asText(), dateFormatter));
+            milestone.setEnd_date(LocalDate.parse(milestoneJSON.get("estimated_finish").asText(), dateFormatter));
+            JsonNode userStories = milestoneJSON.get("user_stories");
+            double totalSum = milestone.getTotalPoints();
+            List<BurndownChartDTO> totalRunningSum = new ArrayList<>();
+            totalRunningSum.add(new BurndownChartDTO(
+                    LocalDate.parse(milestoneJSON.get("estimated_start").asText(), dateFormatter), totalSum));
+            Map<LocalDate, Double> pointsMap = new TreeMap<>();
+            if (userStories.isArray()) {
+                for (JsonNode us : userStories) {
+                    double storyPoints = us.get("total_points").asDouble();
+                    System.out.println("StoryID: "+us.get("id").asInt());
+                    List<TaskDTO> tasks = getUserStoryTasks(us.get("id").asInt());
+                    for(TaskDTO task:tasks) {
+                        System.out.println(task.toString());
                     }
-                    milestone.setPartialSumValue(totalSum);
-                    milestones.add(milestone);
+                    System.out.println("=========================================");
                 }
-            } else {
-                throw new RuntimeException(response);
             }
-            return milestones;
+            milestone.setTotalSumValue(totalRunningSum);
+            return milestone;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
+
+    public List<TaskDTO> getUserStoryTasks(Integer userStoryID) {
+        try{
+            String endpoint = TAIGA_API_ENDPOINT + "/tasks?user_story=" + userStoryID;
+            HttpClient httpClient = HttpClients.createDefault();
+            HttpGet request = new HttpGet(endpoint);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+            HttpResponse httpResponse = httpClient.execute(request);
+
+            int httpStatus = httpResponse.getStatusLine().getStatusCode();
+            if (httpStatus < 200 || httpStatus >= 300) {
+                throw new RuntimeException(httpResponse.getStatusLine().toString());
+            }
+
+            HttpEntity responseEntity = httpResponse.getEntity();
+            List<TaskDTO> tasks = new ArrayList<>();
+
+            if (responseEntity != null) {
+                String response = EntityUtils.toString(responseEntity);
+                JsonNode tasksJSON = objectMapper.readTree(response);
+                if(tasksJSON.isArray()) {
+                    for(JsonNode taskJSON: tasksJSON) {
+                        TaskDTO task = new TaskDTO();
+                        task.setTaskID(taskJSON.get("id").asInt());
+                        task.setTaskName(taskJSON.get("subject").asText());
+                        task.setClosed(taskJSON.get("is_closed").asBoolean());
+                        if(task.getClosed()) {
+                            LocalDateTime dateTime = LocalDateTime.parse(taskJSON.get("finished_date").asText(),
+                                    DateTimeFormatter.ISO_DATE_TIME);
+                            task.setClosedDate(dateTime.toLocalDate());
+                        }
+                        tasks.add(task);
+                    }
+                }
+                return tasks;
+            }else {
+                throw new RuntimeException("Response body is NULL");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     public Integer getBusinessValueForUserStory(Integer userStoryID) {
         try {
