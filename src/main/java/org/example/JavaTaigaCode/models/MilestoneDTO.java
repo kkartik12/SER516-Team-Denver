@@ -1,3 +1,4 @@
+
 package org.example.JavaTaigaCode.models;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ public class MilestoneDTO {
     private LocalDate start_date;
     private LocalDate end_date;
     private List<BurndownChartDTO> totalSumValue;
-    private Double partialSumValue;
+    private List<BurndownChartDTO> partialSumValue;
     private Double totalPoints;
 
     public Integer getMilestoneID() {
@@ -37,11 +38,11 @@ public class MilestoneDTO {
         this.totalSumValue = totalSumValue;
     }
 
-    public Double getPartialSumValue() {
+    public List<BurndownChartDTO> getPartialSumValue() {
         return partialSumValue;
     }
 
-    public void setPartialSumValue(Double partialSumValue) {
+    public void setPartialSumValue(List<BurndownChartDTO> partialSumValue) {
         this.partialSumValue = partialSumValue;
     }
 
@@ -73,7 +74,7 @@ public class MilestoneDTO {
     }
 
     public MilestoneDTO(Integer milestoneID, String milestoneName, LocalDate start_date, LocalDate end_date,
-            List<BurndownChartDTO> totalSumValue, Double partialSumValue, Double totalPoints) {
+            List<BurndownChartDTO> totalSumValue, List<BurndownChartDTO> partialSumValue, Double totalPoints) {
         this.milestoneID = milestoneID;
         this.milestoneName = milestoneName;
         this.start_date = start_date;

@@ -3,7 +3,12 @@ package org.example.JavaTaigaCode.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -118,22 +123,31 @@ public class BurndownChart {
             milestone.setEnd_date(LocalDate.parse(milestoneJSON.get("estimated_finish").asText(), dateFormatter));
             JsonNode userStories = milestoneJSON.get("user_stories");
             double totalSum = milestone.getTotalPoints();
-            List<BurndownChartDTO> totalRunningSum = new ArrayList<>();
-            totalRunningSum.add(new BurndownChartDTO(
+            List<BurndownChartDTO> partialRunningSum = new ArrayList<>();
+            partialRunningSum.add(new BurndownChartDTO(
                     LocalDate.parse(milestoneJSON.get("estimated_start").asText(), dateFormatter), totalSum));
-            Map<LocalDate, Double> pointsMap = new TreeMap<>();
+            //Map<LocalDate, Double> pointsMap = new TreeMap<>();
             if (userStories.isArray()) {
                 for (JsonNode us : userStories) {
+                    //story points of that user story
                     double storyPoints = us.get("total_points").asDouble();
                     System.out.println("StoryID: "+us.get("id").asInt());
                     List<TaskDTO> tasks = getUserStoryTasks(us.get("id").asInt());
+                    //len of tasks = total tasks in that story
+                    double taskStoryPoint = storyPoints / tasks.size();
+                    // if the task is closed only then store the value
+                    Collections.sort(tasks, Comparator.comparing(TaskDTO::getClosedDate));
                     for(TaskDTO task:tasks) {
+                        if(task.getClosed()==true){
+                            totalSum = totalSum -taskStoryPoint;
+                            partialRunningSum.add(new BurndownChartDTO(task.getClosedDate(), totalSum));
+                        }
                         System.out.println(task.toString());
                     }
                     System.out.println("=========================================");
                 }
             }
-            milestone.setTotalSumValue(totalRunningSum);
+            milestone.setPartialSumValue(partialRunningSum);
             return milestone;
         } catch (Exception e) {
             e.printStackTrace();
