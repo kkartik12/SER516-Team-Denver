@@ -24,8 +24,8 @@ const ProjectDetails = () => {
       try {
         const response = await fetch(`http://localhost:8080/api/projects/${projectId}`);
         if (response.ok) {
-          const data = await response.json();
-          console.log('Data', data);  
+          const data = await response.json();  
+          console.log("projectDetails: ", data)
           setProject(data);
         } else {
           throw new Error('Failed to fetch project details');
