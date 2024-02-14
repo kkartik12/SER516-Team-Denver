@@ -56,7 +56,7 @@ public class ProjectController {
         
     }
 
-    @GetMapping("/projects/{milestoneID}/businessValue")
+    @GetMapping("/burndownchart/{milestoneID}/businessValue")
     @ResponseBody
     public MilestoneDTO getTotalBusinessValue(@PathVariable("milestoneID") Integer milestoneID) {
         return burndownChart.getTotalBusinessValue(milestoneID);
