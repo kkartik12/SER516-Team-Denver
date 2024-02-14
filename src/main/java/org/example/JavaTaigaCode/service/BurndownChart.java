@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -79,8 +80,13 @@ public class BurndownChart {
                     if (us.get("is_closed").asBoolean()) {
                         LocalDateTime dateTime = LocalDateTime.parse(us.get("finish_date").asText(),
                                 DateTimeFormatter.ISO_DATE_TIME);
-                        pointsMap.put(dateTime.toLocalDate(),
-                                us.get("total_points").asDouble());
+                        if(!pointsMap.containsKey(dateTime.toLocalDate())) {
+                            pointsMap.put(dateTime.toLocalDate(),
+                                    us.get("total_points").asDouble());
+                        } else {
+                            pointsMap.put(dateTime.toLocalDate(),
+                                    pointsMap.get(dateTime.toLocalDate()) + us.get("total_points").asDouble());
+                        }
                     }
                 }
 
@@ -131,20 +137,24 @@ public class BurndownChart {
                 for (JsonNode us : userStories) {
                     //story points of that user story
                     double storyPoints = us.get("total_points").asDouble();
-                    System.out.println("StoryID: "+us.get("id").asInt());
                     List<TaskDTO> tasks = getUserStoryTasks(us.get("id").asInt());
                     //len of tasks = total tasks in that story
                     double taskStoryPoint = storyPoints / tasks.size();
                     // if the task is closed only then store the value
+                    tasks = tasks.stream().filter(task -> task.getClosedDate() != null).collect(Collectors.toList());
                     Collections.sort(tasks, Comparator.comparing(TaskDTO::getClosedDate));
                     for(TaskDTO task:tasks) {
                         if(task.getClosed()==true){
-                            totalSum = totalSum -taskStoryPoint;
-                            partialRunningSum.add(new BurndownChartDTO(task.getClosedDate(), totalSum));
+                            partialRunningSum.add(new BurndownChartDTO(task.getClosedDate(), taskStoryPoint));
                         }
-                        System.out.println(task.toString());
                     }
-                    System.out.println("=========================================");
+                    
+                }
+
+                Collections.sort(partialRunningSum, Comparator.comparing(BurndownChartDTO::getDate));
+                for(int i=1; i<partialRunningSum.size();i++) {
+                    totalSum = totalSum - partialRunningSum.get(i).getValue();
+                    partialRunningSum.get(i).setValue(totalSum);
                 }
             }
             milestone.setPartialSumValue(partialRunningSum);
@@ -290,5 +300,4 @@ public class BurndownChart {
         }
         return null;
     }
-
 }
