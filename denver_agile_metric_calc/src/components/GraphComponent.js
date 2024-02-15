@@ -13,7 +13,7 @@ const GraphComponent = ({ sx = {} , parameter}) => {
       .then(response => response.json())
       .then(data => setData(data))
   }, [parameter, projectId])
-/*   useEffect(() => {
+   useEffect(() => {
     const fetchMilestoneDetails = async () => {
       try {
         const response = await fetch(`http://localhost:8080/api/projects/${projectId}/${parameter}`);
@@ -98,9 +98,9 @@ const GraphComponent = ({ sx = {} , parameter}) => {
   
   return (
     <Paper sx={{ ...sx, ...styles.container }}>
-      {/* <Typography variant="body2" color="text.secondary">
+      { <Typography variant="body2" color="text.secondary">
         Placeholder for Burndown Chart
-      </Typography> */}
+      </Typography> }
        <canvas id="burndownChart"></canvas>
     </Paper>
   );
