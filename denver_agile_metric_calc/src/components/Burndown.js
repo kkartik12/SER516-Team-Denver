@@ -19,7 +19,7 @@ const Burndown = () => {
                 <ToggleButton key="totalRunningSum" value="totalRunningSum">
                     Total Running Sum
                 </ToggleButton>
-                <ToggleButton key="BV Running Sum" value="BV Running Sum" disabled>
+                <ToggleButton key="BV Running Sum" value="BV Running Sum">
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
