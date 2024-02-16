@@ -5,7 +5,6 @@ import GraphComponent from './GraphComponent'
 
 const Burndown = ({ milestone }) => {
     const [parameter, setParameter] = useState('')
-    console.log("Milestone Id: ", milestone)
     return (
         <Box>
             <ToggleButtonGroup
@@ -24,7 +23,7 @@ const Burndown = ({ milestone }) => {
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} />}
+            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
         </Box>
     )
 }

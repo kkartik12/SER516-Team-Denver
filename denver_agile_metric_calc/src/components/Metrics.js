@@ -8,9 +8,9 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   ListItemButton,
-} from '@mui/material';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Burndown from './Burndown';
+} from '@mui/material'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Burndown from './Burndown'
 
 const MetricsSection = ({ project }) => {
     const [selectedMetric, setSelectedMetric]  = useState('')
@@ -22,13 +22,16 @@ const MetricsSection = ({ project }) => {
           prevChecked.includes(milestone)
             ? prevChecked.filter(m => m !== milestone)
             : [...prevChecked, milestone]
-        ));
-        setSelectedMilestone(checked.pop()); 
-    };
+        ))
+        const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
+        if (milestoneId) {
+          setSelectedMilestone(milestoneId);
+        }
+    }
     const milestoneDict = project.milestones.map((name, index) => ({
         name,
         id: project.milestoneIds[index],
-      }));
+      }))
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box sx={{ flex: 1, padding: 2, overflowY: 'auto', maxHeight: '70vh', borderRight: 1, borderColor: 'divider' }}>
@@ -84,4 +87,4 @@ const MetricsSection = ({ project }) => {
     );
 };
 
-export default MetricsSection;
+export default MetricsSection
