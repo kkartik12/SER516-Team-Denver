@@ -7,20 +7,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
-import org.example.JavaTaigaCode.models.ProjectDTO;
+import org.example.JavaTaigaCode.models.TaskDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.example.JavaTaigaCode.util.HTTPRequest;
-import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.example.JavaTaigaCode.models.UserStoryDTO;
 
@@ -87,7 +82,36 @@ public class Tasks {
         return null;
     }
 
-    public static List<UserStoryDTO> calculateLeadTime(Integer milestoneId) {
+    public static List<TaskDTO> getClosedTasks(Integer milestoneId){
+        String endpoint = TAIGA_API_ENDPOINT + "/tasks?milestone=" + milestoneId;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        String responseJson = HTTPRequest.sendHttpRequest(request);
+        if(responseJson != null) {
+            try {
+                JsonNode tasks = objectMapper.readTree(responseJson);
+                List<TaskDTO> closedTasks = new ArrayList<>();
+                if(tasks.isArray()) {
+                    for(JsonNode story : tasks) {
+                        if(story.get("is_closed").booleanValue()){
+                            LocalDate createdAt = parseDate(story.get("created_date").asText());
+                            LocalDate closedAt = parseDate(story.get("finished_date").asText());
+                            TaskDTO u = new TaskDTO(createdAt, closedAt);
+                            closedTasks.add(u);
+                        }
+                    }
+                    return closedTasks;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    public static List<UserStoryDTO> calculateLeadTimeUS(Integer milestoneId) {
         List<UserStoryDTO> closedStories = getClosedStories(milestoneId);
         for (UserStoryDTO story : closedStories) {
             LocalDate createdAt = story.getCreatedDate();
@@ -98,6 +122,19 @@ public class Tasks {
             }
         }
         return closedStories;
+    }
+
+    public static List<TaskDTO> calculateLeadTimeTask(Integer milestoneId) {
+        List<TaskDTO> closedTasks = getClosedTasks(milestoneId);
+        for (TaskDTO task : closedTasks) {
+            LocalDate createdAt = task.getCreatedDate();
+            LocalDate closedAt = task.getClosedDate();
+            if (createdAt != null && closedAt != null) {
+                long leadTimeInDays = ChronoUnit.DAYS.between(createdAt, closedAt);
+                task.setLeadTime(leadTimeInDays);
+            }
+        }
+        return closedTasks;
     }
 
     private static LocalDate parseDate(String dateString) {
