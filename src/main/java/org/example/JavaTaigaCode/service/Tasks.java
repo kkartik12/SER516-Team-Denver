@@ -4,18 +4,31 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-//import org.apache.http.HttpHeaders;
-//import org.apache.http.client.methods.HttpGet;
+
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.HttpGet;
+import org.example.JavaTaigaCode.models.ProjectDTO;
+import org.example.JavaTaigaCode.util.GlobalData;
+import org.example.JavaTaigaCode.util.HTTPRequest;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.example.JavaTaigaCode.models.UserStoryDTO;
 
 public class Tasks {
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
+    private final static String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 //    public static List<JsonNode> getClosedTasks(int projectId, String authToken, String TAIGA_API_ENDPOINT) {
 //
 //        // API to get list of all tasks in a project.
@@ -46,12 +59,53 @@ public class Tasks {
 //        }
 //    }
 
-    private static LocalDateTime parseDateTime(String dateTimeString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        return LocalDateTime.parse(dateTimeString, formatter);
+    public static List<UserStoryDTO> getClosedStories(Integer milestoneId){
+        String endpoint = TAIGA_API_ENDPOINT + "/userstories?milestone=" + milestoneId;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        String responseJson = HTTPRequest.sendHttpRequest(request);
+        if(responseJson != null) {
+            try {
+                JsonNode stories = objectMapper.readTree(responseJson);
+                List<UserStoryDTO> closedStories = new ArrayList<>();
+                if(stories.isArray()) {
+                    for(JsonNode story : stories) {
+                        if(story.get("is_closed").booleanValue()){
+                            LocalDate createdAt = parseDate(story.get("created_date").asText());
+                            LocalDate closedAt = parseDate(story.get("finish_date").asText());
+                            UserStoryDTO u = new UserStoryDTO(createdAt, closedAt);
+                            closedStories.add(u);
+                        }
+                    }
+                    return closedStories;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
-    private static int[] calculateCycleTime(JsonNode historyData, LocalDateTime finishedDate) {
+    public static List<UserStoryDTO> calculateLeadTime(Integer milestoneId) {
+        List<UserStoryDTO> closedStories = getClosedStories(milestoneId);
+        for (UserStoryDTO story : closedStories) {
+            LocalDate createdAt = story.getCreatedDate();
+            LocalDate closedAt = story.getFinishDate();
+            if (createdAt != null && closedAt != null) {
+                long leadTimeInDays = ChronoUnit.DAYS.between(createdAt, closedAt);
+                story.setLeadTime(leadTimeInDays);
+            }
+        }
+        return closedStories;
+    }
+
+    private static LocalDate parseDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX"); 
+        return LocalDate.parse(dateString, formatter);
+    }
+
+/*     private static int[] calculateCycleTime(JsonNode historyData, LocalDateTime finishedDate) {
         int cycleTime = 0;
         int closedTasks = 0;
 
@@ -61,7 +115,7 @@ public class Tasks {
                 JsonNode statusDiff = valuesDiff.get("status");
                 if (statusDiff.isArray() && statusDiff.size() == 2
                         && "New".equals(statusDiff.get(0).asText()) && "In progress".equals(statusDiff.get(1).asText())) {
-                    LocalDateTime createdAt =parseDateTime(event.get("created_at").asText());
+                    LocalDate createdAt =parseDate(event.get("created_at").asText());
                     cycleTime += Duration.between(createdAt.toLocalDate().atStartOfDay(), finishedDate.toLocalDate().atStartOfDay()).toDays();
                     closedTasks++;
                 }
@@ -69,7 +123,7 @@ public class Tasks {
         }
 
         return new int[]{cycleTime, closedTasks};
-    }
+    } */
 
 //    public static List<Integer> getTaskHistory(List<JsonNode> tasks, String authToken, String TAIGA_API_ENDPOINT) {
 //        List<Integer> result = new ArrayList<>(List.of(0, 0));

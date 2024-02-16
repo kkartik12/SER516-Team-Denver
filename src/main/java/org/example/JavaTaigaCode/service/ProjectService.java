@@ -104,6 +104,8 @@ public class ProjectService {
         return null;
     }
 
+
+
     public ProjectDTO getPojectDetails(int projectID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/projects/" + projectID;

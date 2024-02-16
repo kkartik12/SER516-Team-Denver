@@ -7,9 +7,27 @@ public class UserStoryDTO {
     private Integer businessValue;
     private boolean isClosed;
     private LocalDate finishDate;
+    private LocalDate createdDate;
+    private Long leadTime;
 
     public Integer getUserStoryID() {
         return userStoryID;
+    }
+
+    public LocalDate  getCreatedDate() {
+        return createdDate;
+    }
+
+    public Long getLeadTime() {
+        return leadTime;
+    }
+    
+    public void setLeadTime(Long leadTime) {
+        this.leadTime = leadTime;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) { 
+        this.createdDate = createdDate; 
     }
 
     public void setUserStoryID(Integer userStoryID) {
@@ -40,10 +58,16 @@ public class UserStoryDTO {
         this.finishDate = finishDate;
     }
 
-    public UserStoryDTO(Integer userStoryID, Integer businessValue, boolean isClosed, LocalDate finishDate) {
+    public UserStoryDTO(LocalDate createdAt, LocalDate closedAt) {
+        this.createdDate = createdAt;
+        this.finishDate = closedAt;
+    }
+
+    public UserStoryDTO(Integer userStoryID, Integer businessValue, boolean isClosed, LocalDate finishDate, LocalDate createdDate) {
         this.userStoryID = userStoryID;
         this.businessValue = businessValue;
         this.isClosed = isClosed;
         this.finishDate = finishDate;
+        this.createdDate = createdDate;
     }
 }

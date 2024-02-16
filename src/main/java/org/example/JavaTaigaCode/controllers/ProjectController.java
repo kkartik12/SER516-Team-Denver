@@ -1,11 +1,14 @@
 package org.example.JavaTaigaCode.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
+import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.service.BurndownChart;
 import org.example.JavaTaigaCode.service.ProjectService;
+import org.example.JavaTaigaCode.service.Tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDate;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -83,4 +87,9 @@ public class ProjectController {
         return burndownChart.calculateTotalRunningSum(milestoneID);
     }
 
+    @GetMapping("/leadTime/{milestoneID}")
+    @ResponseBody
+    public List<UserStoryDTO> getLeadTime(@PathVariable("milestoneID") Integer  milestoneID) {
+        return Tasks.calculateLeadTime(milestoneID);
+    }
 }
