@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Burndown from './Burndown'
+import LeadTime from './LeadTime';
 
 const MetricsSection = ({ project }) => {
     const [selectedMetric, setSelectedMetric]  = useState('')
@@ -28,6 +29,9 @@ const MetricsSection = ({ project }) => {
           setSelectedMilestone(milestoneId);
         }
     }
+    const handleMetricChange = (event, newMetric) => {
+        setSelectedMetric(newMetric);
+      }
     const milestoneDict = project.milestones.map((name, index) => ({
         name,
         id: project.milestoneIds[index],
@@ -64,7 +68,7 @@ const MetricsSection = ({ project }) => {
             <ToggleButtonGroup
                 exclusive
                 value={selectedMetric}
-                onChange={(event, newMetric) => setSelectedMetric(newMetric)}
+                onChange={handleMetricChange}
                 aria-label="metrics-selection"
                 sx={{ mt: 2 }}
             >
@@ -78,10 +82,14 @@ const MetricsSection = ({ project }) => {
                     Lead Time
                 </ToggleButton>                
             </ToggleButtonGroup>
-            {selectedMetric === 'Burndown Chart' 
-             && selectedMilestone &&
-                <Burndown milestone = {selectedMilestone}/>
-             }
+            <React.Fragment>
+                {selectedMetric === 'Burndown Chart' && (
+                    <Burndown milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Lead Time' && (
+                    <LeadTime milestone={selectedMilestone} />
+                )}
+        </React.Fragment>
         </Box>
     </Box>
     );
