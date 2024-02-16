@@ -18,7 +18,7 @@ const LeadTime = ({ milestone }) => {
                 <ToggleButton key="US" value="US">
                     User Story
                 </ToggleButton>
-                <ToggleButton key="task" value="task">
+                <ToggleButton key="Task" value="Task">
                     Task
                 </ToggleButton>
             </ToggleButtonGroup>

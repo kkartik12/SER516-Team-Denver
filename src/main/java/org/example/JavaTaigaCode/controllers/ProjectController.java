@@ -86,13 +86,13 @@ public class ProjectController {
         return burndownChart.calculateTotalRunningSum(milestoneID);
     }
 
-    @GetMapping("/leadTimeUS/{milestoneID}")
+    @GetMapping("/leadTime/US/{milestoneID}")
     @ResponseBody
     public List<UserStoryDTO> getLeadTimeUS(@PathVariable("milestoneID") Integer  milestoneID) {
         return Tasks.calculateLeadTimeUS(milestoneID);
     }
 
-    @GetMapping("/leadTimeTask/{milestoneID}")
+    @GetMapping("/leadTime/Task/{milestoneID}")
     @ResponseBody
     public List<TaskDTO> getLeadTimeTask(@PathVariable("milestoneID") Integer  milestoneID) {
         return Tasks.calculateLeadTimeTask(milestoneID);

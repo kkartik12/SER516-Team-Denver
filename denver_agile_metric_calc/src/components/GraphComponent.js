@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import Chart from 'chart.js/auto';
 
 const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
-  const { projectId } =  useParams()
   const [milestone, setMilestone] = useState({})
   const BvchartInstance = useRef(null); // Graph instance for Business Value
   console.log("milestoneId: ", parameter)
