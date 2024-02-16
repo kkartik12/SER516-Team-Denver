@@ -11,16 +11,17 @@ const GraphComponent = ({ sx = {} , parameter}) => {
   useEffect(() => {
     fetch(`http://localhost:8080/api/burndownchart/${projectId}/${parameter}`)
       .then(response => response.json())
-      .then(data => setData(data))
+      // .then(data => setData(data))
   }, [parameter, projectId])
    useEffect(() => {
     const fetchMilestoneDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/projects/${projectId}/${parameter}`);
+        const response = await fetch(`http://localhost:8080/api/projects/${projectId}`);
         if (response.ok) {
           const data = await response.json();
-          console.log("milestone: ", data)  
-          setMilestone(data);
+          console.log("project: ", data);
+          // console.log("milestone: ", data)  
+          // setMilestone(data);
         } else {
           throw new Error('Failed to fetch project details');
         }
@@ -30,7 +31,7 @@ const GraphComponent = ({ sx = {} , parameter}) => {
     };
 
     fetchMilestoneDetails();
-    if(parameter === "BV Running Sum"){
+    if(parameter === "BusinessValue"){
     // Dummy data for the line graph
     const labels = ['29/01/2024', '08/02/2024', '12/02/2024', '14/02/2024', '20/02/2024'];
     const data = {
@@ -98,9 +99,9 @@ const GraphComponent = ({ sx = {} , parameter}) => {
   
   return (
     <Paper sx={{ ...sx, ...styles.container }}>
-      { <Typography variant="body2" color="text.secondary">
+      {/* { <Typography variant="body2" color="text.secondary">
         Placeholder for Burndown Chart
-      </Typography> }
+      </Typography> } */}
        <canvas id="burndownChart"></canvas>
     </Paper>
   );
