@@ -19,7 +19,7 @@ const Burndown = ({ milestone }) => {
                 <ToggleButton key="totalRunningSum" value="totalRunningSum">
                     Total Running Sum
                 </ToggleButton>
-                <ToggleButton key="BusinessValue" value="BusinessValue">
+                <ToggleButton key="businessValue" value="businessValue">
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
