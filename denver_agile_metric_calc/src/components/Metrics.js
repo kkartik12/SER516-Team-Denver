@@ -17,17 +17,33 @@ const MetricsSection = ({ project }) => {
     const [selectedMilestone, setSelectedMilestone] = useState('')
     const [checked, setChecked] = useState([])
 
+    // const handleToggle = (milestone) => () => {
+    //     setChecked(prevChecked => (
+    //       prevChecked.includes(milestone)
+    //         ? prevChecked.filter(m => m !== milestone)
+    //         : [...prevChecked, milestone]
+    //     ))
+    //     const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
+    //     if (milestoneId) {
+    //       setSelectedMilestone(milestoneId);
+    //     }
+    // }
+
     const handleToggle = (milestone) => () => {
-        setChecked(prevChecked => (
-          prevChecked.includes(milestone)
-            ? prevChecked.filter(m => m !== milestone)
-            : [...prevChecked, milestone]
-        ))
-        const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
-        if (milestoneId) {
-          setSelectedMilestone(milestoneId);
+        if (checked === milestone) {
+            // If the same milestone is already selected, deselect it
+            setChecked(null);
+            setSelectedMilestone('');
+        } else {
+            // If a different milestone is selected, update the state
+            setChecked(milestone);
+            const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
+            if (milestoneId) {
+              setSelectedMilestone(milestoneId);
+            }
         }
     }
+    
     const milestoneDict = project.milestones.map((name, index) => ({
         name,
         id: project.milestoneIds[index],
