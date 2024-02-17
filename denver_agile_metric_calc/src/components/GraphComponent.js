@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
+
 import Chart from 'chart.js/auto';
 
 const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
