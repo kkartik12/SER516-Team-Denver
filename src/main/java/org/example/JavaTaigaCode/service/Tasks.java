@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
 import org.example.JavaTaigaCode.models.TaskDTO;
+import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.example.JavaTaigaCode.util.HTTPRequest;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.JavaTaigaCode.models.UserStoryDTO;
-
+@Service
 public class Tasks {
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -54,7 +54,7 @@ public class Tasks {
 //        }
 //    }
 
-    public static List<UserStoryDTO> getClosedStories(Integer milestoneId){
+    public List<UserStoryDTO> getClosedStories(Integer milestoneId){
         String endpoint = TAIGA_API_ENDPOINT + "/userstories?milestone=" + milestoneId;
         HttpGet request = new HttpGet(endpoint);
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -82,7 +82,7 @@ public class Tasks {
         return null;
     }
 
-    public static List<TaskDTO> getClosedTasks(Integer milestoneId){
+    public List<TaskDTO> getClosedTasks(Integer milestoneId){
         String endpoint = TAIGA_API_ENDPOINT + "/tasks?milestone=" + milestoneId;
         HttpGet request = new HttpGet(endpoint);
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -111,7 +111,7 @@ public class Tasks {
     }
 
 
-    public static List<UserStoryDTO> calculateLeadTimeUS(Integer milestoneId) {
+    public List<UserStoryDTO> calculateLeadTimeUS(Integer milestoneId) {
         List<UserStoryDTO> closedStories = getClosedStories(milestoneId);
         for (UserStoryDTO story : closedStories) {
             LocalDate createdAt = story.getCreatedDate();
@@ -124,7 +124,7 @@ public class Tasks {
         return closedStories;
     }
 
-    public static List<TaskDTO> calculateLeadTimeTask(Integer milestoneId) {
+    public List<TaskDTO> calculateLeadTimeTask(Integer milestoneId) {
         List<TaskDTO> closedTasks = getClosedTasks(milestoneId);
         for (TaskDTO task : closedTasks) {
             LocalDate createdAt = task.getCreatedDate();
@@ -137,7 +137,7 @@ public class Tasks {
         return closedTasks;
     }
 
-    private static LocalDate parseDate(String dateString) {
+    private LocalDate parseDate(String dateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX"); 
         return LocalDate.parse(dateString, formatter);
     }
