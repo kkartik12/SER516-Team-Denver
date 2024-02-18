@@ -169,7 +169,6 @@ public class BurndownChart {
     public List<TaskDTO> getUserStoryTasks(Integer userStoryID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/tasks?user_story=" + userStoryID;
-            HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
