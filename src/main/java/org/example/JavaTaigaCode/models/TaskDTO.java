@@ -2,14 +2,25 @@ package org.example.JavaTaigaCode.models;
 
 import java.time.LocalDate;
 
+
 public class TaskDTO {
     private Integer taskID;
     private String taskName;
     private Boolean isClosed;
     private LocalDate closedDate;
+    private LocalDate createdDate;
+    private Long leadTime;
 
     public Integer getTaskID() {
         return taskID;
+    }
+
+    public LocalDate getCreatedDate() {
+        return  createdDate;
+    }
+
+    public Long getLeadTime() {
+        return  leadTime;
     }
 
     public void setTaskID(Integer taskID) {
@@ -22,6 +33,13 @@ public class TaskDTO {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+    public void setCreatedDate(LocalDate date) {
+        this.createdDate=date;
+    }
+
+    public void setLeadTime(Long duration) {
+        this.leadTime = duration;
     }
 
     public Boolean getClosed() {
@@ -41,6 +59,11 @@ public class TaskDTO {
     }
 
     public TaskDTO() {
+    }
+
+    public TaskDTO(LocalDate createdDate, LocalDate closedDate) {
+        this.createdDate = createdDate;
+        this.closedDate = closedDate;
     }
 
     public TaskDTO(Integer taskID, String taskName, Boolean isClosed, LocalDate closedDate) {
