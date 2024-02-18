@@ -12,6 +12,7 @@ import {
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Burndown from './Burndown'
 import LeadTime from './LeadTime';
+import CycleTime from './CycleTime';
 
 const MetricsSection = ({ project }) => {
     const [selectedMetric, setSelectedMetric]  = useState('')
@@ -88,6 +89,9 @@ const MetricsSection = ({ project }) => {
                 )}
                 {selectedMetric === 'Lead Time' && (
                     <LeadTime milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Cycle Time' && (
+                    <CycleTime milestone={selectedMilestone} />
                 )}
         </React.Fragment>
         </Box>
