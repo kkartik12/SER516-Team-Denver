@@ -87,9 +87,12 @@ public class TaskDTO {
     public String toString() {
         return "TaskDTO{" +
                 "taskID=" + taskID +
-                ", taskName='" + taskName +
+                ", taskName='" + taskName + '\'' +
                 ", isClosed=" + isClosed +
                 ", closedDate=" + closedDate +
+                ", createdDate=" + createdDate +
+                ", leadTime=" + leadTime +
+                ", cycleTime=" + cycleTime +
                 '}';
     }
 }

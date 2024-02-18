@@ -1,5 +1,6 @@
 package org.example.JavaTaigaCode.controllers;
 
+import org.example.JavaTaigaCode.models.TaskDTO;
 import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.service.CycleTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ public class CycleTimeController {
     @ResponseBody
     public List<UserStoryDTO> getUSCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
         return cycleTimeService.getUSCycleTime(milestoneID);
+    }
+
+    @GetMapping("/cycleTime/task/{milestoneID}")
+    @ResponseBody
+    public List<TaskDTO> getTaskCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
+        return cycleTimeService.getTaskCycleTime(milestoneID);
     }
 
 }
