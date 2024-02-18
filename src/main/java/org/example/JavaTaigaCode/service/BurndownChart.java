@@ -80,7 +80,7 @@ public class BurndownChart {
                     if (us.get("is_closed").asBoolean()) {
                         LocalDateTime dateTime = LocalDateTime.parse(us.get("finish_date").asText(),
                                 DateTimeFormatter.ISO_DATE_TIME);
-                        if(!pointsMap.containsKey(dateTime.toLocalDate())) {
+                        if (!pointsMap.containsKey(dateTime.toLocalDate())) {
                             pointsMap.put(dateTime.toLocalDate(),
                                     us.get("total_points").asDouble());
                         } else {
@@ -132,27 +132,27 @@ public class BurndownChart {
             List<BurndownChartDTO> partialRunningSum = new ArrayList<>();
             partialRunningSum.add(new BurndownChartDTO(
                     LocalDate.parse(milestoneJSON.get("estimated_start").asText(), dateFormatter), totalSum));
-            //Map<LocalDate, Double> pointsMap = new TreeMap<>();
+            // Map<LocalDate, Double> pointsMap = new TreeMap<>();
             if (userStories.isArray()) {
                 for (JsonNode us : userStories) {
-                    //story points of that user story
+                    // story points of that user story
                     double storyPoints = us.get("total_points").asDouble();
                     List<TaskDTO> tasks = getUserStoryTasks(us.get("id").asInt());
-                    //len of tasks = total tasks in that story
+                    // len of tasks = total tasks in that story
                     double taskStoryPoint = storyPoints / tasks.size();
                     // if the task is closed only then store the value
                     tasks = tasks.stream().filter(task -> task.getClosedDate() != null).collect(Collectors.toList());
                     Collections.sort(tasks, Comparator.comparing(TaskDTO::getClosedDate));
-                    for(TaskDTO task:tasks) {
-                        if(task.getClosed()==true){
+                    for (TaskDTO task : tasks) {
+                        if (task.getClosed() == true) {
                             partialRunningSum.add(new BurndownChartDTO(task.getClosedDate(), taskStoryPoint));
                         }
                     }
-                    
+
                 }
 
                 Collections.sort(partialRunningSum, Comparator.comparing(BurndownChartDTO::getDate));
-                for(int i=1; i<partialRunningSum.size();i++) {
+                for (int i = 1; i < partialRunningSum.size(); i++) {
                     totalSum = totalSum - partialRunningSum.get(i).getValue();
                     partialRunningSum.get(i).setValue(totalSum);
                 }
@@ -167,7 +167,7 @@ public class BurndownChart {
     }
 
     public List<TaskDTO> getUserStoryTasks(Integer userStoryID) {
-        try{
+        try {
             String endpoint = TAIGA_API_ENDPOINT + "/tasks?user_story=" + userStoryID;
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(endpoint);
@@ -187,13 +187,13 @@ public class BurndownChart {
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 JsonNode tasksJSON = objectMapper.readTree(response);
-                if(tasksJSON.isArray()) {
-                    for(JsonNode taskJSON: tasksJSON) {
+                if (tasksJSON.isArray()) {
+                    for (JsonNode taskJSON : tasksJSON) {
                         TaskDTO task = new TaskDTO();
                         task.setTaskID(taskJSON.get("id").asInt());
                         task.setTaskName(taskJSON.get("subject").asText());
                         task.setClosed(taskJSON.get("is_closed").asBoolean());
-                        if(task.getClosed()) {
+                        if (task.getClosed()) {
                             LocalDateTime dateTime = LocalDateTime.parse(taskJSON.get("finished_date").asText(),
                                     DateTimeFormatter.ISO_DATE_TIME);
                             task.setClosedDate(dateTime.toLocalDate());
@@ -202,34 +202,27 @@ public class BurndownChart {
                     }
                 }
                 return tasks;
-            }else {
+            } else {
                 throw new RuntimeException("Response body is NULL");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-
-
     public Integer getBusinessValueForUserStory(Integer userStoryID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/userstories/custom-attributes-values/" + userStoryID;
-            HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-
             HttpResponse httpResponse = httpClient.execute(request);
-
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
                 throw new RuntimeException(httpResponse.getStatusLine().toString());
             }
-
             HttpEntity responseEntity = httpResponse.getEntity();
-
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 // TODO - Fix. Currently assumes the only custom attribute is the business value
@@ -237,27 +230,24 @@ public class BurndownChart {
                 String bvKey = node.fieldNames().next();
                 return node.get(bvKey).asInt();
             }
+            return 0;
         } catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
-        return 0;
     }
 
     public MilestoneDTO getTotalBusinessValue(Integer milestoneID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
-            HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-
             HttpResponse httpResponse = httpClient.execute(request);
-
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
                 throw new RuntimeException(httpResponse.getStatusLine().toString());
             }
-
             HttpEntity responseEntity = httpResponse.getEntity();
 
             if (responseEntity != null) {
@@ -266,7 +256,7 @@ public class BurndownChart {
                 JsonNode userStoriesNode = node.get("user_stories");
                 LocalDate estimatedStart = LocalDate.parse(node.get("estimated_start").asText(), dateFormatter);
                 LocalDate estimatedFinish = LocalDate.parse(node.get("estimated_finish").asText(), dateFormatter);
-                
+
                 List<UserStoryDTO> userStories = new ArrayList<>();
                 for (JsonNode userStory : userStoriesNode) {
                     Integer userStoryId = userStory.get("id").asInt();
@@ -293,11 +283,13 @@ public class BurndownChart {
                         estimatedFinish,
                         totalSumValue, null, totalSumValue.get(totalSumValue.size() - 1).getValue());
                 return milestone;
+            } else {
+                throw new RuntimeException("Response body is null");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }

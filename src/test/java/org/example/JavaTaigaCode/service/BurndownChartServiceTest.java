@@ -1,6 +1,5 @@
 package org.example.JavaTaigaCode.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -10,6 +9,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicStatusLine;
 import org.example.JavaTaigaCode.models.BurndownChartDTO;
 import org.example.JavaTaigaCode.models.MilestoneDTO;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +24,7 @@ import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,12 +41,13 @@ public class BurndownChartServiceTest {
                 + "\"user_stories\":[{\"is_closed\":true,\"finish_date\":\"2024-01-03T12:00:00Z\",\"total_points\":2.0},"
                 + "{\"is_closed\":true,\"finish_date\":\"2024-01-05T12:00:00Z\",\"total_points\":3.0},"
                 + "{\"is_closed\":true,\"finish_date\":\"2024-01-08T12:00:00Z\",\"total_points\":1.0}]}";
-        ObjectMapper objectMapper = new ObjectMapper();
+
         HttpClient httpClient = mock(HttpClient.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         HttpEntity httpEntity = new StringEntity(jsonResponse);
         when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpURLConnection.HTTP_OK, "OK"));
+        when(httpResponse.getStatusLine())
+                .thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpURLConnection.HTTP_OK, "OK"));
         when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
         BurndownChart burndownChart = new BurndownChart();
         burndownChart.httpClient = httpClient;
@@ -68,4 +70,62 @@ public class BurndownChartServiceTest {
         expectedPointsMap.put(LocalDate.parse("2024-01-05"), 3.0);
         expectedPointsMap.put(LocalDate.parse("2024-01-08"), 1.0);
     }
+
+    @Test
+    @DisplayName("Should return the business value for a user story successfully")
+    public void testGetBusinessValueForUserStory_Successful() throws Exception {
+        Integer userStoryId = 5468133;
+        String jsonResponse = "{\"attributes_values\": {\"40211\": \"2\"}, \"version\": 2, \"user_story\": 5468133}";
+
+        HttpClient httpClient = mock(HttpClient.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        HttpEntity httpEntity = new StringEntity(jsonResponse);
+
+        when(httpResponse.getEntity()).thenReturn(httpEntity);
+        when(httpResponse.getStatusLine())
+                .thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpURLConnection.HTTP_OK, "OK"));
+        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
+
+        BurndownChart burndownChart = new BurndownChart();
+        burndownChart.httpClient = httpClient;
+
+        Integer businessValue = burndownChart.getBusinessValueForUserStory(userStoryId);
+
+        assertNotNull(businessValue);
+        assertEquals(2, businessValue);
+    }
+
+    @Test
+    @DisplayName("Should the total running sum of business value for a milestone successfully")
+    public void testGetTotalBusinessValue_Successful() throws Exception {
+        Integer milestoneID = 376611;
+        String jsonResponse = "{\"project\":1521717,\"project_extra_info\":{\"name\":\"SER516-Team-Denver\",\"slug\":\"ser516asu-ser516-team-denver\",\"logo_small_url\":null,\"id\":1521717},\"id\":376611,\"name\":\"Sprint1\",\"slug\":\"sprint-5-3543\",\"owner\":501364,\"estimated_start\":\"2024-01-29\",\"estimated_finish\":\"2024-02-18\",\"created_date\":\"2024-01-29T21:19:27.772Z\",\"modified_date\":\"2024-02-14T02:22:55.088Z\",\"closed\":false,\"disponibility\":0,\"order\":1,\"user_stories\":[{\"id\":5468109,\"finish_date\":\"2024-02-08T23:44:27.608Z\",\"is_closed\":true},{\"id\":5468111,\"finish_date\":\"2024-02-08T23:44:27.608Z\",\"is_closed\":true},{\"id\":5468122,\"finish_date\":\"2024-02-08T23:44:27.608Z\",\"is_closed\":true},{\"id\":5468133,\"finish_date\":\"2024-02-08T23:44:27.608Z\",\"is_closed\":true}],\"total_points\":72,\"closed_points\":35}";
+
+        HttpClient httpClient = mock(HttpClient.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        HttpEntity httpEntity = new StringEntity(jsonResponse);
+        BurndownChart burndownChartMock = mock(BurndownChart.class);
+        when(burndownChartMock.getBusinessValueForUserStory(anyInt())).thenReturn(4);
+
+        when(httpResponse.getEntity()).thenReturn(httpEntity);
+        when(httpResponse.getStatusLine())
+                .thenReturn(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpURLConnection.HTTP_OK, "OK"));
+        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
+
+        BurndownChart burndownChart = new BurndownChart();
+        burndownChart.httpClient = httpClient;
+
+        MilestoneDTO milestone = burndownChart.getTotalBusinessValue(milestoneID);
+
+        assertNotNull(milestone);
+        List<BurndownChartDTO> totalSumValue = milestone.getTotalSumValue();
+        assertNotNull(totalSumValue);
+        assertEquals(4, totalSumValue.size());
+        assertEquals("Sprint1", milestone.getMilestoneName());
+        assertEquals(null, milestone.getPartialSumValue());
+        assertEquals(LocalDate.parse("2024-01-29"), milestone.getStart_date());
+        assertEquals(LocalDate.parse("2024-02-18"), milestone.getEnd_date());
+        assertEquals(0, milestone.getTotalPoints());
+    }
+
 }
