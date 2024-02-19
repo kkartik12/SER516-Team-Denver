@@ -1,30 +1,31 @@
 import React, {useState} from 'react'
 import { ToggleButton,
 ToggleButtonGroup, Box } from '@mui/material'
-import GraphComponent from './GraphComponent'
+import GraphPlaceholder from './GraphComponent'
 
-const Burndown = ({ milestone }) => {
-    const [parameter, setParameter] = useState('')
+const Burndown = () => {
+    const [paramter, setParameter] = useState('')
     return (
         <Box>
             <ToggleButtonGroup
                 exclusive
                 sx={{ mt: 2 }}
-                value={parameter}
+                value={paramter}
                 onChange={(event, newParameter) => setParameter(newParameter)}
                 >
-                <ToggleButton key="partialRunningSum" value="partialRunningSum">
+                <ToggleButton key="Partial Running Sum" value="Partial Running Sum">
                     Partial Running Sum
                 </ToggleButton>
-                <ToggleButton key="totalRunningSum" value="totalRunningSum">
+                <ToggleButton key="Total Running Sum" value="Total Running Sum">
                     Total Running Sum
                 </ToggleButton>
-                <ToggleButton key="businessValue" value="businessValue">
+                <ToggleButton key="BV Running Sum" value="BV Running Sum">
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
+            <GraphPlaceholder sx = {{marginY: 2}}/>
         </Box>
+        
     )
 }
 

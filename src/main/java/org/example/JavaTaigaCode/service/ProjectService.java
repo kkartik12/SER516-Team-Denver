@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Scanner;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
@@ -20,9 +20,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class ProjectService {
+    private static final Scanner scanner = new Scanner(System.in);
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    // private static String promptUser(String prompt) {
+    // System.out.print(prompt);
+    // return scanner.nextLine();
+    // }
 
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
@@ -104,8 +109,6 @@ public class ProjectService {
         return null;
     }
 
-
-
     public ProjectDTO getPojectDetails(int projectID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/projects/" + projectID;
@@ -137,13 +140,10 @@ public class ProjectService {
                 JsonNode milestonesJSON = projectJSON.get("milestones");
                 if (milestonesJSON.isArray()) {
                     List<String> milestones = new ArrayList<>();
-                    List<String> milestoneIds = new ArrayList<>();
                     for (JsonNode milestone : milestonesJSON) {
                         milestones.add(milestone.get("name").asText());
-                        milestoneIds.add(milestone.get("id").asText());
                     }
                     project.setMilestones(milestones);
-                    project.setMilestoneIds(milestoneIds);
                 }
 
                 JsonNode customAttr = projectJSON.get("userstory_custom_attributes");

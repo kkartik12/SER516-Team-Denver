@@ -1,6 +1,7 @@
 // ProjectDetails.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import '../styles/ProjectDetails.css'
 import { 
   CircularProgress, 
   ListItem,
@@ -8,25 +9,23 @@ import {
   Avatar,
   ListItemText,
   Stack,
-  Divider,
-  Box } from '@mui/material';
+  Divider } from '@mui/material';
 import MetricsSection from '../components/Metrics';
 import PersonIcon from '@mui/icons-material/Person';
-import Header from '../components/Header';
+
 
 const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [project, setProject] = useState(null);
   const { projectId } = useParams();
 
-  const apiURL = `http://localhost:8080/api/projects/${projectId}`
-
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const response = await fetch(apiURL);
+        const response = await fetch(`http://localhost:8080/api/projects/${projectId}`);
         if (response.ok) {
-          const data = await response.json();  
+          const data = await response.json();
+          console.log('Data', data);  
           setProject(data);
         } else {
           throw new Error('Failed to fetch project details');
@@ -51,10 +50,25 @@ const ProjectDetails = () => {
   }
 
   return (
-    <Box>
-      <Header title = {project.projectName}/>
-        <Box sx = {{ml: 2}}>
-          <h2>Members:</h2>          
+    <div className="app">
+      <header>
+        <div className="title-container">
+          <h1 className='project-title'>{project.projectName}</h1>
+          <p className='project-subtitle'>
+            {project.description}
+          </p>
+          <p className='project-subtitle'>
+            Created At: {project.createdDate}
+          </p>
+          <p className='project-subtitle'>
+            Owner: {project.owner}
+          </p>
+        </div>
+      </header>
+      <main>
+        <div className="content-container">
+          <div className="content">
+          <h4>Members:</h4>          
             <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
               {project.members.map((member) => (
                 <ListItem key={member}>
@@ -70,8 +84,10 @@ const ProjectDetails = () => {
             <h2 style={{marginBottom: '2em'}}>Metrics:</h2>
             <Divider />
             <MetricsSection project={project}/>
-        </Box>
-    </Box>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
 
