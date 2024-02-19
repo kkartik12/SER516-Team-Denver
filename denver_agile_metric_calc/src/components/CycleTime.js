@@ -30,3 +30,4 @@ const CycleTime = ({ milestone }) => {
 }
 
 export default CycleTime
+
