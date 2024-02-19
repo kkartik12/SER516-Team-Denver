@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
 import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Checkbox,
-  ToggleButton,
-  ToggleButtonGroup,
-  ListItemButton,
-} from '@mui/material'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import Burndown from './Burndown'
+    Box,
+    Checkbox,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    ToggleButton,
+    ToggleButtonGroup,
+} from '@mui/material';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import React, { useState } from 'react';
+import Burndown from './Burndown';
+import CycleTime from './CycleTime';
 import LeadTime from './LeadTime';
 
 const MetricsSection = ({ project }) => {
@@ -80,11 +81,14 @@ const MetricsSection = ({ project }) => {
                 </ToggleButton>
                 <ToggleButton key="Lead Time" value="Lead Time">
                     Lead Time
-                </ToggleButton>                
+                </ToggleButton>
             </ToggleButtonGroup>
             <React.Fragment>
                 {selectedMetric === 'Burndown Chart' && (
                     <Burndown milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Cycle Time' && (
+                    <CycleTime milestone={selectedMilestone} />
                 )}
                 {selectedMetric === 'Lead Time' && (
                     <LeadTime milestone={selectedMilestone} />
