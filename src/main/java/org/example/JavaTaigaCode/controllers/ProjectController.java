@@ -1,8 +1,6 @@
 package org.example.JavaTaigaCode.controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
@@ -57,6 +55,12 @@ public class ProjectController {
         return burndownChart.getBusinessValueForUserStory(userStoryID);
         
     }
+
+    @GetMapping("/burndownchart/{milestoneID}/businessValue")
+    @ResponseBody
+    public MilestoneDTO getTotalBusinessValue(@PathVariable("milestoneID") Integer milestoneID) {
+        return burndownChart.getTotalBusinessValue(milestoneID);
+    }
     
     // @GetMapping("/projects/{projectID}/partialRunningSum")
     // @ResponseBody
@@ -67,16 +71,16 @@ public class ProjectController {
     //     return prs;
     // }
 
-    @GetMapping("/projects/{projectID}/patialRunningSum")
+    @GetMapping("/burndownchart/{milestoneID}/partialRunningSum")
     @ResponseBody
-    public List<MilestoneDTO> getPartialRunningSum(@PathVariable("projectID") Integer projectID) {
-        return burndownChart.calculatePartialRunningSum(projectID);
+    public MilestoneDTO getPartialRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
+        return burndownChart.calculatePartialRunningSum(milestoneID);
     }
     
-    @GetMapping("/projects/{projectID}/totalRunningSum")
+    @GetMapping("/burndownchart/{milestoneID}/totalRunningSum")
     @ResponseBody
-    public List<MilestoneDTO> getTotalRunningSum(@PathVariable("projectID") Integer projectID) {
-        return burndownChart.calculateTotalRunningSum(projectID);
+    public MilestoneDTO getTotalRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
+        return burndownChart.calculateTotalRunningSum(milestoneID);
     }
 
 }
