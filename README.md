@@ -35,3 +35,6 @@ Open another terminal
    cd denver_agile_metric_calc
    npm start
    ```
+
+IMPORTANT NOTE: 
+Some metrics like Partial running sum and cycle time take some time to load, so please wait for 10-15 seconds for those metrics to be displayed properly.
