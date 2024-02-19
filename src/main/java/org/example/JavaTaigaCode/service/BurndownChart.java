@@ -263,11 +263,10 @@ public class BurndownChart {
                     Boolean isClosed = userStory.get("is_closed").asBoolean();
 
                     LocalDate finishDate = null;
-                    LocalDate createdAt = null;
                     if (isClosed) {
                         finishDate = LocalDateTime.parse(dateText, DateTimeFormatter.ISO_DATE_TIME).toLocalDate();
                         userStories.add(new UserStoryDTO(userStoryId, getBusinessValueForUserStory(userStoryId),
-                                isClosed, finishDate, createdAt));
+                                isClosed, finishDate));
                     }
                 }
                 Collections.sort(userStories, Comparator.comparing(UserStoryDTO::getFinishDate));
