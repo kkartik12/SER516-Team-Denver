@@ -12,7 +12,6 @@ public class ProjectDTO {
     String owner;
     List<String> members;
     List<String> milestones;
-    List<String> milestoneIds;
     Double businessValue = 0.0;
     Double partialRunningSum = 0.0;
     Double totalRunningSum = 0.0;
@@ -36,10 +35,6 @@ public class ProjectDTO {
 
     public String getDescription() {
         return description;
-    }
-
-    public List<String> getMilestoneIds() {
-        return  milestoneIds;
     }
 
     public void setProjectID(Integer projectID) {
@@ -118,10 +113,6 @@ public class ProjectDTO {
         this.bvCustomAttributeID = bvCustomAttributeID;
     }
 
-    public void setMilestoneIds(List<String> milestoneIds){
-        this.milestoneIds = milestoneIds;
-    }
-
     public ProjectDTO() {
     }
 
@@ -133,7 +124,7 @@ public class ProjectDTO {
     }
 
     public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description,
-            String owner, List<String> members, List<String> milestones, List<String> milestoneIds) {
+            String owner, List<String> members, List<String> milestones) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.slug = slug;
@@ -142,7 +133,6 @@ public class ProjectDTO {
         this.owner = owner;
         this.members = members;
         this.milestones = milestones;
-        this.milestoneIds = milestoneIds;
     }
 
     @Override

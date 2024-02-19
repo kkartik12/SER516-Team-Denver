@@ -1,18 +1,10 @@
-
 package org.example.JavaTaigaCode.models;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class MilestoneDTO {
     private Integer milestoneID;
     private String milestoneName;
-
-    private LocalDate start_date;
-    private LocalDate end_date;
-    private List<BurndownChartDTO> totalSumValue;
-    private List<BurndownChartDTO> partialSumValue;
-    private Double totalPoints;
+    private Double totalSumValue;
+    private Double partialSumValue;
 
     public Integer getMilestoneID() {
         return milestoneID;
@@ -30,57 +22,28 @@ public class MilestoneDTO {
         this.milestoneName = milestoneName;
     }
 
-    public List<BurndownChartDTO> getTotalSumValue() {
+    public Double getTotalSumValue() {
         return totalSumValue;
     }
 
-    public void setTotalSumValue(List<BurndownChartDTO> totalSumValue) {
+    public void setTotalSumValue(Double totalSumValue) {
         this.totalSumValue = totalSumValue;
     }
 
-    public List<BurndownChartDTO> getPartialSumValue() {
+    public Double getPartialSumValue() {
         return partialSumValue;
     }
 
-    public void setPartialSumValue(List<BurndownChartDTO> partialSumValue) {
+    public void setPartialSumValue(Double partialSumValue) {
         this.partialSumValue = partialSumValue;
-    }
-
-    public Double getTotalPoints() {
-        return totalPoints;
-    }
-
-    public void setTotalPoints(Double totalPoints) {
-        this.totalPoints = totalPoints;
-    }
-
-    public LocalDate getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(LocalDate start_date) {
-        this.start_date = start_date;
-    }
-
-    public LocalDate getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(LocalDate end_date) {
-        this.end_date = end_date;
     }
 
     public MilestoneDTO() {
     }
 
-    public MilestoneDTO(Integer milestoneID, String milestoneName, LocalDate start_date, LocalDate end_date,
-            List<BurndownChartDTO> totalSumValue, List<BurndownChartDTO> partialSumValue, Double totalPoints) {
+    public MilestoneDTO(Integer milestoneID, String milestoneName, Double totalSumValue) {
         this.milestoneID = milestoneID;
         this.milestoneName = milestoneName;
-        this.start_date = start_date;
-        this.end_date = end_date;
         this.totalSumValue = totalSumValue;
-        this.partialSumValue = partialSumValue;
-        this.totalPoints = totalPoints;
     }
 }
