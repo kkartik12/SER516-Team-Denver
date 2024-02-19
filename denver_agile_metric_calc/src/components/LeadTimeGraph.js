@@ -40,10 +40,6 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
     fetchMilestoneDetails();
   }, [parameter, milestone]);
 
- /*  const leadTimeData = milestone?.map((item) => ({ 
-    closedDate: item.finishDate,
-    leadTime: item.leadTime, 
-  })); */
   const leadTimeData = milestone?.map((item) => {
 
     let closedDate;
@@ -82,8 +78,6 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
     });
   }
   
-
- 
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
         <Box sx={{ display: 'flex' }}>

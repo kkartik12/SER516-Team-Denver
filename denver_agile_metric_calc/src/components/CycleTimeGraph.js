@@ -36,7 +36,7 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
     fetchMilestoneDetails();
   }, [parameter, milestone]);
 
-  const cycleTimeData = milestone?.map((item) => ({
+  /* const cycleTimeData = milestone?.map((item) => ({
     closedDate: moment(item.finishDate).format('DD/MM'),
     cycleTime: item.cycleTime,
   }));
@@ -51,10 +51,45 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
       }
       groupedData[date].push(item.cycleTime);
     });
+  } */
+  const cycleTimeData = milestone?.map((item) => {
+
+    let closedDate;
+  
+    if (parameter === 'US') {
+      closedDate = item.finishDate; 
+    } else if (parameter === 'Task') {
+      closedDate = item.closedDate;
+    }
+  
+    return {
+      closedDate,
+      cycleTime: item.cycleTime
+    };
+  
+  }); 
+  if(cycleTimeData) {
+    cycleTimeData.sort((a, b) => {
+      return new Date(a.closedDate) - new Date(b.closedDate); 
+    })
+  }
+  const formattedData = cycleTimeData?.map(item => ({
+    ...item,
+    closedDate: moment(item.closedDate).format('DD/MM')  
+  }));
+  console.log(formattedData)
+  const groupedData = {};
+  
+  if(formattedData) {
+    formattedData.forEach(item => {
+      const date = item.closedDate;
+      if(!groupedData[date]) {
+        groupedData[date] = [];
+      }
+      groupedData[date].push(item.cycleTime); 
+    });
   }
 
-
- 
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
         <Box sx={{ display: 'flex' }}>
@@ -78,7 +113,7 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
         </YAxis>
           <Tooltip cursor={{ strokeDasharray: '3 3' }}/>
           <Scatter
-            data={cycleTimeData}
+            data={formattedData}
             fill="#8884d8"
           />
 
