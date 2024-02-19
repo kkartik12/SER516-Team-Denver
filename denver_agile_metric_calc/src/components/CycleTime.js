@@ -4,6 +4,7 @@ import {
   ToggleButtonGroup
 } from '@mui/material'
 import React, { useState } from 'react'
+import CycleTimeGraph from './CycleTimeGraph'
 
 const CycleTime = ({ milestone }) => {
   const [parameter, setParameter] = useState('')
@@ -23,6 +24,7 @@ const CycleTime = ({ milestone }) => {
                   Task
               </ToggleButton>
           </ToggleButtonGroup>
+          { parameter && <CycleTimeGraph  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
       </Box>
   )
 }
