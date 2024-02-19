@@ -19,7 +19,6 @@ const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
           throw new Error(`API Request Failed with Status ${response.status}: ${errorMessage}`)
         }
         const data = await response.json()
-        console.log("Milestone: ", data)
         setMilestone(data)
         if(parameter === "totalRunningSum"){
           totalRunningSumGraph(data, chartInstance)
@@ -34,7 +33,6 @@ const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
 
   useEffect(() => {
   if(parameter === "businessValue" && milestone.totalSumValue){
-    console.log(milestone)
     const uniqueDatesMap = new Map();
     milestone.totalSumValue.forEach(entry => {
       const currentValue = uniqueDatesMap.get(entry.date);
@@ -91,7 +89,64 @@ const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
     }
   }
   else if(parameter === "totalRunningSum"){
-    console.log("Graph for Total running sum");
+    console.log("Graph for Total running sum")
+    const uniqueDatesMap = new Map();
+    if(milestone) {
+      milestone.totalSumValue.forEach(entry => {
+        const currentValue = uniqueDatesMap.get(entry.date);
+        if (currentValue === undefined || entry.value < currentValue.value) {
+          uniqueDatesMap.set(entry.date, entry);
+        }
+      });
+    }
+    // Extract labels (dates) and values from the map
+    const labels = Array.from(uniqueDatesMap.keys());
+    const values = Array.from(uniqueDatesMap.values()).map(entry => entry.value);
+
+    // Render the chart
+    const prsCtx = document.getElementById('burndownChart');
+    if (prsCtx) {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+
+      chartInstance.current = new Chart(prsCtx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Total Running Sum Chart',
+            data: values,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            fill: false
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 5,
+              },
+              title: {
+                display: true,
+                text: 'Dates'
+              }
+            },
+            y: {
+              min: 0,
+              title: {
+                display: true,
+                text: 'Total Running Sum'
+              }
+            }
+          }
+        }
+      });
+    } else {
+      console.error('Total Running Sum Chart canvas element not found');
+    }
   }
   else if(parameter === "partialRunningSum" && milestone.partialSumValue){
     // Filter and keep only the entry with the lowest value for each date
