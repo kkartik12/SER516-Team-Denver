@@ -1,10 +1,10 @@
-import { Paper } from '@mui/material';
+import React, { useEffect, useState, useRef } from 'react';
+import { Box, Paper, Typography } from '@mui/material';
 import Chart from 'chart.js/auto';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
-  const { projectId } =  useParams()
   const [milestone, setMilestone] = useState({})
   const chartInstance = useRef(null); // Graph instance for all burndown charts
   console.log("milestoneId: ", parameter)
