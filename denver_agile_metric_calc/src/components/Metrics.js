@@ -1,41 +1,77 @@
-import React, { useState } from 'react';
 import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Checkbox,
-  ToggleButton,
-  ToggleButtonGroup,
-  ListItemButton,
+    Box,
+    Checkbox,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    ToggleButton,
+    ToggleButtonGroup,
 } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import React, { useState } from 'react';
 import Burndown from './Burndown';
+import CycleTime from './CycleTime';
+import LeadTime from './LeadTime';
 
 const MetricsSection = ({ project }) => {
-    const [selectedMetric, setSelectedMetric]  = useState('');
+    const [selectedMetric, setSelectedMetric]  = useState('')
+    const [selectedMilestone, setSelectedMilestone] = useState('')
+    const [checked, setChecked] = useState([])
+
+    const handleToggle = (milestone) => () => {
+        setChecked(prevChecked => (
+          prevChecked.includes(milestone)
+            ? prevChecked.filter(m => m !== milestone)
+            : [...prevChecked, milestone]
+        ))
+        setChecked([])
+        setChecked(prev => [...prev, milestone])
+        const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
+        if (milestoneId) {
+          setSelectedMilestone(milestoneId);
+        }
+    }
+    const handleMetricChange = (event, newMetric) => {
+        setSelectedMetric(newMetric);
+      }
+    const milestoneDict = project.milestones.map((name, index) => ({
+        name,
+        id: project.milestoneIds[index],
+      }))
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box sx={{ flex: 1, padding: 2, overflowY: 'auto', maxHeight: '70vh', borderRight: 1, borderColor: 'divider' }}>
             <h4>Milestones:</h4>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                    {project.milestones.map((milestone) => (
-                        <ListItem key={milestone}>
-                            <ListItemButton>
-                            <ListItemIcon>
-                                <Checkbox edge="start"/>
-                            </ListItemIcon>
-                            <ListItemText primary={milestone} />
-                            </ListItemButton>
-                        </ListItem> 
-                    ))}
-                </List>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                {project.milestones.map((milestone) => {
+                    const labelId = `checkbox-list-label-${milestone}`;
+                    return (
+                    <ListItem
+                        key={milestone}
+                        disablePadding
+                    >
+                        <ListItemButton onClick={handleToggle(milestone)} dense>
+                        <ListItemIcon>
+                            <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(milestone) !== -1}
+                            tabIndex={-1}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                        </ListItemIcon>
+                            <ListItemText id={labelId} primary={milestone} />
+                        </ListItemButton>
+                    </ListItem>
+                    );
+                })}
+            </List>
         </Box>
         <Box sx={{ flex: 3, padding: 2, display: 'flex', flexDirection: 'column' }}>
             <ToggleButtonGroup
                 exclusive
                 value={selectedMetric}
-                onChange={(event, newMetric) => setSelectedMetric(newMetric)}
+                onChange={handleMetricChange}
                 aria-label="metrics-selection"
                 sx={{ mt: 2 }}
             >
@@ -47,12 +83,22 @@ const MetricsSection = ({ project }) => {
                 </ToggleButton>
                 <ToggleButton key="Lead Time" value="Lead Time">
                     Lead Time
-                </ToggleButton>                
+                </ToggleButton>
             </ToggleButtonGroup>
-            {selectedMetric === 'Burndown Chart' && <Burndown />}
+            <React.Fragment>
+                {selectedMetric === 'Burndown Chart' && (
+                    <Burndown milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Cycle Time' && (
+                    <CycleTime milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Lead Time' && (
+                    <LeadTime milestone={selectedMilestone} />
+                )}
+        </React.Fragment>
         </Box>
     </Box>
     );
 };
 
-export default MetricsSection;
+export default MetricsSection
