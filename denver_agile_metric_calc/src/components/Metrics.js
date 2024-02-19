@@ -25,6 +25,8 @@ const MetricsSection = ({ project }) => {
             ? prevChecked.filter(m => m !== milestone)
             : [...prevChecked, milestone]
         ))
+        setChecked([])
+        setChecked(prev => [...prev, milestone])
         const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
         if (milestoneId) {
           setSelectedMilestone(milestoneId);
