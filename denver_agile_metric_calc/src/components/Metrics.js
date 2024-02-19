@@ -12,24 +12,11 @@ import {
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Burndown from './Burndown'
 import LeadTime from './LeadTime';
-import CycleTime from './CycleTime';
 
 const MetricsSection = ({ project }) => {
     const [selectedMetric, setSelectedMetric]  = useState('')
     const [selectedMilestone, setSelectedMilestone] = useState('')
     const [checked, setChecked] = useState([])
-
-    // const handleToggle = (milestone) => () => {
-    //     setChecked(prevChecked => (
-    //       prevChecked.includes(milestone)
-    //         ? prevChecked.filter(m => m !== milestone)
-    //         : [...prevChecked, milestone]
-    //     ))
-    //     const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
-    //     if (milestoneId) {
-    //       setSelectedMilestone(milestoneId);
-    //     }
-    // }
 
     const handleToggle = (milestone) => () => {
         if (checked === milestone) {
@@ -45,11 +32,9 @@ const MetricsSection = ({ project }) => {
             }
         }
     }
-
     const handleMetricChange = (event, newMetric) => {
         setSelectedMetric(newMetric);
       }
-    
     const milestoneDict = project.milestones.map((name, index) => ({
         name,
         id: project.milestoneIds[index],
@@ -106,9 +91,6 @@ const MetricsSection = ({ project }) => {
                 )}
                 {selectedMetric === 'Lead Time' && (
                     <LeadTime milestone={selectedMilestone} />
-                )}
-                {selectedMetric === 'Cycle Time' && (
-                    <CycleTime milestone={selectedMilestone} />
                 )}
         </React.Fragment>
         </Box>

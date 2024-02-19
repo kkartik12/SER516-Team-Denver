@@ -39,7 +39,7 @@ public class CycleTimeService {
 
     public List<UserStoryDTO> getUSCycleTime(Integer milestoneID) {
         String response = "";
-        try {
+        try{
             String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -66,13 +66,12 @@ public class CycleTimeService {
                                     DateTimeFormatter.ISO_DATE_TIME);
                             userStoryDTO.setFinishDate(dateTime.toLocalDate());
                             userStoryDTO.setCreatedDate(inprogressDate);
-                            if (userStoryDTO.getCreatedDate() == null) {
+                            if(userStoryDTO.getCreatedDate() == null){
                                 userStoryDTO.setCreatedDate(userStoryDTO.getFinishDate());
                             }
                             if (userStoryDTO.getCreatedDate() != null && userStoryDTO.getFinishDate() != null) {
-                                long cycleTimeInDays = ChronoUnit.DAYS.between(userStoryDTO.getCreatedDate(),
-                                        userStoryDTO.getFinishDate());
-                                if (cycleTimeInDays == 0) {
+                                long cycleTimeInDays = ChronoUnit.DAYS.between(userStoryDTO.getCreatedDate(), userStoryDTO.getFinishDate());
+                                if(cycleTimeInDays==0) {
                                     cycleTimeInDays = 1;
                                 }
                                 userStoryDTO.setCycleTime(cycleTimeInDays);
@@ -92,7 +91,7 @@ public class CycleTimeService {
     }
 
     public LocalDate getInProgressDateUS(Integer userStoryID) {
-        try {
+        try{
             String endpoint = TAIGA_API_ENDPOINT + "/history/userstory/" + userStoryID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -106,8 +105,8 @@ public class CycleTimeService {
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 JsonNode historyListJSON = objectMapper.readTree(response);
-                if (historyListJSON.isArray()) {
-                    for (JsonNode history : historyListJSON) {
+                if(historyListJSON.isArray()) {
+                    for(JsonNode history: historyListJSON) {
                         JsonNode statusList = history.get("values_diff").get("status");
                         if (statusList != null && statusList.get(1).asText().equals("In progress")) {
                             LocalDateTime dateTime = LocalDateTime.parse(history.get("created_at").asText(),
@@ -128,8 +127,8 @@ public class CycleTimeService {
 
     public List<TaskDTO> getTaskCycleTime(Integer milestoneID) {
         String response = "";
-        try {
-            String endpoint = TAIGA_API_ENDPOINT + "/tasks?milestone=" + milestoneID;
+        try{
+            String endpoint = TAIGA_API_ENDPOINT +  "/tasks?milestone=" + milestoneID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -143,9 +142,9 @@ public class CycleTimeService {
             if (responseEntity != null) {
                 response = EntityUtils.toString(responseEntity);
                 JsonNode taskListJSON = objectMapper.readTree(response);
-                if (taskListJSON.isArray()) {
-                    for (JsonNode taskJSON : taskListJSON) {
-                        if (taskJSON.get("is_closed").asBoolean()) {
+                if(taskListJSON.isArray()){
+                    for(JsonNode taskJSON: taskListJSON){
+                        if(taskJSON.get("is_closed").asBoolean()) {
                             TaskDTO task = new TaskDTO();
                             task.setTaskID(taskJSON.get("id").asInt());
                             task.setClosed(taskJSON.get("is_closed").asBoolean());
@@ -153,12 +152,11 @@ public class CycleTimeService {
                                     DateTimeFormatter.ISO_DATE_TIME);
                             task.setClosedDate(dateTime.toLocalDate());
                             task.setCreatedDate(getInProgressDateTask(task.getTaskID()));
-                            if (task.getCreatedDate() == null) {
+                            if(task.getCreatedDate() == null){
                                 task.setCreatedDate(task.getClosedDate());
                             }
                             if (task.getCreatedDate() != null && task.getClosedDate() != null) {
-                                long cycleTimeInDays = ChronoUnit.DAYS.between(task.getCreatedDate(),
-                                        task.getClosedDate());
+                                long cycleTimeInDays = ChronoUnit.DAYS.between(task.getCreatedDate(), task.getClosedDate());
                                 if (cycleTimeInDays == 0) {
                                     cycleTimeInDays = 1;
                                 }
@@ -179,7 +177,7 @@ public class CycleTimeService {
     }
 
     public LocalDate getInProgressDateTask(Integer taskID) {
-        try {
+        try{
             String endpoint = TAIGA_API_ENDPOINT + "/history/task/" + taskID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -193,8 +191,8 @@ public class CycleTimeService {
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 JsonNode historyListJSON = objectMapper.readTree(response);
-                if (historyListJSON.isArray()) {
-                    for (JsonNode history : historyListJSON) {
+                if(historyListJSON.isArray()) {
+                    for(JsonNode history: historyListJSON) {
                         JsonNode statusList = history.get("values_diff").get("status");
                         if (statusList != null && statusList.get(1).asText().equals("In progress")) {
                             LocalDateTime dateTime = LocalDateTime.parse(history.get("created_at").asText(),

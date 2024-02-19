@@ -5,7 +5,7 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 
-const LeadTime = ({ milestone }) => {
+const CycleTime = ({ milestone }) => {
   const [parameter, setParameter] = useState('')
   return (
       <Box>
@@ -27,4 +27,5 @@ const LeadTime = ({ milestone }) => {
   )
 }
 
-export default LeadTime
+export default CycleTime
+
