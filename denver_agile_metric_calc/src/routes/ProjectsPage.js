@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import '../components/ProjectComponent.css';
 import {
   Box,
   AppBar,
   Toolbar,
   Typography,
   CircularProgress, 
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
  } from '@mui/material';
+import Header from '../components/Header';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 const ProjectsPage = () => {
   const { memberID } = useParams();
   const [projectList, setProjectList] = useState([]);
+  const title = "User Projects"
 
   useEffect(() => {
     const getProjects = async () => {
@@ -52,31 +58,20 @@ const ProjectsPage = () => {
   }, [memberID]);
 
   return (
-    <div>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx = {{backgroundColor: ' #568c8c'}}>
-          <Toolbar>
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-              User Projects
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <ul className='project-list'>
-        {projectList.map((project) => (
-          <li key={project.details.projectID} className="project-list-item">
-            <div className="project-details">
-              <h3 className="project-name">
-                <Link to={`/projects/${project.details.projectID}`} className="project-link">
-                  {project.details.projectName}
-                </Link>
-              </h3>
-              <p className="project-description">{project.details.description}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Box>
+      <Header title = {title}/>
+      <List dense component="nav"> 
+      {projectList.map((project) => (
+        <ListItem key={project.details.projectID} button component={Link} to={`/projects/${project.details.projectID}`}>
+          <AnalyticsIcon />
+          <ListItemText primary={project.details.projectName} />
+          <ListItemSecondaryAction>
+            <p>{project.details.description}</p>
+          </ListItemSecondaryAction>
+        </ListItem>
+      ))}
+    </List>
+    </Box>
 
   );
 };
