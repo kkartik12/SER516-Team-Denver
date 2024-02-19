@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, Box, Typography } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 import moment from 'moment';
-import { ScatterChart, 
-  Scatter, 
-  BarChart, 
-  XAxis, 
-  XAxisProps, 
-  YAxis, 
-  YAxisProps, 
-  Tooltip, 
-  Text, 
-  Label, 
-  CartesianGrid} from 'recharts';
+import React, { useEffect, useState } from 'react';
+import {
+  CartesianGrid,
+  Label,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 
-// Ensure you also import the necessary charting library components (e.g., BarChart, Scatter)
-
-const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
+const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
   const [milestone, setMilestone] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +20,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
   useEffect(() => {
     const fetchMilestoneDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}`);
+        const response = await fetch(`http://localhost:8080/api/cycleTime/${parameter}/${milestoneId}`);
         if (!response.ok) {
           throw new Error(`API Request Failed with Status ${response.status}`);
         }
@@ -40,7 +36,23 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
     fetchMilestoneDetails();
   }, [parameter, milestone]);
 
-  const leadTimeData = milestone?.map((item) => {
+  /* const cycleTimeData = milestone?.map((item) => ({
+    closedDate: moment(item.finishDate).format('DD/MM'),
+    cycleTime: item.cycleTime,
+  }));
+
+  const groupedData = {};
+  
+  if(cycleTimeData) {
+    cycleTimeData.forEach(item => {
+      const date = item.closedDate;
+      if(!groupedData[date]) {
+        groupedData[date] = [];
+      }
+      groupedData[date].push(item.cycleTime);
+    });
+  } */
+  const cycleTimeData = milestone?.map((item) => {
 
     let closedDate;
   
@@ -52,16 +64,16 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
   
     return {
       closedDate,
-      leadTime: item.leadTime
+      cycleTime: item.cycleTime
     };
   
   }); 
-  if(leadTimeData) {
-    leadTimeData.sort((a, b) => {
+  if(cycleTimeData) {
+    cycleTimeData.sort((a, b) => {
       return new Date(a.closedDate) - new Date(b.closedDate); 
     })
   }
-  const formattedData = leadTimeData?.map(item => ({
+  const formattedData = cycleTimeData?.map(item => ({
     ...item,
     closedDate: moment(item.closedDate).format('DD/MM')  
   }));
@@ -74,33 +86,33 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
       if(!groupedData[date]) {
         groupedData[date] = [];
       }
-      groupedData[date].push(item.leadTime); 
+      groupedData[date].push(item.cycleTime); 
     });
   }
-  
+
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
         <Box sx={{ display: 'flex' }}>
           <ScatterChart width={500} height={400}>
           
           <CartesianGrid strokeDasharray="3 3"/>
-          <XAxis 
+          <XAxis
           dataKey="closedDate"
           axisLine={true}
           tickLine={true}
         >
-          <Label value="Closed Date(DD/M)" offset={-5} position="insideBottom" />  
+          <Label value="Closed Date(DD/M)" offset={-5} position="insideBottom" />
         </XAxis>
 
         <YAxis
-          dataKey="leadTime"
+          dataKey="cycleTime"
           axisLine={true}
-          tickLine={true}  
+          tickLine={true}
         >
-          <Label value="Lead Time (days)" offset={10} angle={-90} position="insideLeft" />
-        </YAxis>  
+          <Label value="Cycle Time (days)" offset={10} angle={-90} position="insideLeft" />
+        </YAxis>
           <Tooltip cursor={{ strokeDasharray: '3 3' }}/>
-          <Scatter 
+          <Scatter
             data={formattedData}
             fill="#8884d8"
           />
@@ -108,11 +120,11 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
           </ScatterChart>
           <Box sx={{ ml: 3 }}>
             <Typography variant="h4">
-            Average Lead Time: {Number(leadTimeData?.reduce((a, v) => a + v.leadTime, 0) / leadTimeData?.length).toFixed(2)} days
+            Average Cycle Time: {Number(cycleTimeData?.reduce((a, v) => a + v.cycleTime, 0) / cycleTimeData?.length).toFixed(2)} days
             </Typography>
 
             <Typography variant="body1">
-              {leadTimeData?.length} items completed
+              {cycleTimeData?.length} items completed
             </Typography>
           </Box>
         </Box>
@@ -120,4 +132,4 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
   );
 };
 
-export default LeadTimeGraph;
+export default CycleTimeGraph;

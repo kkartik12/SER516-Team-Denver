@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
 import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Checkbox,
-  ToggleButton,
-  ToggleButtonGroup,
-  ListItemButton,
-} from '@mui/material'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import Burndown from './Burndown'
+    Box,
+    Checkbox,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    ToggleButton,
+    ToggleButtonGroup,
+} from '@mui/material';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import React, { useState } from 'react';
+import Burndown from './Burndown';
+import CycleTime from './CycleTime';
 import LeadTime from './LeadTime';
 import CycleTime from './CycleTime';
 
@@ -32,17 +33,16 @@ const MetricsSection = ({ project }) => {
     // }
 
     const handleToggle = (milestone) => () => {
-        if (checked === milestone) {
-            // If the same milestone is already selected, deselect it
-            setChecked(null);
-            setSelectedMilestone('');
-        } else {
-            // If a different milestone is selected, update the state
-            setChecked(milestone);
-            const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
-            if (milestoneId) {
-              setSelectedMilestone(milestoneId);
-            }
+        setChecked(prevChecked => (
+          prevChecked.includes(milestone)
+            ? prevChecked.filter(m => m !== milestone)
+            : [...prevChecked, milestone]
+        ))
+        setChecked([])
+        setChecked(prev => [...prev, milestone])
+        const milestoneId = milestoneDict.find(m => m.name === milestone)?.id; // Handle potential missing IDs
+        if (milestoneId) {
+          setSelectedMilestone(milestoneId);
         }
     }
 
@@ -98,11 +98,14 @@ const MetricsSection = ({ project }) => {
                 </ToggleButton>
                 <ToggleButton key="Lead Time" value="Lead Time">
                     Lead Time
-                </ToggleButton>                
+                </ToggleButton>
             </ToggleButtonGroup>
             <React.Fragment>
                 {selectedMetric === 'Burndown Chart' && (
                     <Burndown milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Cycle Time' && (
+                    <CycleTime milestone={selectedMilestone} />
                 )}
                 {selectedMetric === 'Lead Time' && (
                     <LeadTime milestone={selectedMilestone} />
