@@ -21,7 +21,7 @@ public class CycleTimeController {
         return cycleTimeService.getUSCycleTime(milestoneID);
     }
 
-    @GetMapping("/cycleTime/task/{milestoneID}")
+    @GetMapping("/cycleTime/Task/{milestoneID}")
     @ResponseBody
     public List<TaskDTO> getTaskCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
         return cycleTimeService.getTaskCycleTime(milestoneID);
