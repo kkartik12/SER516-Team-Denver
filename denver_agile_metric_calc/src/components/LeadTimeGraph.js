@@ -40,36 +40,15 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
     fetchMilestoneDetails();
   }, [parameter, milestone]);
 
-  const leadTimeData = milestone?.map((item) => {
-
-    let closedDate;
-  
-    if (parameter === 'US') {
-      closedDate = item.finishDate; 
-    } else if (parameter === 'Task') {
-      closedDate = item.closedDate;
-    }
-  
-    return {
-      closedDate,
-      leadTime: item.leadTime
-    };
-  
-  }); 
-  if(leadTimeData) {
-    leadTimeData.sort((a, b) => {
-      return new Date(a.closedDate) - new Date(b.closedDate); 
-    })
-  }
-  const formattedData = leadTimeData?.map(item => ({
-    ...item,
-    closedDate: moment(item.closedDate).format('DD/MM')  
+  const leadTimeData = milestone?.map((item) => ({ 
+    closedDate: moment(item.finishDate).format('DD/MM'),
+    leadTime: item.leadTime, 
   }));
-  console.log(formattedData)
+
   const groupedData = {};
   
-  if(formattedData) {
-    formattedData.forEach(item => {
+  if(leadTimeData) {
+    leadTimeData.forEach(item => {
       const date = item.closedDate;
       if(!groupedData[date]) {
         groupedData[date] = [];
@@ -77,7 +56,9 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
       groupedData[date].push(item.leadTime); 
     });
   }
-  
+
+
+ 
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
         <Box sx={{ display: 'flex' }}>
@@ -101,7 +82,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
         </YAxis>  
           <Tooltip cursor={{ strokeDasharray: '3 3' }}/>
           <Scatter 
-            data={formattedData}
+            data={leadTimeData}
             fill="#8884d8"
           />
 
