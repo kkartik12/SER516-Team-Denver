@@ -134,6 +134,7 @@ public class CycleTimeService {
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            request.setHeader("x-disable-pagination","True");
             HttpResponse httpResponse = httpClient.execute(request);
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
