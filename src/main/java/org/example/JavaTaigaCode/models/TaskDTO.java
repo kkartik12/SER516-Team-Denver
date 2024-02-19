@@ -11,6 +11,8 @@ public class TaskDTO {
     private LocalDate createdDate;
     private Long leadTime;
 
+    private Long cycleTime;
+
     public Integer getTaskID() {
         return taskID;
     }
@@ -58,6 +60,14 @@ public class TaskDTO {
         this.closedDate = closedDate;
     }
 
+    public Long getCycleTime() {
+        return cycleTime;
+    }
+
+    public void setCycleTime(Long cycleTime) {
+        this.cycleTime = cycleTime;
+    }
+
     public TaskDTO() {
     }
 
@@ -77,9 +87,12 @@ public class TaskDTO {
     public String toString() {
         return "TaskDTO{" +
                 "taskID=" + taskID +
-                ", taskName='" + taskName +
+                ", taskName='" + taskName + '\'' +
                 ", isClosed=" + isClosed +
                 ", closedDate=" + closedDate +
+                ", createdDate=" + createdDate +
+                ", leadTime=" + leadTime +
+                ", cycleTime=" + cycleTime +
                 '}';
     }
 }

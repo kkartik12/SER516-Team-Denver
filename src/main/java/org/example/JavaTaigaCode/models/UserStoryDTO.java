@@ -9,6 +9,7 @@ public class UserStoryDTO {
     private LocalDate finishDate;
     private LocalDate createdDate;
     private Long leadTime;
+    private Long cycleTime;
 
     public Integer getUserStoryID() {
         return userStoryID;
@@ -56,6 +57,17 @@ public class UserStoryDTO {
 
     public void setFinishDate(LocalDate finishDate) {
         this.finishDate = finishDate;
+    }
+
+    public Long getCycleTime() {
+        return cycleTime;
+    }
+
+    public void setCycleTime(Long cycleTime) {
+        this.cycleTime = cycleTime;
+    }
+
+    public UserStoryDTO() {
     }
 
     public UserStoryDTO(LocalDate createdAt, LocalDate closedAt) {
