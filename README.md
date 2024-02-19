@@ -25,6 +25,10 @@ Go to the project root and compile the Maven project
    ```
 
 #### Run the frontend
+Download the required imports
+```bash
+   npm install
+```
 
 Open another terminal 
 ```bash
