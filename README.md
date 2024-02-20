@@ -21,7 +21,7 @@ This project is a Java application for interacting with the Taiga API to perform
 Go to the project root and compile the Maven project
 
 ```bash
-   mvn compile spring:boot-run
+   mvn compile spring-boot:run
    ```
 
 #### Run the frontend
