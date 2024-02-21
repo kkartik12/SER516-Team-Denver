@@ -50,7 +50,7 @@ public class ProjectController {
         return project;
     }
 
-    @GetMapping("/projects/slug/{slug}")
+    @GetMapping("/projects/by-slug/{slug}")
     @ResponseBody
     public ProjectDTO getProjectDetailsSlug(@PathVariable("slug") String Slug) {
         ProjectDTO project = projectService.getProjectDetailsSlug(Slug);
