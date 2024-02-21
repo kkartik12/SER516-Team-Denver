@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import Burndown from './Burndown';
 import CycleTime from './CycleTime';
 import LeadTime from './LeadTime';
+import DeliveryOnTime from './DeliveryOnTime';
 
 const MetricsSection = ({ project }) => {
     const [selectedMetric, setSelectedMetric]  = useState('')
@@ -84,6 +85,9 @@ const MetricsSection = ({ project }) => {
                 <ToggleButton key="Lead Time" value="Lead Time">
                     Lead Time
                 </ToggleButton>
+                <ToggleButton key="Delivery on Time" value="Delivery on Time">
+                    Delivery on Time
+                </ToggleButton>
             </ToggleButtonGroup>
             <React.Fragment>
                 {selectedMetric === 'Burndown Chart' && (
@@ -94,6 +98,9 @@ const MetricsSection = ({ project }) => {
                 )}
                 {selectedMetric === 'Lead Time' && (
                     <LeadTime milestone={selectedMilestone} />
+                )}
+                {selectedMetric === 'Delivery on Time' && (
+                    <DeliveryOnTime milestone={selectedMilestone} />
                 )}
         </React.Fragment>
         </Box>
