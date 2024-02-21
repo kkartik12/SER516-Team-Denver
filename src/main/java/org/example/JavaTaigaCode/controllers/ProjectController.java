@@ -50,6 +50,17 @@ public class ProjectController {
         return project;
     }
 
+    @GetMapping("/projects/slug/{slug}")
+    @ResponseBody
+    public ProjectDTO getProjectDetailsSlug(@PathVariable("slug") String Slug) {
+        ProjectDTO project = projectService.getProjectDetailsSlug(Slug);
+
+        if (project == null) {
+            throw new RuntimeException("Unable to get Project List for user");
+        }
+        return project;
+    }
+
     @GetMapping("/projects/{projectID}/businessValue/{userStoryID}")
     @ResponseBody
     public Integer getBusinessValueForUserStory(@PathVariable("userStoryID") Integer userStoryID) {
