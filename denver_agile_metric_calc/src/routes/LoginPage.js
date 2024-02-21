@@ -20,10 +20,10 @@ const theme = createTheme({
 });
 
 function AuthenticationForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault();

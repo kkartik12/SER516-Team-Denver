@@ -17,10 +17,14 @@ import Header from '../components/Header';
 const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [project, setProject] = useState(null);
-  const { projectId } = useParams();
-
-  const apiURL = `http://localhost:8080/api/projects/${projectId}`
-
+  const { projectId , slug} = useParams();
+  console.log(projectId)
+  let apiURL;
+  if (projectId) {
+    apiURL = `http://localhost:8080/api/projects/${projectId}`; // Use projectId if available
+  } else if (slug) {
+    apiURL = `http://localhost:8080/api/projects/by-slug/${slug}`; // Use slug if not
+  }
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
