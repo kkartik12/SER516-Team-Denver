@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
+import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.example.JavaTaigaCode.util.HTTPRequest;
@@ -172,18 +173,12 @@ public class ProjectService {
         return null;
     }
 
-    public double calculateBusinessValue(Integer projectID) {
-        // Implement the logic to calculate the business value metric parameter
-        return 0.0; 
+    public List<MilestoneDTO> getClosedMilestonesbyID(Integer projectID) {
+        List<MilestoneDTO> closedMilestones =  new ArrayList<>();
+        return closedMilestones;
     }
-
-    public double calculatePartialRunningSum(Integer projectID) {
-        // Implement logic to calculate the partial running sum
-        return 0.0; 
-    }
-
-    public double calculateTotalRunningSum(Integer projectID) {
-        // Implement logic to calculate the total running sum
-        return 0.0; 
+    public List<MilestoneDTO> getClosedMilestonesbySlug(String Slug) {
+        List<MilestoneDTO> closedMilestones =  new ArrayList<>();
+        return closedMilestones;
     }
 }

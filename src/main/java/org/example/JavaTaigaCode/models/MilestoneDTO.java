@@ -10,6 +10,7 @@ public class MilestoneDTO {
 
     private LocalDate start_date;
     private LocalDate end_date;
+    private Boolean isClosed;
     private List<BurndownChartDTO> totalSumValue;
     private List<BurndownChartDTO> partialSumValue;
     private Double totalPoints;
@@ -28,6 +29,14 @@ public class MilestoneDTO {
 
     public void setMilestoneName(String milestoneName) {
         this.milestoneName = milestoneName;
+    }
+
+    public Boolean getClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(Boolean isClosed) {
+        this.isClosed = isClosed;
     }
 
     public List<BurndownChartDTO> getTotalSumValue() {
