@@ -15,7 +15,7 @@ public class UserStoryDTO {
         return userStoryID;
     }
 
-    public LocalDate  getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
