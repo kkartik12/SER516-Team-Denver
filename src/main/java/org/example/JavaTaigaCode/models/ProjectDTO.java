@@ -13,6 +13,7 @@ public class ProjectDTO {
     List<String> members;
     List<String> milestones;
     List<String> milestoneIds;
+    List<Boolean> isClosed;
     Double businessValue = 0.0;
     Double partialRunningSum = 0.0;
     Double totalRunningSum = 0.0;
@@ -39,7 +40,7 @@ public class ProjectDTO {
     }
 
     public List<String> getMilestoneIds() {
-        return  milestoneIds;
+        return milestoneIds;
     }
 
     public void setProjectID(Integer projectID) {
@@ -118,8 +119,16 @@ public class ProjectDTO {
         this.bvCustomAttributeID = bvCustomAttributeID;
     }
 
-    public void setMilestoneIds(List<String> milestoneIds){
+    public void setMilestoneIds(List<String> milestoneIds) {
         this.milestoneIds = milestoneIds;
+    }
+
+    public List<Boolean> getIsClosed() {
+        return isClosed;
+    }
+
+    public void setIsClosed(List<Boolean> isClosed) {
+        this.isClosed = isClosed;
     }
 
     public ProjectDTO() {
@@ -133,7 +142,8 @@ public class ProjectDTO {
     }
 
     public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description,
-            String owner, List<String> members, List<String> milestones, List<String> milestoneIds) {
+            String owner, List<String> members, List<String> milestones, List<String> milestoneIds,
+            List<Boolean> isClosed) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.slug = slug;
@@ -143,6 +153,7 @@ public class ProjectDTO {
         this.members = members;
         this.milestones = milestones;
         this.milestoneIds = milestoneIds;
+        this.isClosed = isClosed;
     }
 
     @Override

@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpGet;
 import org.example.JavaTaigaCode.models.MilestoneDTO;
@@ -26,6 +25,7 @@ public class ProjectService {
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
+
     public ProjectDTO getProjectDetailsSlug(String Slug) {
         String endpoint = TAIGA_API_ENDPOINT + "/projects/by_slug?slug=" + Slug;
         HttpGet request = new HttpGet(endpoint);
@@ -35,7 +35,7 @@ public class ProjectService {
             String responseJson = HTTPRequest.sendHttpRequest(request);
             ProjectDTO project = new ProjectDTO();
             if (responseJson != null) {
-    
+
                 JsonNode projectJSON = objectMapper.readTree(responseJson);
                 project.setProjectID(projectJSON.get("id").asInt());
                 project.setProjectName(projectJSON.get("name").asText());
@@ -53,7 +53,7 @@ public class ProjectService {
                     }
                     project.setMembers(members);
                 }
-    
+
                 JsonNode milestonesJSON = projectJSON.get("milestones");
                 if (milestonesJSON.isArray()) {
                     List<String> milestones = new ArrayList<>();
@@ -65,7 +65,7 @@ public class ProjectService {
                     project.setMilestones(milestones);
                     project.setMilestoneIds(milestoneIds);
                 }
-    
+
                 JsonNode customAttr = projectJSON.get("userstory_custom_attributes");
                 if (customAttr.isArray()) {
                     for (JsonNode attr : customAttr) {
@@ -114,8 +114,6 @@ public class ProjectService {
         return null;
     }
 
-
-
     public ProjectDTO getPojectDetails(int projectID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/projects/" + projectID;
@@ -148,12 +146,15 @@ public class ProjectService {
                 if (milestonesJSON.isArray()) {
                     List<String> milestones = new ArrayList<>();
                     List<String> milestoneIds = new ArrayList<>();
+                    List<Boolean> isClosed = new ArrayList<>();
                     for (JsonNode milestone : milestonesJSON) {
                         milestones.add(milestone.get("name").asText());
                         milestoneIds.add(milestone.get("id").asText());
+                        isClosed.add(milestone.get("closed").asBoolean());
                     }
                     project.setMilestones(milestones);
                     project.setMilestoneIds(milestoneIds);
+                    project.setIsClosed(isClosed);
                 }
 
                 JsonNode customAttr = projectJSON.get("userstory_custom_attributes");
@@ -174,11 +175,12 @@ public class ProjectService {
     }
 
     public List<MilestoneDTO> getClosedMilestonesbyID(Integer projectID) {
-        List<MilestoneDTO> closedMilestones =  new ArrayList<>();
+        List<MilestoneDTO> closedMilestones = new ArrayList<>();
         return closedMilestones;
     }
+
     public List<MilestoneDTO> getClosedMilestonesbySlug(String Slug) {
-        List<MilestoneDTO> closedMilestones =  new ArrayList<>();
+        List<MilestoneDTO> closedMilestones = new ArrayList<>();
         return closedMilestones;
     }
 }
