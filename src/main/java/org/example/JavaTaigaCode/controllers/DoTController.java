@@ -1,16 +1,12 @@
 package org.example.JavaTaigaCode.controllers;
 
-import java.util.List;
-
 import org.example.JavaTaigaCode.models.MilestoneDTO;
+import org.example.JavaTaigaCode.service.DeliveryOnTimeService;
 import org.example.JavaTaigaCode.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // Allow access from frontend server (React)
@@ -19,6 +15,9 @@ public class DoTController {
 
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    DeliveryOnTimeService deliveryOnTimeService;
 
     @GetMapping("/DoT/{projectID}")
     @ResponseBody
@@ -30,5 +29,10 @@ public class DoTController {
     @ResponseBody
     public List<MilestoneDTO> getClosedMilestonesbySlug(@PathVariable("Slug") String Slug) {
         return projectService.getClosedMilestonesbySlug(Slug);
-    }   
+    }
+
+    @GetMapping("DoT/{projectID}/BV")
+    @ResponseBody List<MilestoneDTO> getClosedMilestonesforBV(@PathVariable("projectID") Integer projectID) {
+        return deliveryOnTimeService.getClosedMilestonesbyID(projectID);
+    }
 }
