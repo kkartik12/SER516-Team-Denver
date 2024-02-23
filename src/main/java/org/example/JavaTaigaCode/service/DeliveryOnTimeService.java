@@ -93,4 +93,19 @@ public class DeliveryOnTimeService {
             return null;
         }
     }
+
+    public List<MilestoneDTO> getClosedMilestonesbySlug(String projectSlug){
+        List<MilestoneDTO> milestones = new ArrayList<>();
+        try {
+            ProjectDTO project = projectService.getProjectDetailsSlug(projectSlug);
+            for(String milestoneID: project.getMilestoneIds()) {
+                MilestoneDTO milestoneDTO = getMilestondeDetails(Integer.parseInt(milestoneID));
+                milestones.add(milestoneDTO);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return milestones;
+    }
 }

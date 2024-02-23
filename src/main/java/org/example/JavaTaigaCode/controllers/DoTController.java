@@ -35,4 +35,9 @@ public class DoTController {
     @ResponseBody List<MilestoneDTO> getClosedMilestonesforBV(@PathVariable("projectID") Integer projectID) {
         return deliveryOnTimeService.getClosedMilestonesbyID(projectID);
     }
+
+    @GetMapping("DoT/by-slug/{Slug}/BV")
+    @ResponseBody List<MilestoneDTO> getClosedMilestonesforBV(@PathVariable("Slug") String slug) {
+        return deliveryOnTimeService.getClosedMilestonesbySlug(slug);
+    }
 }
