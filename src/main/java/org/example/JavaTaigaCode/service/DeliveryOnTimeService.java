@@ -27,12 +27,12 @@ public class DeliveryOnTimeService {
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-    private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
+    String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
     @Autowired
-    private ProjectService projectService;
+    ProjectService projectService;
     @Autowired
-    private BurndownChart burndownChart;
+    BurndownChart burndownChart;
 
     HttpClient httpClient = HttpClients.createDefault();
 
