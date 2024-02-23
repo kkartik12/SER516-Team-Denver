@@ -1,19 +1,19 @@
 import {
     Box,
-    Checkbox,
     List,
     ListItem,
     ListItemButton,
     ListItemText,
+    Radio,
     ToggleButton,
-    ToggleButtonGroup,
+    ToggleButtonGroup
 } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import React, { useState } from 'react';
 import Burndown from './Burndown';
 import CycleTime from './CycleTime';
-import LeadTime from './LeadTime';
 import DeliveryOnTime from './DeliveryOnTime';
+import LeadTime from './LeadTime';
 
 const MetricsSection = ({ project }) => {
     const [selectedMetric, setSelectedMetric]  = useState('')
@@ -46,21 +46,22 @@ const MetricsSection = ({ project }) => {
             <h4>Milestones:</h4>
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                 {project.milestones.map((milestone) => {
-                    const labelId = `checkbox-list-label-${milestone}`;
+                    const labelId = `radio-list-label-${milestone}`;  // Change the label ID
                     return (
                     <ListItem
                         key={milestone}
                         disablePadding
                     >
                         <ListItemButton onClick={handleToggle(milestone)} dense>
-                        <ListItemIcon>
-                            <Checkbox
-                            edge="start"
-                            checked={checked.indexOf(milestone) !== -1}
-                            tabIndex={-1}
-                            inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                        </ListItemIcon>
+                            <ListItemIcon>
+                                {/* Replace Checkbox with Radio */}
+                                <Radio
+                                    edge="start"
+                                    checked={checked.indexOf(milestone) !== -1}
+                                    tabIndex={-1}
+                                    inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                            </ListItemIcon>
                             <ListItemText id={labelId} primary={milestone} />
                         </ListItemButton>
                     </ListItem>
