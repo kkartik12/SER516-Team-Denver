@@ -1,16 +1,9 @@
 package org.example.JavaTaigaCode.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -25,10 +18,11 @@ import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BurndownChart {
@@ -233,7 +227,7 @@ public class BurndownChart {
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 // TODO - Fix. Currently assumes the only custom attribute is the business value
-                JsonNode node = objectMapper.readTree(response).path("attributes_values");
+                JsonNode node = objectMapper.readTree(response).get("attributes_values");
                 String bvKey = node.fieldNames().next();
                 return node.get(bvKey).asInt();
             }

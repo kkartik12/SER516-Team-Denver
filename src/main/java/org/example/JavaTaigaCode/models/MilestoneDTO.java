@@ -14,6 +14,8 @@ public class MilestoneDTO {
     private List<BurndownChartDTO> totalSumValue;
     private List<BurndownChartDTO> partialSumValue;
     private Double totalPoints;
+    private Integer bvTotal;
+    private Integer bvCompleted;
 
     public Integer getMilestoneID() {
         return milestoneID;
@@ -77,6 +79,22 @@ public class MilestoneDTO {
 
     public void setEnd_date(LocalDate end_date) {
         this.end_date = end_date;
+    }
+
+    public Integer getBvTotal() {
+        return bvTotal;
+    }
+
+    public void setBvTotal(Integer bvTotal) {
+        this.bvTotal = bvTotal;
+    }
+
+    public Integer getBvCompleted() {
+        return bvCompleted;
+    }
+
+    public void setBvCompleted(Integer bvCompleted) {
+        this.bvCompleted = bvCompleted;
     }
 
     public MilestoneDTO() {
