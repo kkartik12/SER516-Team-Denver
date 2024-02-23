@@ -58,12 +58,15 @@ public class ProjectService {
                 if (milestonesJSON.isArray()) {
                     List<String> milestones = new ArrayList<>();
                     List<String> milestoneIds = new ArrayList<>();
+                    List<Boolean> isClosed = new ArrayList<>();
                     for (JsonNode milestone : milestonesJSON) {
                         milestones.add(milestone.get("name").asText());
                         milestoneIds.add(milestone.get("id").asText());
+                        isClosed.add(milestone.get("closed").asBoolean());
                     }
                     project.setMilestones(milestones);
                     project.setMilestoneIds(milestoneIds);
+                    project.setIsClosed(isClosed);
                 }
 
                 JsonNode customAttr = projectJSON.get("userstory_custom_attributes");
