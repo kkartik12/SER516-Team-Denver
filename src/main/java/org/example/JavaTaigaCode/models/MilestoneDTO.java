@@ -16,6 +16,7 @@ public class MilestoneDTO {
     private Double totalPoints;
     private Integer bvTotal;
     private Integer bvCompleted;
+    private Boolean errorCondition = false;
 
     public Integer getMilestoneID() {
         return milestoneID;
@@ -95,6 +96,14 @@ public class MilestoneDTO {
 
     public void setBvCompleted(Integer bvCompleted) {
         this.bvCompleted = bvCompleted;
+    }
+
+    public Boolean getErrorCondition() {
+        return errorCondition;
+    }
+
+    public void setErrorCondition(Boolean errorCondition) {
+        this.errorCondition = errorCondition;
     }
 
     public MilestoneDTO() {

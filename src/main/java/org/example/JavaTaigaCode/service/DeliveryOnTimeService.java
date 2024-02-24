@@ -86,7 +86,9 @@ public class DeliveryOnTimeService {
             }
             milestone.setBvTotal(totalBV);
             milestone.setBvCompleted(completedBV);
-
+            if(totalBV == 0 && completedBV == 0){
+                milestone.setErrorCondition(true);
+            } 
             return milestone;
         } catch (Exception e) {
             e.printStackTrace();
