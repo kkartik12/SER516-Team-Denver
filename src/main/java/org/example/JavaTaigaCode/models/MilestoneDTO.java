@@ -17,6 +17,7 @@ public class MilestoneDTO {
     private Integer bvTotal;
     private Integer bvCompleted;
     private Boolean errorCondition = false;
+    private Double spCompleted;
 
     public Integer getMilestoneID() {
         return milestoneID;
@@ -104,6 +105,14 @@ public class MilestoneDTO {
 
     public void setErrorCondition(Boolean errorCondition) {
         this.errorCondition = errorCondition;
+    }
+
+    public Double getSpCompleted() {
+        return spCompleted;
+    }
+
+    public void setSpCompleted(Double spCompleted) {
+        this.spCompleted = spCompleted;
     }
 
     public MilestoneDTO() {

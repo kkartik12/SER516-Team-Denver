@@ -40,8 +40,8 @@ public class DeliveryOnTimeService {
         List<MilestoneDTO> milestones = new ArrayList<>();
         try {
             ProjectDTO project = projectService.getPojectDetails(projectID);
-            for(String milestoneID: project.getMilestoneIds()) {
-                MilestoneDTO milestoneDTO = getMilestondeDetails(Integer.parseInt(milestoneID));
+            for(MilestoneDTO milestone: project.getMilestoneDetails()) {
+                MilestoneDTO milestoneDTO = getMilestondeDetails(milestone.getMilestoneID());
                 milestones.add(milestoneDTO);
             }
 
@@ -100,8 +100,8 @@ public class DeliveryOnTimeService {
         List<MilestoneDTO> milestones = new ArrayList<>();
         try {
             ProjectDTO project = projectService.getProjectDetailsSlug(projectSlug);
-            for(String milestoneID: project.getMilestoneIds()) {
-                MilestoneDTO milestoneDTO = getMilestondeDetails(Integer.parseInt(milestoneID));
+            for(MilestoneDTO milestone: project.getMilestoneDetails()) {
+                MilestoneDTO milestoneDTO = getMilestondeDetails(milestone.getMilestoneID());
                 milestones.add(milestoneDTO);
             }
 
