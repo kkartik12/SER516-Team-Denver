@@ -5,12 +5,11 @@ import {
     YAxis,
 } from 'recharts'
 
-const TimelineChart = ({ parameter, milestones }) => {
+const TimelineChart = ({ parameter, milestone }) => {
     return (
         <LineChart>
             <XAxis dataKey="sprint" />
             <YAxis />
-
         </LineChart>
     )
 }

@@ -39,6 +39,7 @@ const MetricsSection = ({ project }) => {
     const milestoneDict = project.milestones.map((name, index) => ({
         name,
         id: project.milestoneIds[index],
+        isClosed: project.isClosed[index],
       }))
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
@@ -101,7 +102,7 @@ const MetricsSection = ({ project }) => {
                     <LeadTime milestone={selectedMilestone} />
                 )}
                 {selectedMetric === 'Delivery on Time' && (
-                    <DeliveryOnTime milestone={selectedMilestone} />
+                    <DeliveryOnTime milestones={milestoneDict}/>
                 )}
         </React.Fragment>
         </Box>

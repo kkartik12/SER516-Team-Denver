@@ -20,8 +20,8 @@ const DeliveryOnTime = ({ milestone }) => {
 					Story Points
 				</ToggleButton>
 			</ToggleButtonGroup>
-			{parameter && <PieChartComponent parameter={parameter} />}
-			{parameter && <TimelineChart parameter={parameter} />}
+			{parameter && <PieChartComponent parameter={parameter} milestone={milestone} />}
+			{parameter && <TimelineChart parameter={parameter} milestone={milestone}/>}
 		</Box>
 	);
 };
