@@ -46,6 +46,10 @@ const PieChartComponent = ({ parameter, milestoneId }) => {
 		return <div>Loading...</div>;
 	}
 
+	if(parameter == "BV" &&  project[0]?.bvCompleted === 0 && project[0]?.bvTotal === 0){
+		return <div>Custom attribute Business Value not defined. Therefore, delivery on time for business value cannot be calculated.</div>;
+	}
+
 	const data = [
 		{
 		name: 'Completed',
