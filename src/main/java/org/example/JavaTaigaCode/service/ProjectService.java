@@ -212,6 +212,15 @@ public class ProjectService {
             milestone.setTotalPoints(milestoneJSON.get("total_points").asDouble());
             milestone.setSpCompleted(milestoneJSON.get("closed_points").asDouble());
             milestone.setClosed(milestoneJSON.get("closed").asBoolean());
+            //adding the estimated start and finish dates
+            String start = milestoneJSON.get("estimated_start").asText(); 
+            String end = milestoneJSON.get("estimated_finish").asText();
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+            LocalDate startDate = LocalDate.parse(start, formatter);
+            LocalDate endDate = LocalDate.parse(end, formatter);
+            milestone.setStart_date(startDate);
+            milestone.setEnd_date(endDate);
+            
             return milestone;
         }catch (Exception e) {
             e.printStackTrace();

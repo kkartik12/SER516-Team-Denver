@@ -27,6 +27,7 @@ public class DeliveryOnTimeServiceTest {
     @Mock
     private BurndownChart burndownChart;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -40,7 +41,7 @@ public class DeliveryOnTimeServiceTest {
     public void testGetClosedMilestonesbyID() {
         // Mock project details
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setMilestoneIds(List.of("1", "2"));
+        //projectDTO.setMilestoneIds(List.of("1", "2"));
 
         // Mock milestone details
         MilestoneDTO milestoneDTO1 = new MilestoneDTO();
