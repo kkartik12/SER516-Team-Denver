@@ -10,9 +10,14 @@ public class MilestoneDTO {
 
     private LocalDate start_date;
     private LocalDate end_date;
+    private Boolean isClosed;
     private List<BurndownChartDTO> totalSumValue;
     private List<BurndownChartDTO> partialSumValue;
     private Double totalPoints;
+    private Integer bvTotal;
+    private Integer bvCompleted;
+    private Boolean errorCondition = false;
+    private Double spCompleted;
 
     public Integer getMilestoneID() {
         return milestoneID;
@@ -28,6 +33,14 @@ public class MilestoneDTO {
 
     public void setMilestoneName(String milestoneName) {
         this.milestoneName = milestoneName;
+    }
+
+    public Boolean getClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(Boolean isClosed) {
+        this.isClosed = isClosed;
     }
 
     public List<BurndownChartDTO> getTotalSumValue() {
@@ -68,6 +81,38 @@ public class MilestoneDTO {
 
     public void setEnd_date(LocalDate end_date) {
         this.end_date = end_date;
+    }
+
+    public Integer getBvTotal() {
+        return bvTotal;
+    }
+
+    public void setBvTotal(Integer bvTotal) {
+        this.bvTotal = bvTotal;
+    }
+
+    public Integer getBvCompleted() {
+        return bvCompleted;
+    }
+
+    public void setBvCompleted(Integer bvCompleted) {
+        this.bvCompleted = bvCompleted;
+    }
+
+    public Boolean getErrorCondition() {
+        return errorCondition;
+    }
+
+    public void setErrorCondition(Boolean errorCondition) {
+        this.errorCondition = errorCondition;
+    }
+
+    public Double getSpCompleted() {
+        return spCompleted;
+    }
+
+    public void setSpCompleted(Double spCompleted) {
+        this.spCompleted = spCompleted;
     }
 
     public MilestoneDTO() {
