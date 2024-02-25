@@ -1,7 +1,6 @@
+import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React, { useState } from 'react';
-import { ToggleButton, ToggleButtonGroup, Box } from '@mui/material';
 import PieChartComponent from './PieChartComponent';
-import TimelineChart from './TimelineChart';
 
 const DeliveryOnTime = ({ milestone }) => {
 	const [parameter, setParameter] = useState('');
@@ -20,10 +19,9 @@ const DeliveryOnTime = ({ milestone }) => {
 					Story Points
 				</ToggleButton>
 			</ToggleButtonGroup>
-			{parameter && <PieChartComponent parameter={parameter} milestone={milestone} />}
-			{parameter && <TimelineChart parameter={parameter} milestone={milestone}/>}
+			{parameter && <PieChartComponent parameter={parameter} milestoneId={milestone} />}
 		</Box>
 	);
 };
 
-export default DeliveryOnTime;
+export default DeliveryOnTime;
