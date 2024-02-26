@@ -1,6 +1,8 @@
 package org.example.JavaTaigaCode.controllers;
 
 import org.example.JavaTaigaCode.models.TaskDTO;
+import org.example.JavaTaigaCode.service.FoundWorkService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,11 +11,14 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000") // Allow access from frontend server (React)
 @RequestMapping("/api")
 public class FoundWorkController {
+
+    @Autowired
+    FoundWorkService foundWorkService;
+
     @GetMapping("/foundWork/{milestoneID}")
     @ResponseBody
     public List<TaskDTO> getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID) {
-        return null;
-//        return projectService.getClosedMilestonesbyID(projectID);
+        return foundWorkService.getFoundWork(milestoneID);
     }
 
 }
