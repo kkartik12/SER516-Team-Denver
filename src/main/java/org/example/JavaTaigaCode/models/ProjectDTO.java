@@ -12,7 +12,9 @@ public class ProjectDTO {
     String owner;
     List<String> members;
     List<String> milestones;
-    List<String> milestoneIds;
+//    List<String> milestoneIds;
+//    List<Boolean> isClosed;
+    List<MilestoneDTO> milestoneList;
     Double businessValue = 0.0;
     Double partialRunningSum = 0.0;
     Double totalRunningSum = 0.0;
@@ -38,9 +40,9 @@ public class ProjectDTO {
         return description;
     }
 
-    public List<String> getMilestoneIds() {
-        return  milestoneIds;
-    }
+//    public List<String> getMilestoneIds() {
+//        return milestoneIds;
+//    }
 
     public void setProjectID(Integer projectID) {
         this.projectID = projectID;
@@ -118,8 +120,25 @@ public class ProjectDTO {
         this.bvCustomAttributeID = bvCustomAttributeID;
     }
 
-    public void setMilestoneIds(List<String> milestoneIds){
-        this.milestoneIds = milestoneIds;
+//    public void setMilestoneIds(List<String> milestoneIds) {
+//        this.milestoneIds = milestoneIds;
+//    }
+//
+//    public List<Boolean> getIsClosed() {
+//        return isClosed;
+//    }
+//
+//    public void setIsClosed(List<Boolean> isClosed) {
+//        this.isClosed = isClosed;
+//    }
+
+
+    public List<MilestoneDTO> getMilestoneDetails() {
+        return milestoneList;
+    }
+
+    public void setMilestoneDetails(List<MilestoneDTO> milestoneDetails) {
+        this.milestoneList = milestoneDetails;
     }
 
     public ProjectDTO() {
@@ -133,7 +152,9 @@ public class ProjectDTO {
     }
 
     public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description,
-            String owner, List<String> members, List<String> milestones, List<String> milestoneIds) {
+            String owner, List<String> members, List<String> milestones){
+//            , List<String> milestoneIds,
+//            List<Boolean> isClosed) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.slug = slug;
@@ -142,7 +163,8 @@ public class ProjectDTO {
         this.owner = owner;
         this.members = members;
         this.milestones = milestones;
-        this.milestoneIds = milestoneIds;
+//        this.milestoneIds = milestoneIds;
+//        this.isClosed = isClosed;
     }
 
     @Override

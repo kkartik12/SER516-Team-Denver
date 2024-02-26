@@ -74,15 +74,6 @@ public class ProjectController {
         return burndownChart.getTotalBusinessValue(milestoneID);
     }
     
-    // @GetMapping("/projects/{projectID}/partialRunningSum")
-    // @ResponseBody
-    // public Map<String, Double> getPartialRunningSum(@PathVariable("projectID") Integer projectID) {
-    //     Map<String, Double> prs = new HashMap<>();
-    //     double partialRunningSum = projectService.calculatePartialRunningSum(projectID);
-    //     prs.put("partialRunningSum", partialRunningSum);
-    //     return prs;
-    // }
-
     @GetMapping("/burndownchart/{milestoneID}/partialRunningSum")
     @ResponseBody
     public MilestoneDTO getPartialRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
