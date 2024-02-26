@@ -102,7 +102,7 @@ const MetricsSection = ({ project }) => {
                     <LeadTime milestone={selectedMilestone} />
                 )}
                 {selectedMetric === 'Delivery on Time' && (
-                    <DeliveryOnTime milestone={selectedMilestone}/>
+                    <DeliveryOnTime milestoneId={selectedMilestone} milestones={project.milestoneDetails}/>
                 )}
         </React.Fragment>
         </Box>
