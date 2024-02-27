@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class UserStoryDTO {
     private Integer userStoryID;
     private Integer businessValue;
+    private Integer totalPoints;
     private boolean isClosed;
     private LocalDate finishDate;
     private LocalDate createdDate;
@@ -65,6 +66,14 @@ public class UserStoryDTO {
 
     public void setCycleTime(Long cycleTime) {
         this.cycleTime = cycleTime;
+    }
+    
+    public Integer getTotalPoints() {
+        return totalPoints;
+    }
+    
+    public void setTotalPoints(Integer totalPoints) {
+        this.totalPoints = totalPoints;
     }
 
     public UserStoryDTO() {

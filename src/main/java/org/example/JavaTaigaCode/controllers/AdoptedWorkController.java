@@ -2,6 +2,7 @@ package org.example.JavaTaigaCode.controllers;
 
 import java.util.List;
 
+import org.example.JavaTaigaCode.models.AdoptedWorkDTO;
 import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.service.AdoptedWorkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,13 @@ public class AdoptedWorkController {
 
     @GetMapping("/adoptedWork/{milestoneID}")
     @ResponseBody
-    public List<UserStoryDTO> getUSAddedAfterSprintPlanning(@PathVariable("milestoneID") Integer milestoneID) {
+    public AdoptedWorkDTO getUSAddedAfterSprintPlanning(@PathVariable("milestoneID") Integer milestoneID) {
         return adoptedWorkService.getUSAddedAfterSprintPlanning(milestoneID);
+    }
+
+    @GetMapping("/adoptedWork/project/{projectID}")
+    @ResponseBody
+    public List<AdoptedWorkDTO> getAdoptedWorkForAllSprints(@PathVariable("projectID") Integer projectID) {
+        return adoptedWorkService.getAdoptedWorkForAllSprints(projectID);
     }
 }

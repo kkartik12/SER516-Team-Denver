@@ -12,7 +12,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.example.JavaTaigaCode.models.UserStoryDTO;
+import org.example.JavaTaigaCode.models.AdoptedWorkDTO;
+import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,10 @@ public class AdoptedWorkService {
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
-    public List<UserStoryDTO> getUSAddedAfterSprintPlanning(Integer milestoneID) {
+    public AdoptedWorkDTO getUSAddedAfterSprintPlanning(Integer milestoneID) {
+        // percentage of adopted work
+        // sum of original estimate of stories added after sprint planning /
+        // sum of original forecast for the sprint
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
             HttpClient httpClient = HttpClients.createDefault();
@@ -47,43 +51,53 @@ public class AdoptedWorkService {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             HttpEntity responseEntity = httpResponse.getEntity();
-            List<UserStoryDTO> userStoryList = new ArrayList<>();
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 JsonNode milestoneJSON = objectMapper.readTree(response);
                 JsonNode userStories = milestoneJSON.get("user_stories");
                 LocalDate sprintEstimatedStart = LocalDate.parse(milestoneJSON.get("estimated_start").asText(),
                         dateFormatter);
+                Integer sprintTotalPoints = milestoneJSON.get("total_points").asInt();
+                Integer adoptedWork = 0;
 
                 if (userStories.isArray()) {
                     for (JsonNode userStoryNode : userStories) {
-                        LocalDate finishDate;
-                        if (userStoryNode.get("finish_date").asText().equals("null")) {
-                            finishDate = null;
-                        } else {
-                            finishDate = LocalDate.parse(userStoryNode.get("finish_date").asText(),
-                                    DateTimeFormatter.ISO_DATE_TIME);
-                        }
-
                         LocalDate createdDate = LocalDate.parse(userStoryNode.get("created_date").asText(),
                                 DateTimeFormatter.ISO_DATE_TIME);
 
                         if (createdDate.isAfter(sprintEstimatedStart)) {
-                            UserStoryDTO userStory = new UserStoryDTO(
-                                    userStoryNode.get("id").asInt(),
-                                    null,
-                                    userStoryNode.get("is_closed").asBoolean(),
-                                    finishDate,
-                                    createdDate);
-                            userStoryList.add(userStory);
+                            adoptedWork += userStoryNode.get("total_points").asInt();
                         }
                     }
                 }
+                return new AdoptedWorkDTO(adoptedWork, sprintTotalPoints, milestoneID);
             }
-            return userStoryList;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<AdoptedWorkDTO> getAdoptedWorkForAllSprints(Integer projectId) {
+        try {
+            ProjectService projectService = new ProjectService();
+            List<MilestoneDTO> milestones = projectService.getPojectDetails(projectId).getMilestoneDetails();
+            List<AdoptedWorkDTO> adoptedWorkList = new ArrayList<>();
+
+            for (MilestoneDTO milestone : milestones) {
+                AdoptedWorkDTO adoptedWork = getUSAddedAfterSprintPlanning(milestone.getMilestoneID());
+                adoptedWork.setMilestoneName(milestone.getMilestoneName());
+                if (adoptedWork != null) {
+                    adoptedWorkList.add(adoptedWork);
+                }
+            }
+            return adoptedWorkList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
