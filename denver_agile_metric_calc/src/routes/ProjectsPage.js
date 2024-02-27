@@ -1,37 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   Box,
-  Typography,
-  CircularProgress, 
+  Container,
+  Divider,
+  IconButton,
   List,
   ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  Grid,
-  IconButton,
   TextField,
-  Button,
-  Divider
- } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+  Typography
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const ProjectsPage = () => {
-  const { memberID } = useParams()
-  const [projectList, setProjectList] = useState([])
-  const [slug,  setSlug] = useState('')
-  const title = "User Projects"
-  const navigate =  useNavigate()
+  const { memberID } = useParams();
+  const [projectList, setProjectList] = useState([]);
+  const [slug, setSlug] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    navigate(`/projects/by-slug/${slug}`)
-  }
-
-  //Fetches project list for a logged in user 
+  // Fetches project list for a logged-in user
   useEffect(() => {
     const getProjects = async () => {
       try {
@@ -64,55 +52,49 @@ const ProjectsPage = () => {
     getProjects();
   }, [memberID]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/projects/by-slug/${slug}`);
+  };
+
   return (
-    <Box>
-      <Header title = {title}/>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Box>
-            <List dense component="nav"> 
-            {projectList.map((project) => (
-                <ListItem 
-                  key={project.details.projectID} 
-                  component={Link} 
-                  button
-                  to={`/projects/${project.details.projectID}`}
-                >
-                <AnalyticsIcon />
-                <ListItemText primary={project.details.projectName} />
-                <ListItemSecondaryAction>
-                  <p>{project.details.description}</p>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-          </Box>
-        </Grid>
-        <Divider />
-        <Grid item xs={4} sx = {{mt: 1}}>
-            <Typography sx = {{mt: 1, mb: 1}}>
-              Get Project By Slug
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <TextField
-                    label="Slug"
-                    name="slug"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                    fullWidth
-                  />
-                  <IconButton type="submit" sx={{ ml: 1 , mr: 1, mb: 2.5}}>
-                    <ArrowForwardIcon />
-                  </IconButton>
-              </Box>
-            </form>
-        </Grid>
-      </Grid>
-    </Box>
-    
+    <Container maxWidth="xl">
+      <Header title="User Projects" sx={{ pt: 0, pl: 0, pr: 0 }} />
+
+      <Typography variant="h5" align="center" sx={{ mb: 2 }}>
+        Get Project By Slug
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+          <TextField label="Slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} />
+          <IconButton type="submit" sx={{ ml: 1 }}>
+            <ArrowForwardIcon />
+          </IconButton>
+        </Box>
+      </form>
+
+      <Divider />
+
+      <List>
+        {projectList.map((project) => (
+          <ListItem
+            key={project.details.projectID}
+            component={Link}
+            button
+            to={`/projects/${project.details.projectID}`}
+            sx={{ mb: 2 }}
+          >
+            <Box>
+              <Typography variant="h6" fontWeight="bold">
+                {project.details.projectName}
+              </Typography>
+              <Typography variant="body1">{project.details.description}</Typography>
+            </Box>
+          </ListItem>
+        ))}
+      </List>
+    </Container>
   );
 };
 
 export default ProjectsPage;
-
