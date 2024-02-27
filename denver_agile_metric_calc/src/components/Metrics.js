@@ -14,6 +14,7 @@ import Burndown from './Burndown';
 import CycleTime from './CycleTime';
 import DeliveryOnTime from './DeliveryOnTime';
 import LeadTime from './LeadTime';
+import AdoptedWork from './AdoptedWorkComponent';
 
 const MetricsSection = ({ project }) => {
 	const [selectedMetric, setSelectedMetric] = useState('');
@@ -119,6 +120,9 @@ const MetricsSection = ({ project }) => {
 							milestoneId={selectedMilestone}
 							milestones={project.milestoneDetails}
 						/>
+					)}
+					{selectedMetric === 'Adopted Work' && (
+						<AdoptedWork projectID={project.projectID} />
 					)}
 				</React.Fragment>
 			</Box>
