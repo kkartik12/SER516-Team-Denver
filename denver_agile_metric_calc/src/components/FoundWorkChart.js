@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, CircularProgress } from '@mui/material';
-import { Typography } from '@mui/material';
-import { Timeline, 
-  TimelineItem, 
-  TimelineSeparator, 
-  TimelineConnector, 
-  TimelineContent, 
- } from '@mui/lab';
-
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Label } from 'recharts';
 
 const FoundWorkChart = ({ milestoneId }) => {
   
@@ -35,42 +28,38 @@ const FoundWorkChart = ({ milestoneId }) => {
 		})();
 	}, [milestoneId]);
 
+  const tasksByDate = foundwork?.reduce((acc, task) => {
+    const date = new Date(task.createdDate).toDateString(); 
+    acc[date] = (acc[date] || 0) + 1; 
+    return acc;
+  }, {});
+  const chartData = Object.entries(tasksByDate).map(([date, count]) => ({
+    date, 
+    count, 
+  }));
+
   return (
-    <Box width={750} height={300}>
-     {/*  <Box>
-        {isloading && <CircularProgress />}
-      </Box>
-      {!isloading && (
-        <Timeline>
-        {postPlanningTasks.map((task) => (
-          <TimelineItem key={task.id}>
-            <TimelineSeparator>
-              <TimelineDot color="primary" />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <Typography variant="body2" color="text.secondary">
-                {new Date(task.addedDate).toLocaleDateString('en-US')}
-              </Typography>
-              <Typography variant="body1">{task.name}</Typography>
-            </TimelineContent>
-          </TimelineItem>
-        ))}
-      </Timeline>
-      )} */}
-    </Box>
+    <Box width={750} height={300} sx={{mt: 2}}>
+    <LineChart width={730} height={250} data={chartData}
+      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="date" tickFormatter={(dateStr) => {
+        const date = new Date(dateStr);
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const day = String(date.getDate()).padStart(2, '0'); 
+        return `${month}/${day}`;
+      }} 
+      >  
+      </XAxis>
+      <YAxis>
+      </YAxis>
+      <Tooltip />
+      <Legend />
+      <Line type="monotone" dataKey="count" stroke="#8884d8" name='# of tasks added' />
+    </LineChart>
+  </Box>
+
   );
 };
 
-const TimelineDot = ({ color }) => (
-  <span
-    style={{
-      display: 'inline-block',
-      height: '12px',
-      width: '12px',
-      borderRadius: '50%',
-      backgroundColor: color || 'primary.main',
-    }}
-  />
-);
 export default FoundWorkChart
