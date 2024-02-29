@@ -15,6 +15,8 @@ import CycleTime from './CycleTime';
 import DeliveryOnTime from './DeliveryOnTime';
 import LeadTime from './LeadTime';
 import AdoptedWork from './AdoptedWorkComponent';
+import FoundWorkChart from './FoundWorkChart';
+
 
 const MetricsSection = ({ project }) => {
 	const [selectedMetric, setSelectedMetric] = useState('');
@@ -104,6 +106,9 @@ const MetricsSection = ({ project }) => {
 					<ToggleButton key="Adopted Work" value="Adopted Work">
 						Adopted Work
 					</ToggleButton>
+					<ToggleButton key="Found Work" value="Found Work">
+						Found Work
+					</ToggleButton>
 				</ToggleButtonGroup>
 				<React.Fragment>
 					{selectedMetric === 'Burndown Chart' && (
@@ -123,6 +128,9 @@ const MetricsSection = ({ project }) => {
 					)}
 					{selectedMetric === 'Adopted Work' && (
 						<AdoptedWork projectID={project.projectID} />
+					)}
+					{selectedMetric === 'Found Work' && (
+						<FoundWorkChart milestoneId={selectedMilestone} />
 					)}
 				</React.Fragment>
 			</Box>
