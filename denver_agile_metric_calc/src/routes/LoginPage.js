@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createTheme, ThemeProvider, Box, TextField, Button, Typography, Stack, Avatar, Divider, Chip } from '@mui/material'
+import { createTheme, 
+	ThemeProvider, 
+	Box, 
+	TextField, 
+	Button, 
+	Typography, 
+	Stack, 
+	Avatar, 
+	Divider, 
+	Chip } from '@mui/material'
 import LoginIcon from '@mui/icons-material/Login'
 import '../styles/LoginPage.css'
 

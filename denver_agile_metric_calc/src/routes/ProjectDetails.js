@@ -23,7 +23,6 @@ const ProjectDetails = () => {
   const [project, setProject] = useState(null);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const { projectId , slug} = useParams();
-  console.log(projectId)
   let apiURL;
   if (projectId) {
     apiURL = `http://localhost:8080/api/projects/${projectId}`; // Use projectId if available
