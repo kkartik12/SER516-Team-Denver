@@ -1,22 +1,26 @@
 package org.example.JavaTaigaCode.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
 import org.example.JavaTaigaCode.util.GlobalData;
 import org.example.JavaTaigaCode.util.HTTPRequest;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProjectService {
@@ -26,52 +30,71 @@ public class ProjectService {
 
     private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
-    // private static String promptUserPassword(String prompt) {
-    // if (System.console() != null) {
-    // char[] passwordChars = System.console().readPassword(prompt);
-    // return new String(passwordChars);
-    // } else {
-    // System.out.print(prompt);
-    // return scanner.nextLine();
-    // }
-    // }
+    String datePattern = "yyyy-MM-dd";
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
+    HttpClient httpClient = HttpClients.createDefault();
 
-    // public static int getProjectId(String authToken,String TAIGA_API_ENDPOINT) {
-    //
-    // // Prompting user to enter project slug name. A slug name is nothing but an
-    // identifier for a project.
-    // // Open any Taiga project and check the url of your browser. Slug name is the
-    // value after " /project/SLUG_NAME "
-    // // Example https://tree.taiga.io/project/SLUG_NAME/us/1?no-milestone=1
-    //
-    // String projectSlug = promptUser("Enter the Taiga project slug: ");
-    // String endpoint = TAIGA_API_ENDPOINT + "/projects/by_slug?slug=" +
-    // projectSlug;
-    //
-    // HttpGet request = new HttpGet(endpoint);
-    // request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
-    // request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-    //
-    // String responseJson = HTTPRequest.sendHttpRequest(request);
-    //
-    // if (responseJson != null) {
-    // try {
-    // JsonNode projectInfo = objectMapper.readTree(responseJson);
-    // int projectId = projectInfo.has("id") ? projectInfo.get("id").asInt() : -1;
-    //
-    // if (projectId != -1) {
-    // System.out.println("Service.Project details retrieved successfully.");
-    // return projectId;
-    // } else {
-    // System.out.println("Invalid project slug. Please try again.");
-    // }
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
-    //
-    // return -1;
-    // }
+    public ProjectDTO getProjectDetailsSlug(String Slug) {
+        String endpoint = TAIGA_API_ENDPOINT + "/projects/by_slug?slug=" + Slug;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        try {
+            String responseJson = HTTPRequest.sendHttpRequest(request);
+            ProjectDTO project = new ProjectDTO();
+            if (responseJson != null) {
+
+                JsonNode projectJSON = objectMapper.readTree(responseJson);
+                project.setProjectID(projectJSON.get("id").asInt());
+                project.setProjectName(projectJSON.get("name").asText());
+                project.setSlug(projectJSON.get("slug").asText());
+                project.setDescription(projectJSON.get("description").asText());
+                project.setCreatedDate(
+                        LocalDate.parse(projectJSON.get("created_date").asText(), DateTimeFormatter.ISO_DATE_TIME));
+                JsonNode owner = projectJSON.get("owner");
+                project.setOwner(owner.get("full_name_display").asText());
+                JsonNode membersJSON = projectJSON.get("members");
+                if (membersJSON.isArray()) {
+                    List<String> members = new ArrayList<>();
+                    for (JsonNode member : membersJSON) {
+                        members.add(member.get("full_name").asText());
+                    }
+                    project.setMembers(members);
+                }
+
+                JsonNode milestonesJSON = projectJSON.get("milestones");
+                if (milestonesJSON.isArray()) {
+                    List<String> milestones = new ArrayList<>();
+//                    List<String> milestoneIds = new ArrayList<>();
+//                    List<Boolean> isClosed = new ArrayList<>();
+                    List<MilestoneDTO> milestoneList = new ArrayList<>();
+                    for (JsonNode milestoneJSON : milestonesJSON) {
+                        milestones.add(milestoneJSON.get("name").asText());
+                        MilestoneDTO milestone = getMilestoneDetails(milestoneJSON.get("id").asInt());
+                        milestoneList.add(milestone);
+                    }
+                    project.setMilestones(milestones);
+                    project.setMilestoneDetails(milestoneList);
+//                    project.setMilestoneIds(milestoneIds);
+//                    project.setIsClosed(isClosed);
+                }
+
+                JsonNode customAttr = projectJSON.get("userstory_custom_attributes");
+                if (customAttr.isArray()) {
+                    for (JsonNode attr : customAttr) {
+                        if (attr.get("name").asText().equals("BV")) {
+                            project.setBvCustomAttributeID(attr.get("id").asInt());
+                            break;
+                        }
+                    }
+                }
+            }
+            return project;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     // This method returns list of Projects related to member who has logged in.
     public List<ProjectDTO> getPojectList(Integer memberID) {
@@ -104,8 +127,6 @@ public class ProjectService {
         return null;
     }
 
-
-
     public ProjectDTO getPojectDetails(int projectID) {
         try {
             String endpoint = TAIGA_API_ENDPOINT + "/projects/" + projectID;
@@ -137,13 +158,18 @@ public class ProjectService {
                 JsonNode milestonesJSON = projectJSON.get("milestones");
                 if (milestonesJSON.isArray()) {
                     List<String> milestones = new ArrayList<>();
-                    List<String> milestoneIds = new ArrayList<>();
-                    for (JsonNode milestone : milestonesJSON) {
-                        milestones.add(milestone.get("name").asText());
-                        milestoneIds.add(milestone.get("id").asText());
+//                    List<String> milestoneIds = new ArrayList<>();
+//                    List<Boolean> isClosed = new ArrayList<>();
+                    List<MilestoneDTO> milestoneList = new ArrayList<>();
+                    for (JsonNode milestoneJSON : milestonesJSON) {
+                        milestones.add(milestoneJSON.get("name").asText());
+                        MilestoneDTO milestone = getMilestoneDetails(milestoneJSON.get("id").asInt());
+                        milestoneList.add(milestone);
                     }
                     project.setMilestones(milestones);
-                    project.setMilestoneIds(milestoneIds);
+                    project.setMilestoneDetails(milestoneList);
+//                    project.setMilestoneIds(milestoneIds);
+//                    project.setIsClosed(isClosed);
                 }
 
                 JsonNode customAttr = projectJSON.get("userstory_custom_attributes");
@@ -163,18 +189,52 @@ public class ProjectService {
         return null;
     }
 
-    public double calculateBusinessValue(Integer projectID) {
-        // Implement the logic to calculate the business value metric parameter
-        return 0.0; // Placeholder, replace with actual calculation
+    public MilestoneDTO getMilestoneDetails(Integer milestoneID) {
+        String response = "";
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
+            HttpGet request = new HttpGet(endpoint);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            HttpResponse httpResponse = httpClient.execute(request);
+            int httpStatus = httpResponse.getStatusLine().getStatusCode();
+            if (httpStatus < 200 || httpStatus >= 300) {
+                throw new RuntimeException(httpResponse.getStatusLine().toString());
+            }
+            HttpEntity responseEntity = httpResponse.getEntity();
+            if (responseEntity != null) {
+                response = EntityUtils.toString(responseEntity);
+            }
+            JsonNode milestoneJSON = objectMapper.readTree(response);
+            MilestoneDTO milestone = new MilestoneDTO();
+            milestone.setMilestoneID(milestoneJSON.get("id").asInt());
+            milestone.setMilestoneName(milestoneJSON.get("name").asText());
+            milestone.setTotalPoints(milestoneJSON.get("total_points").asDouble());
+            milestone.setSpCompleted(milestoneJSON.get("closed_points").asDouble());
+            milestone.setClosed(milestoneJSON.get("closed").asBoolean());
+            //adding the estimated start and finish dates
+            String start = milestoneJSON.get("estimated_start").asText(); 
+            String end = milestoneJSON.get("estimated_finish").asText();
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+            LocalDate startDate = LocalDate.parse(start, formatter);
+            LocalDate endDate = LocalDate.parse(end, formatter);
+            milestone.setStart_date(startDate);
+            milestone.setEnd_date(endDate);
+            
+            return milestone;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public double calculatePartialRunningSum(Integer projectID) {
-        // Implement logic to calculate the partial running sum
-        return 0.0; // Placeholder, replace with actual calculation
+    public List<MilestoneDTO> getClosedMilestonesbyID(Integer projectID) {
+        List<MilestoneDTO> closedMilestones = new ArrayList<>();
+        return closedMilestones;
     }
 
-    public double calculateTotalRunningSum(Integer projectID) {
-        // Implement logic to calculate the total running sum
-        return 0.0; // Placeholder, replace with actual calculation
+    public List<MilestoneDTO> getClosedMilestonesbySlug(String Slug) {
+        List<MilestoneDTO> closedMilestones = new ArrayList<>();
+        return closedMilestones;
     }
 }

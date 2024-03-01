@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createTheme, ThemeProvider, Box, TextField, Button, Typography, Stack, Avatar, Divider, Chip } from '@mui/material'
+import { createTheme, 
+	ThemeProvider, 
+	Box, 
+	TextField, 
+	Button, 
+	Typography, 
+	Stack, 
+	Avatar, 
+	Divider, 
+	Chip } from '@mui/material'
 import LoginIcon from '@mui/icons-material/Login'
 import '../styles/LoginPage.css'
 
@@ -20,10 +29,10 @@ const theme = createTheme({
 });
 
 function AuthenticationForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault();
