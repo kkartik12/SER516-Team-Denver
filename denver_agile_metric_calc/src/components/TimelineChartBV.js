@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart, XAxis, YAxis, Tooltip, Legend, Bar, CartesianGrid, Label } from 'recharts';
 import {
-    RadioGroup , 
-    FormControlLabel, 
-    Radio, 
-    Box, 
-    FormControl, 
-    FormLabel, 
-    Divider, 
-    Typography,
-    CircularProgress,
     Alert,
     AlertTitle,
-}  from "@mui/material";
+    Box,
+    CircularProgress,
+    Divider,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
+    Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Bar, BarChart, CartesianGrid, Label, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 
 
 const TimelineChart = () => {
@@ -55,8 +55,7 @@ const TimelineChart = () => {
                 <AlertTitle>Error</AlertTitle>
                     This project does not have a business value attribute.</Alert>
     }
-    const paginatedData = project.milestones.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
+    const paginatedData = project.slice((currentPage - 1) * pageSize, currentPage * pageSize);
     const handlePageChange = (event) => {
         setCurrentPage(parseInt(event.target.value));
     };
@@ -89,7 +88,7 @@ const TimelineChart = () => {
                 flexDirection: 'column', 
                 alignItems: 'center',
                 }}>
-                {[...Array(Math.ceil(project.milestones.length / pageSize))].map((_, index) => (
+                {[...Array(Math.ceil(project.length / pageSize))].map((_, index) => (
                     <FormControlLabel
                     key={index + 1}
                     value={index + 1}
