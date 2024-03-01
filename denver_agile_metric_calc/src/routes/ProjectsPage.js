@@ -1,13 +1,14 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
-  Box,
-  Container,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  TextField,
-  Typography
+	Box,
+	CircularProgress,
+	Container,
+	Divider,
+	IconButton,
+	List,
+	ListItem,
+	TextField,
+	Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -53,17 +54,26 @@ const ProjectsPage = () => {
       }
     };
 
-    getProjects();
-  }, [memberID]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate(`/projects/by-slug/${slug}`);
-  };
+		getProjects();
+	}, [memberID]);
 
-  return (
-    <Container maxWidth="xl">
-      <Header title="User Projects" sx={{ pt: 0, pl: 0, pr: 0 }} />
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		navigate(`/projects/by-slug/${slug}`);
+	};
+
+	return (
+		<div>
+			{isLoading && (
+				<div style={{ display: 'flex', justifyContent: 'center' }}>
+					<CircularProgress />
+				</div>
+			)}
+			{!isLoading && (
+				<Container maxWidth="xl">
+					<Header title="User Projects" sx={{ pt: 0, pl: 0, pr: 0 }} />
+
 
       {/* Search form */}
       <Typography variant="h5" align="center" sx={{ mb: 2 }}>
@@ -111,6 +121,7 @@ const ProjectsPage = () => {
       )}
     </Container>
   );
+
 };
 
 export default ProjectsPage;

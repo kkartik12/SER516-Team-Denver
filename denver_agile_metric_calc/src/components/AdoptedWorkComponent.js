@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { PureComponent, useEffect, useState } from 'react';
 import {
 	Bar,
 	BarChart,
@@ -29,10 +29,12 @@ const AdoptedWork = ({ projectID }) => {
 				data.forEach((element) => {
 					element['Adopted Work'] = element.adoptedWork;
 					element['Total Points'] = element.sprintTotalPoints;
+					element.name = element.milestoneName;
 				});
 				setAdoptedWork(data);
 				setLoading(false);
 			} catch (error) {
+				setLoading(false);
 				console.error('Error fetching milestone details: ', error.message);
 			}
 		})();
