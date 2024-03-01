@@ -45,7 +45,7 @@ const GraphComponent = ({ sx = {} , parameter, milestoneId}) => {
     const graphData = {
       labels: labels,
       datasets: [{
-        label: 'Burndown Chart BV',
+        label: 'Burn "UP" Chart Business Value',
         data: values,
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
