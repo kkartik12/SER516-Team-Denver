@@ -33,6 +33,7 @@ const AdoptedWork = ({ projectID }) => {
 				setAdoptedWork(data);
 				setLoading(false);
 			} catch (error) {
+				setLoading(false);
 				console.error('Error fetching milestone details: ', error.message);
 			}
 		})();
