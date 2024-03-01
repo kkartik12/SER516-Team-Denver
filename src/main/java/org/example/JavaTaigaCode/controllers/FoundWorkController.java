@@ -3,6 +3,7 @@ package org.example.JavaTaigaCode.controllers;
 import org.example.JavaTaigaCode.models.TaskDTO;
 import org.example.JavaTaigaCode.service.FoundWorkService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class FoundWorkController {
     @Autowired
     FoundWorkService foundWorkService;
 
+    @Cacheable(value="foundWork", key = "#milestoneID")
     @GetMapping("/foundWork/{milestoneID}")
     @ResponseBody
     public List<TaskDTO> getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID) {
