@@ -36,80 +36,78 @@ const GraphComponent = ({ sx = {}, parameter, milestoneId }) => {
 		fetchMilestoneDetails();
 	}, [parameter, milestoneId]);
 
-	useEffect(() => {
-		if (parameter === 'businessValue' && milestone.totalSumValue) {
-			const uniqueDatesMap = new Map();
-			milestone.totalSumValue.forEach((entry) => {
-				const currentValue = uniqueDatesMap.get(entry.date);
-				if (currentValue === undefined || entry.value > currentValue) {
-					uniqueDatesMap.set(entry.date, entry.value);
-				}
-			});
-			const labels = Array.from(uniqueDatesMap.keys());
-			const values = Array.from(uniqueDatesMap.values());
-			const graphData = {
-				labels: labels,
-				datasets: [
-					{
-						label: 'Burndown Chart BV',
-						data: values,
-						borderColor: 'rgba(75, 192, 192, 1)',
-						borderWidth: 1,
-						fill: false,
-					},
-				],
-			};
-			const ctx = document.getElementById('burndownChart');
-			if (chartInstance.current) {
-				chartInstance.current.destroy();
-			}
-			if (ctx) {
-				chartInstance.current = new Chart(ctx, {
-					type: 'line',
-					data: graphData,
-					options: {
-						scales: {
-							x: {
-								ticks: {
-									autoSkip: true,
-									maxTicksLimit: 5,
-								},
-								title: {
-									display: true,
-									text: 'Dates',
-								},
-							},
-							y: {
-								min: 0,
-								max: 20,
-								ticks: {
-									stepSize: 2,
-								},
-								title: {
-									display: true,
-									text: 'Business Value',
-								},
-							},
-						},
-					},
-				});
-			}
-		} else if (parameter === 'totalRunningSum' && milestone.totalSumValue) {
-			console.log('Graph for Total running sum');
-			const uniqueDatesMap = new Map();
-			if (milestone) {
-				milestone.totalSumValue.forEach((entry) => {
-					const currentValue = uniqueDatesMap.get(entry.date);
-					if (currentValue === undefined || entry.value < currentValue.value) {
-						uniqueDatesMap.set(entry.date, entry);
-					}
-				});
-			}
-			// Extract labels (dates) and values from the map
-			const labels = Array.from(uniqueDatesMap.keys());
-			const values = Array.from(uniqueDatesMap.values()).map(
-				(entry) => entry.value
-			);
+  useEffect(() => {
+  if(parameter === "businessValue" && milestone.totalSumValue){
+    const uniqueDatesMap = new Map();
+    milestone.totalSumValue.forEach(entry => {
+      const currentValue = uniqueDatesMap.get(entry.date);
+      if (currentValue === undefined || entry.value > currentValue) {
+        uniqueDatesMap.set(entry.date, entry.value);
+      }
+    });
+    const labels = Array.from(uniqueDatesMap.keys());
+    const values = Array.from(uniqueDatesMap.values());
+    const graphData = {
+      labels: labels,
+      datasets: [{
+        label: 'Burn "UP" Chart Business Value',
+        data: values,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        fill: false
+      }]
+    };
+    const ctx = document.getElementById('burndownChart');
+    if (chartInstance.current) {
+      chartInstance.current.destroy();
+    }
+    if (ctx) {
+      chartInstance.current = new Chart(ctx, {
+        type: 'line',
+        data: graphData,
+        options: {
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 5,
+              },
+              title: {
+                display: true,
+                text: 'Dates'
+              }
+            },
+            y: {
+              min: 0,
+              max: 20,
+              ticks: {
+                stepSize: 2
+              },
+              title: {
+                display: true,
+                text: 'Business Value'
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+  else if(parameter === "totalRunningSum" && milestone.totalSumValue){
+    console.log("Graph for Total running sum")
+    const uniqueDatesMap = new Map();
+    if(milestone) {
+      milestone.totalSumValue.forEach(entry => {
+        const currentValue = uniqueDatesMap.get(entry.date);
+        if (currentValue === undefined || entry.value < currentValue.value) {
+          uniqueDatesMap.set(entry.date, entry);
+        }
+      });
+    }
+    // Extract labels (dates) and values from the map
+    const labels = Array.from(uniqueDatesMap.keys());
+    const values = Array.from(uniqueDatesMap.values()).map(entry => entry.value);
+
 
 			// Render the chart
 			const prsCtx = document.getElementById('burndownChart');

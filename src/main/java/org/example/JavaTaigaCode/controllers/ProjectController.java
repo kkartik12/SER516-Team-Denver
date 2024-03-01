@@ -8,6 +8,7 @@ import org.example.JavaTaigaCode.service.BurndownChart;
 import org.example.JavaTaigaCode.service.ProjectService;
 import org.example.JavaTaigaCode.service.Tasks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class ProjectController {
 
     @Autowired
     Tasks taskService;
+
+    @Cacheable(value="projectList", key = "#memberID")
     @GetMapping("/projectList/{memberID}")
     @ResponseBody
     public List<ProjectDTO> getProjectList(@PathVariable("memberID") Integer memberID) {
@@ -39,6 +42,7 @@ public class ProjectController {
             return projects;
     }
 
+    @Cacheable(value="projectByID", key = "#projectID")
     @GetMapping("/projects/{projectID}")
     @ResponseBody
     public ProjectDTO getProjectDetails(@PathVariable("projectID") Integer projectID) {
@@ -50,6 +54,7 @@ public class ProjectController {
         return project;
     }
 
+    @Cacheable(value="projectBySlug", key = "#Slug")
     @GetMapping("/projects/by-slug/{slug}")
     @ResponseBody
     public ProjectDTO getProjectDetailsSlug(@PathVariable("slug") String Slug) {
@@ -68,30 +73,35 @@ public class ProjectController {
         
     }
 
+    @Cacheable(value="burnDownBV", key = "#milestoneID")
     @GetMapping("/burndownchart/{milestoneID}/businessValue")
     @ResponseBody
     public MilestoneDTO getTotalBusinessValue(@PathVariable("milestoneID") Integer milestoneID) {
         return burndownChart.getTotalBusinessValue(milestoneID);
     }
-    
+
+    @Cacheable(value="burnDownPartialRunningSum", key = "#milestoneID")
     @GetMapping("/burndownchart/{milestoneID}/partialRunningSum")
     @ResponseBody
     public MilestoneDTO getPartialRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
         return burndownChart.calculatePartialRunningSum(milestoneID);
     }
-    
+
+    @Cacheable(value="burnDownTotalRunningSum", key = "#milestoneID")
     @GetMapping("/burndownchart/{milestoneID}/totalRunningSum")
     @ResponseBody
     public MilestoneDTO getTotalRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
         return burndownChart.calculateTotalRunningSum(milestoneID);
     }
 
+    @Cacheable(value="leadTimeUS", key = "#milestoneID")
     @GetMapping("/leadTime/US/{milestoneID}")
     @ResponseBody
     public List<UserStoryDTO> getLeadTimeUS(@PathVariable("milestoneID") Integer  milestoneID) {
         return taskService.calculateLeadTimeUS(milestoneID);
     }
 
+    @Cacheable(value="leadTimeTask", key = "#milestoneID")
     @GetMapping("/leadTime/Task/{milestoneID}")
     @ResponseBody
     public List<TaskDTO> getLeadTimeTask(@PathVariable("milestoneID") Integer  milestoneID) {

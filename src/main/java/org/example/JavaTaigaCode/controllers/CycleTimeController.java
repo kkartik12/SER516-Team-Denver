@@ -4,6 +4,7 @@ import org.example.JavaTaigaCode.models.TaskDTO;
 import org.example.JavaTaigaCode.models.UserStoryDTO;
 import org.example.JavaTaigaCode.service.CycleTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +16,13 @@ public class CycleTimeController {
     @Autowired
     CycleTimeService cycleTimeService;
 
+    @Cacheable(value="cycleTimeForUS", key = "#milestoneID")
     @GetMapping("/cycleTime/US/{milestoneID}")
     @ResponseBody
     public List<UserStoryDTO> getUSCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
         return cycleTimeService.getUSCycleTime(milestoneID);
     }
-
+    @Cacheable(value="cycleTimeForTask", key = "#milestoneID")
     @GetMapping("/cycleTime/Task/{milestoneID}")
     @ResponseBody
     public List<TaskDTO> getTaskCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
