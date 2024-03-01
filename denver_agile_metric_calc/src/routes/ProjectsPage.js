@@ -1,14 +1,14 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
-	Box,
-	CircularProgress,
-	Container,
-	Divider,
-	IconButton,
-	List,
-	ListItem,
-	TextField,
-	Typography,
+  Box,
+  CircularProgress,
+  Container,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  TextField,
+  Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -18,7 +18,7 @@ const ProjectsPage = () => {
   const { memberID } = useParams();
   const [projectList, setProjectList] = useState([]);
   const [slug, setSlug] = useState('');
-  const [loading, setLoading] = useState(true); // New loading state
+  const [isLoading, setLoading] = useState(true); // New loading state
   const navigate = useNavigate();
 
   // Fetches project list for a logged-in user
@@ -89,14 +89,14 @@ const ProjectsPage = () => {
       </form>
 
       {/* Loading message */}
-      {loading && (
+      {isLoading && (
         <Typography variant="h6" align="center" sx={{ mt: 4 }}>
           Loading Projects...
         </Typography>
       )}
 
       {/* Project list */}
-      {!loading && (
+      {!isLoading && (
         <>
           <Divider />
           <List>
@@ -120,8 +120,12 @@ const ProjectsPage = () => {
         </>
       )}
     </Container>
-  );
+    
+)}
 
+</div>
+  );
+  
 };
 
 export default ProjectsPage;
