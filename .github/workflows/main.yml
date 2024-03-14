@@ -14,6 +14,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2  # Checkout code from the repository
+        
+      - name: Setup Java environment
+        uses: actions/setup-java@v3  # Setup Java environment
+        with:
+          java-version: '17'  # Java version
+      
+      - name: Install Maven dependencies 
+        run: mvn clean install  # Install Maven dependencies (replace with your build command)
+        
+      - name: Change directory
+        run: cd ./denver_agile_metric_calc  # Change directory to React project
 
       - name: Set up Node.js environment
         uses: actions/setup-node@v3  # Setup Node.js environment
@@ -25,13 +36,5 @@ jobs:
 
       - name: Build React app
         run: npm run build  # Build the React application 
-
-      - name: Setup Java environment
-        uses: actions/setup-java@v3  # Setup Java environment
-        with:
-          java-version: '17'  # Java version
-
-      - name: Install Maven dependencies 
-        run: mvn clean install  # Install Maven dependencies (replace with your build command)
 
 
