@@ -15,10 +15,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2  # Checkout code from the repository
         
-      - name: Setup Java environment
-        uses: actions/setup-java@v3  # Setup Java environment
+      - name: Set up Java environment
+        uses: actions/setup-java@v3
         with:
-          java-version: '17'  # Java version
+            java-version: '17' 
+            distribution: 'adopt'  
+
       
       - name: Install Maven dependencies 
         run: mvn clean install  # Install Maven dependencies (replace with your build command)
