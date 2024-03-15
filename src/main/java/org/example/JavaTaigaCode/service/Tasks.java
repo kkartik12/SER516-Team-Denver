@@ -144,6 +144,14 @@ public class Tasks {
         return LocalDate.parse(dateString, formatter);
     }
 
+    public List<UserStoryDTO> calculateLeadTimeUSbyTime(LocalDate startDate, LocalDate endDate) {
+        return null;
+    }
+
+    public List<TaskDTO> calculateLeadTimeTaskbyTime(LocalDate startDate, LocalDate endDate) {
+        return null;
+    }
+
 /*     private static int[] calculateCycleTime(JsonNode historyData, LocalDateTime finishedDate) {
         int cycleTime = 0;
         int closedTasks = 0;

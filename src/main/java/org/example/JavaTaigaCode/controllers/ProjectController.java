@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -106,5 +107,19 @@ public class ProjectController {
     @ResponseBody
     public List<TaskDTO> getLeadTimeTask(@PathVariable("milestoneID") Integer  milestoneID) {
         return taskService.calculateLeadTimeTask(milestoneID);
+    }
+
+    @Cacheable(value="leadTimeUSbyTime", key = "#startDate#endDate")
+    @GetMapping("/leadTime/US?startDate={startDate}&endDate={endDate}")
+    @ResponseBody
+    public List<UserStoryDTO> getLeadTimeUSbyTime(@PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate) {
+        return taskService.calculateLeadTimeUSbyTime(startDate, endDate);
+    }
+
+    @Cacheable(value="leadTimeTaskbyTime", key = "#startDate#endDate")
+    @GetMapping("/leadTime/Task?startDate={startDate}&endDate={endDate}")
+    @ResponseBody
+    public List<TaskDTO> getLeadTimeTaskbyTime(@PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate) {
+        return taskService.calculateLeadTimeTaskbyTime(startDate, endDate);
     }
 }
