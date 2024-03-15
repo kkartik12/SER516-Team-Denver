@@ -144,11 +144,11 @@ public class Tasks {
         return LocalDate.parse(dateString, formatter);
     }
 
-    public List<UserStoryDTO> calculateLeadTimeUSbyTime(LocalDate startDate, LocalDate endDate) {
+    public List<UserStoryDTO> calculateLeadTimeUSbyTime(Integer projectId, LocalDate startDate, LocalDate endDate) {
         return null;
     }
 
-    public List<TaskDTO> calculateLeadTimeTaskbyTime(LocalDate startDate, LocalDate endDate) {
+    public List<TaskDTO> calculateLeadTimeTaskbyTime(Integer projectId, LocalDate startDate, LocalDate endDate) {
         return null;
     }
 
