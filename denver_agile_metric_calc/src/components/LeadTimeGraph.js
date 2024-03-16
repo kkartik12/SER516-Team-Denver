@@ -1,27 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { 
-	Card, 
-	CardContent, 
-	CardMedia, 
-	Box, 
-	Typography, 
-	CircularProgress,
-	Switch,
-	FormGroup,
-	FormControlLabel } from '@mui/material';
-import moment from 'moment';
 import {
-	ScatterChart,
-	Scatter,
-	BarChart,
-	XAxis,
-	XAxisProps,
-	YAxis,
-	YAxisProps,
-	Tooltip,
-	Text,
-	Label,
+	Box,
+	Card,
+	CircularProgress,
+	FormControlLabel,
+	FormGroup,
+	Switch,
+	TextField,
+	Typography
+} from '@mui/material';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import {
 	CartesianGrid,
+	Label,
+	Scatter,
+	ScatterChart,
+	Tooltip,
+	XAxis,
+	YAxis
 } from 'recharts';
 
 // Ensure you also import the necessary charting library components (e.g., BarChart, Scatter)
@@ -30,6 +26,9 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 	const [milestone, setMilestone] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [isCustomDateRange, setIsCustomDateRange] = useState(false);
+	const [startDate, setStartDate] = useState('');
+	const [endDate, setEndDate] = useState('');
 
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
@@ -52,6 +51,10 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 
 		fetchMilestoneDetails();
 	}, []);
+
+	const handleCustomDateRangeToggle = () => {
+		setIsCustomDateRange(!isCustomDateRange);
+	};
 
 	const leadTimeData = milestone?.map((item) => {
 		let closedDate;
@@ -98,8 +101,35 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			{!isLoading && (
 				<Card sx={{ width: '100%', height: '100%' }}>
 					<FormGroup sx={{m: 2, mr: 4}}>
-						<FormControlLabel control={<Switch />} label="Add Custom Date Range"/>
+						<FormControlLabel 
+							control={<Switch checked={isCustomDateRange} onChange={handleCustomDateRangeToggle} />} 
+							label="Add Custom Date Range"
+						/>
 					</FormGroup>
+					{isCustomDateRange && (
+						<Box sx={{ display: 'flex' }}>
+							<TextField
+								id="startDate"
+								label="Start Date"
+								type="date"
+								value={startDate}
+								onChange={(e) => setStartDate(e.target.value)}
+								InputLabelProps={{
+									shrink: true,
+								}}
+							/>
+							<TextField
+								id="endDate"
+								label="End Date"
+								type="date"
+								value={endDate}
+								onChange={(e) => setEndDate(e.target.value)}
+								InputLabelProps={{
+									shrink: true,
+								}}
+							/>
+						</Box>
+					)}
 					<Box sx={{ display: 'flex' }}>
 						<ScatterChart width={500} height={400}>
 							<CartesianGrid strokeDasharray="3 3" />
