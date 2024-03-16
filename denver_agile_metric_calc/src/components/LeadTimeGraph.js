@@ -3,7 +3,7 @@ import {
 	Card,
 	CircularProgress,
 	FormControlLabel,
-	FormGroup,
+	Grid,
 	Switch,
 	TextField,
 	Typography
@@ -20,8 +20,6 @@ import {
 	YAxis
 } from 'recharts';
 
-// Ensure you also import the necessary charting library components (e.g., BarChart, Scatter)
-
 const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 	const [milestone, setMilestone] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +27,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 	const [isCustomDateRange, setIsCustomDateRange] = useState(false);
 	const [startDate, setStartDate] = useState('');
 	const [endDate, setEndDate] = useState('');
+	const [dateError, setDateError] = useState('');
 
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
@@ -54,6 +53,24 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 
 	const handleCustomDateRangeToggle = () => {
 		setIsCustomDateRange(!isCustomDateRange);
+	};
+
+	const handleStartDateChange = (date) => {
+		if (endDate && moment(date).isAfter(endDate)) {
+			setDateError('Start date cannot be after end date');
+		} else {
+			setDateError('');
+			setStartDate(date);
+		}
+	};
+
+	const handleEndDateChange = (date) => {
+		if (startDate && moment(date).isBefore(startDate)) {
+			setDateError('End date cannot be before start date');
+		} else {
+			setDateError('');
+			setEndDate(date);
+		}
 	};
 
 	const leadTimeData = milestone?.map((item) => {
@@ -100,36 +117,47 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			)}
 			{!isLoading && (
 				<Card sx={{ width: '100%', height: '100%' }}>
-					<FormGroup sx={{m: 2, mr: 4}}>
-						<FormControlLabel 
-							control={<Switch checked={isCustomDateRange} onChange={handleCustomDateRangeToggle} />} 
+					<Grid container alignItems="center" justifyContent="space-between" sx={{ m: 2, mr: 4 }}>
+						<FormControlLabel
+							control={<Switch checked={isCustomDateRange} onChange={handleCustomDateRangeToggle} />}
 							label="Add Custom Date Range"
 						/>
-					</FormGroup>
-					{isCustomDateRange && (
-						<Box sx={{ display: 'flex' }}>
-							<TextField
-								id="startDate"
-								label="Start Date"
-								type="date"
-								value={startDate}
-								onChange={(e) => setStartDate(e.target.value)}
-								InputLabelProps={{
-									shrink: true,
-								}}
-							/>
-							<TextField
-								id="endDate"
-								label="End Date"
-								type="date"
-								value={endDate}
-								onChange={(e) => setEndDate(e.target.value)}
-								InputLabelProps={{
-									shrink: true,
-								}}
-							/>
-						</Box>
-					)}
+						{isCustomDateRange && (
+							<Grid container spacing={2} alignItems="center">
+								<Grid item>
+									<TextField
+										id="startDate"
+										label="Start Date"
+										type="date"
+										value={startDate}
+										onChange={(e) => handleStartDateChange(e.target.value)}
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+								</Grid>
+								<Grid item>
+									<TextField
+										id="endDate"
+										label="End Date"
+										type="date"
+										value={endDate}
+										onChange={(e) => handleEndDateChange(e.target.value)}
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+								</Grid>
+								{dateError && (
+									<Grid item>
+										<Typography variant="body2" color="error">
+											{dateError}
+										</Typography>
+									</Grid>
+								)}
+							</Grid>
+						)}
+					</Grid>
 					<Box sx={{ display: 'flex' }}>
 						<ScatterChart width={500} height={400}>
 							<CartesianGrid strokeDasharray="3 3" />
