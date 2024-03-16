@@ -1,7 +1,10 @@
 import React, {useState} from 'react'
 import { ToggleButton,
 ToggleButtonGroup, 
-Box } from '@mui/material'
+Box, 
+Switch,
+FormGroup,
+FormControlLabel } from '@mui/material'
 import LeadTimeGraph from './LeadTimeGraph'
 
 
@@ -22,6 +25,7 @@ const LeadTime = ({ milestone }) => {
                     Task
                 </ToggleButton>
             </ToggleButtonGroup>
+
             { parameter && <LeadTimeGraph  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
         </Box>
     )

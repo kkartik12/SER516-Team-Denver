@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, Box, Typography, CircularProgress } from '@mui/material';
+import { 
+	Card, 
+	CardContent, 
+	CardMedia, 
+	Box, 
+	Typography, 
+	CircularProgress,
+	Switch,
+	FormGroup,
+	FormControlLabel } from '@mui/material';
 import moment from 'moment';
 import {
 	ScatterChart,
@@ -88,6 +97,9 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			)}
 			{!isLoading && (
 				<Card sx={{ width: '100%', height: '100%' }}>
+					<FormGroup sx={{m: 2, mr: 4}}>
+						<FormControlLabel control={<Switch />} label="Add Custom Date Range"/>
+					</FormGroup>
 					<Box sx={{ display: 'flex' }}>
 						<ScatterChart width={500} height={400}>
 							<CartesianGrid strokeDasharray="3 3" />
