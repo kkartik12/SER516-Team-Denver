@@ -145,11 +145,69 @@ public class Tasks {
     }
 
     public List<UserStoryDTO> calculateLeadTimeUSbyTime(Integer projectId, LocalDate startDate, LocalDate endDate) {
-        return null;
+        List<UserStoryDTO> userStories = new ArrayList<>();
+
+        // Assuming there is an API endpoint to fetch user stories by project ID
+        String endpoint = TAIGA_API_ENDPOINT + "/US?project= " + projectId + "&startDate=" + startDate + "&endDate=" + endDate;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.setHeader("x-disable-pagination", "True");
+
+        try {
+            String responseJson = HTTPRequest.sendHttpRequest(request);
+            JsonNode userStoriesNode = objectMapper.readTree(responseJson);
+
+            for (JsonNode userStoryNode : userStoriesNode) {
+                LocalDate createdDate = parseDate(userStoryNode.get("created_date").asText());
+                // Check if the user story falls within the specified date range
+                if (createdDate.isAfter(startDate) && createdDate.isBefore(endDate)) {
+                    // Assuming UserStoryDTO constructor takes relevant fields
+                    UserStoryDTO userStoryDTO = new UserStoryDTO();
+                    userStoryDTO.setCreatedDate(createdDate);
+                    // Set other relevant fields
+                    userStories.add(userStoryDTO);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(userStories);
+        return userStories; 
+        // return null;
     }
 
     public List<TaskDTO> calculateLeadTimeTaskbyTime(Integer projectId, LocalDate startDate, LocalDate endDate) {
-        return null;
+        List<TaskDTO> tasks = new ArrayList<>();
+
+        // Assuming there is an API endpoint to fetch tasks by project ID
+        String endpoint = TAIGA_API_ENDPOINT + "/Task?project= " + projectId + "&startDate=" + startDate + "&endDate=" + endDate;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.setHeader("x-disable-pagination", "True");
+
+        try {
+            String responseJson = HTTPRequest.sendHttpRequest(request);
+            JsonNode tasksNode = objectMapper.readTree(responseJson);
+
+            for (JsonNode taskNode : tasksNode) {
+                LocalDate createdDate = parseDate(taskNode.get("created_date").asText());
+                // Check if the task falls within the specified date range
+                if (createdDate.isAfter(startDate) && createdDate.isBefore(endDate)) {
+                    // Assuming TaskDTO constructor takes relevant fields
+                    TaskDTO taskDTO = new TaskDTO();
+                    taskDTO.setCreatedDate(createdDate);
+                    // Set other relevant fields
+                    tasks.add(taskDTO);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(tasks);
+        return tasks;
+        // return null; 
     }
 
 /*     private static int[] calculateCycleTime(JsonNode historyData, LocalDateTime finishedDate) {
