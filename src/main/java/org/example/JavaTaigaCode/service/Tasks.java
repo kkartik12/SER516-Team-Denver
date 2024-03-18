@@ -181,7 +181,7 @@ public class Tasks {
         List<TaskDTO> tasks = new ArrayList<>();
 
         // Assuming there is an API endpoint to fetch tasks by project ID
-        String endpoint = TAIGA_API_ENDPOINT + "/Task?project= " + projectId + "&startDate=" + startDate + "&endDate=" + endDate;
+        String endpoint = TAIGA_API_ENDPOINT + "/Task?project=" + projectId + "&startDate=" + startDate + "&endDate=" + endDate;
         HttpGet request = new HttpGet(endpoint);
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
