@@ -112,6 +112,67 @@ public class Tasks {
         return null;
     }
 
+    public List<UserStoryDTO> getClosedStoriesByProject(Integer projectId) {
+        String endpoint = TAIGA_API_ENDPOINT + "/userstories?project=" + projectId;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.setHeader("x-disable-pagination", "True");
+        String responseJson = HTTPRequest.sendHttpRequest(request);
+        
+        if (responseJson != null) {
+            try {
+                JsonNode stories = objectMapper.readTree(responseJson);
+                List<UserStoryDTO> closedStories = new ArrayList<>();
+                
+                if (stories.isArray()) {
+                    for (JsonNode story : stories) {
+                        if (story.get("is_closed").booleanValue()) {
+                            LocalDate createdAt = parseDate(story.get("created_date").asText());
+                            LocalDate closedAt = parseDate(story.get("finish_date").asText());
+                            UserStoryDTO u = new UserStoryDTO(createdAt, closedAt);
+                            closedStories.add(u);
+                        }
+                    }
+                    return closedStories;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    
+    public List<TaskDTO> getClosedTasksByProject(Integer projectId) {
+        String endpoint = TAIGA_API_ENDPOINT + "/tasks?project=" + projectId;
+        HttpGet request = new HttpGet(endpoint);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.setHeader("x-disable-pagination", "True");
+        String responseJson = HTTPRequest.sendHttpRequest(request);
+        
+        if (responseJson != null) {
+            try {
+                JsonNode tasks = objectMapper.readTree(responseJson);
+                List<TaskDTO> closedTasks = new ArrayList<>();       
+                if (tasks.isArray()) {
+                    for (JsonNode task : tasks) {
+                        if (task.get("is_closed").booleanValue()) {
+                            LocalDate createdAt = parseDate(task.get("created_date").asText());
+                            LocalDate closedAt = parseDate(task.get("finished_date").asText());
+                            TaskDTO u = new TaskDTO(createdAt, closedAt);
+                            closedTasks.add(u);
+                        }
+                    }
+                    return closedTasks;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }        
+        return null;
+    }
+    
 
     public List<UserStoryDTO> calculateLeadTimeUS(Integer milestoneId) {
         List<UserStoryDTO> closedStories = getClosedStories(milestoneId);
@@ -145,69 +206,43 @@ public class Tasks {
     }
 
     public List<UserStoryDTO> calculateLeadTimeUSbyTime(Integer projectId, LocalDate startDate, LocalDate endDate) {
-        List<UserStoryDTO> userStories = new ArrayList<>();
-
-        // Assuming there is an API endpoint to fetch user stories by project ID
-        String endpoint = TAIGA_API_ENDPOINT + "/US?project= " + projectId + "&startDate=" + startDate + "&endDate=" + endDate;
-        HttpGet request = new HttpGet(endpoint);
-        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
-        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        request.setHeader("x-disable-pagination", "True");
-
-        try {
-            String responseJson = HTTPRequest.sendHttpRequest(request);
-            JsonNode userStoriesNode = objectMapper.readTree(responseJson);
-
-            for (JsonNode userStoryNode : userStoriesNode) {
-                LocalDate createdDate = parseDate(userStoryNode.get("created_date").asText());
-                // Check if the user story falls within the specified date range
-                if (createdDate.isAfter(startDate) && createdDate.isBefore(endDate)) {
-                    // Assuming UserStoryDTO constructor takes relevant fields
-                    UserStoryDTO userStoryDTO = new UserStoryDTO();
-                    userStoryDTO.setCreatedDate(createdDate);
-                    // Set other relevant fields
-                    userStories.add(userStoryDTO);
-                }
+        List<UserStoryDTO> closedStoriesWithinDateRange = new ArrayList<>();
+        List<UserStoryDTO> closedStories = getClosedStoriesByProject(projectId);
+        for (UserStoryDTO story : closedStories) {
+            LocalDate closedAt = story.getFinishDate();
+            if (closedAt != null && closedAt.isAfter(startDate) && closedAt.isBefore(endDate)) {
+                closedStoriesWithinDateRange.add(story);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        System.out.println(userStories);
-        return userStories; 
-        // return null;
+        for (UserStoryDTO story : closedStoriesWithinDateRange) {
+            LocalDate createdAt = story.getCreatedDate();
+            LocalDate closedAt = story.getFinishDate();
+            if (createdAt != null && closedAt != null) {
+                long leadTimeInDays = ChronoUnit.DAYS.between(createdAt, closedAt);
+                story.setLeadTime(leadTimeInDays);
+            }
+        }
+        return closedStoriesWithinDateRange;
     }
 
     public List<TaskDTO> calculateLeadTimeTaskbyTime(Integer projectId, LocalDate startDate, LocalDate endDate) {
-        List<TaskDTO> tasks = new ArrayList<>();
-
-        // Assuming there is an API endpoint to fetch tasks by project ID
-        String endpoint = TAIGA_API_ENDPOINT + "/Task?project=" + projectId + "&startDate=" + startDate + "&endDate=" + endDate;
-        HttpGet request = new HttpGet(endpoint);
-        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
-        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        request.setHeader("x-disable-pagination", "True");
-
-        try {
-            String responseJson = HTTPRequest.sendHttpRequest(request);
-            JsonNode tasksNode = objectMapper.readTree(responseJson);
-
-            for (JsonNode taskNode : tasksNode) {
-                LocalDate createdDate = parseDate(taskNode.get("created_date").asText());
-                // Check if the task falls within the specified date range
-                if (createdDate.isAfter(startDate) && createdDate.isBefore(endDate)) {
-                    // Assuming TaskDTO constructor takes relevant fields
-                    TaskDTO taskDTO = new TaskDTO();
-                    taskDTO.setCreatedDate(createdDate);
-                    // Set other relevant fields
-                    tasks.add(taskDTO);
-                }
+        List<TaskDTO> closedTasksWithinDateRange = new ArrayList<>();
+        List<TaskDTO> closedTasks = getClosedTasksByProject(projectId);
+        for (TaskDTO task : closedTasks) {
+            LocalDate closedAt = task.getClosedDate();
+            if (closedAt != null && closedAt.isAfter(startDate) && closedAt.isBefore(endDate)) {
+                closedTasksWithinDateRange.add(task);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        System.out.println(tasks);
-        return tasks;
-        // return null; 
+        for (TaskDTO task : closedTasksWithinDateRange) {
+            LocalDate createdAt = task.getCreatedDate();
+            LocalDate closedAt = task.getClosedDate();
+            if (createdAt != null && closedAt != null) {
+                long leadTimeInDays = ChronoUnit.DAYS.between(createdAt, closedAt);
+                task.setLeadTime(leadTimeInDays);
+            }
+        }
+        return closedTasksWithinDateRange;
     }
 
 /*     private static int[] calculateCycleTime(JsonNode historyData, LocalDateTime finishedDate) {

@@ -109,17 +109,32 @@ public class ProjectController {
         return taskService.calculateLeadTimeTask(milestoneID);
     }
 
-    @Cacheable(value="leadTimeUSbyTime")
-    @GetMapping("/leadTime/US?project={projectId}&startDate={startDate}&endDate={endDate}")
+    // @Cacheable(value="leadTimeUSbyTime")
+    // @GetMapping("/leadTime/US?project={projectId}&startDate={startDate}&endDate={endDate}")
+    // @ResponseBody
+    // public List<UserStoryDTO> getLeadTimeUSbyTime(@PathVariable("projectId") Integer projectId, @PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate) {
+    //     return taskService.calculateLeadTimeUSbyTime(projectId, startDate, endDate);
+    // }
+
+    // @Cacheable(value="leadTimeUSbyTime")
+    @GetMapping("/leadTime/UST")
     @ResponseBody
-    public List<UserStoryDTO> getLeadTimeUSbyTime(@PathVariable("projectId") Integer projectId, @PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate) {
+    public List<UserStoryDTO> getLeadTimeUSbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
         return taskService.calculateLeadTimeUSbyTime(projectId, startDate, endDate);
     }
 
-    @Cacheable(value="leadTimeTaskbyTime")
-    @GetMapping("/leadTime/Task?project={projectId}&startDate={startDate}&endDate={endDate}")
+    // @Cacheable(value="leadTimeTaskbyTime")
+    // @GetMapping("/leadTime/Task?project={projectId}&startDate={startDate}&endDate={endDate}")
+    // @ResponseBody
+    // public List<TaskDTO> getLeadTimeTaskbyTime(@PathVariable("projectId") Integer projectId, @PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate) {
+    //     return taskService.calculateLeadTimeTaskbyTime(projectId, startDate, endDate);
+    // }
+
+    // @Cacheable(value="leadTimeTaskbyTime")
+    @GetMapping("/leadTime/Tasks")
     @ResponseBody
-    public List<TaskDTO> getLeadTimeTaskbyTime(@PathVariable("projectId") Integer projectId, @PathVariable("startDate") LocalDate startDate, @PathVariable("endDate") LocalDate endDate) {
+    public List<TaskDTO> getLeadTimeTaskbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
         return taskService.calculateLeadTimeTaskbyTime(projectId, startDate, endDate);
     }
+
 }
