@@ -1,4 +1,4 @@
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, FormControlLabel, FormGroup, Switch, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
@@ -81,6 +81,9 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			</div>
 			{!isLoading && (
 				<Card sx={{ width: '100%', height: '100%' }}>
+					<FormGroup sx={{m: 2, mr: 4}}>
+						<FormControlLabel control={<Switch />} label="Add Custom Date Range"/>
+					</FormGroup>
 					<Box sx={{ display: 'flex' }}>
 						<ScatterChart width={500} height={400}>
 							<CartesianGrid strokeDasharray="3 3" />
