@@ -119,7 +119,8 @@ const MetricsSection = ({ project }) => {
 					{selectedMetric === 'Lead Time' && (
 						<LeadTime milestone={selectedMilestone} 
 						createdDate={project.createdDate}
-						updatedDate={project.updatedDate}/>
+						updatedDate={project.updatedDate}
+						projectId={project.projectID}/>
 					)}
 					{selectedMetric === 'Delivery on Time' && (
 						<DeliveryOnTime milestones={project.milestoneDetails}
