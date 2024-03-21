@@ -28,7 +28,8 @@ public class CachingConfig {
                 "burnDownPartialRunningSum",
                 "burnDownTotalRunningSum",
                 "leadTimeUS",
-                "leadTimeTask"
-                );
+                "leadTimeTask",
+                "USCycleTimeByDates",
+                "taskCycleTimeByDates");
     }
 }
