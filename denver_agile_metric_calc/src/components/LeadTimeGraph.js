@@ -20,15 +20,16 @@ import {
 	YAxis
 } from 'recharts';
 
-const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
+const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDate }) => {
 	const [milestone, setMilestone] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [isCustomDateRange, setIsCustomDateRange] = useState(false);
-	const [startDate, setStartDate] = useState('');
-	const [endDate, setEndDate] = useState('');
+	const [startDate, setStartDate] = useState(createdDate);
+	const [endDate, setEndDate] = useState(updatedDate);
 	const [dateError, setDateError] = useState('');
-
+	console.log("createdDate:", createdDate)
+	console.log("updatedDate:", updatedDate)
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
 			try {
@@ -51,8 +52,14 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 		fetchMilestoneDetails();
 	}, []);
 
-	const handleCustomDateRangeToggle = () => {
-		setIsCustomDateRange(!isCustomDateRange);
+	const fetchCustomDetails = async () => {
+
+	}
+	const handleCustomDateRangeToggle = (event) => {
+		setIsCustomDateRange(event.target.checked);
+		if(event.target.checked) {
+			fetchCustomDetails()
+		}
 	};
 
 	const handleStartDateChange = (date) => {
@@ -107,7 +114,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			groupedData[date].push(item.leadTime);
 		});
 	}
-
+	
 	return (
 		<div>
 			{isLoading && (
