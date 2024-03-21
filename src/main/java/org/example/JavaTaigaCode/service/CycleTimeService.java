@@ -39,12 +39,12 @@ public class CycleTimeService {
 
     public List<UserStoryDTO> getUSCycleTime(Integer milestoneID) {
         String response = "";
-        try{
+        try {
             String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            request.setHeader("x-disable-pagination","True");
+            request.setHeader("x-disable-pagination", "True");
             HttpResponse httpResponse = httpClient.execute(request);
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
@@ -67,12 +67,13 @@ public class CycleTimeService {
                                     DateTimeFormatter.ISO_DATE_TIME);
                             userStoryDTO.setFinishDate(dateTime.toLocalDate());
                             userStoryDTO.setCreatedDate(inprogressDate);
-                            if(userStoryDTO.getCreatedDate() == null){
+                            if (userStoryDTO.getCreatedDate() == null) {
                                 userStoryDTO.setCreatedDate(userStoryDTO.getFinishDate());
                             }
                             if (userStoryDTO.getCreatedDate() != null && userStoryDTO.getFinishDate() != null) {
-                                long cycleTimeInDays = ChronoUnit.DAYS.between(userStoryDTO.getCreatedDate(), userStoryDTO.getFinishDate());
-                                if(cycleTimeInDays==0) {
+                                long cycleTimeInDays = ChronoUnit.DAYS.between(userStoryDTO.getCreatedDate(),
+                                        userStoryDTO.getFinishDate());
+                                if (cycleTimeInDays == 0) {
                                     cycleTimeInDays = 1;
                                 }
                                 userStoryDTO.setCycleTime(cycleTimeInDays);
@@ -92,12 +93,12 @@ public class CycleTimeService {
     }
 
     public LocalDate getInProgressDateUS(Integer userStoryID) {
-        try{
+        try {
             String endpoint = TAIGA_API_ENDPOINT + "/history/userstory/" + userStoryID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            request.setHeader("x-disable-pagination","True");
+            request.setHeader("x-disable-pagination", "True");
             HttpResponse httpResponse = httpClient.execute(request);
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
@@ -107,8 +108,8 @@ public class CycleTimeService {
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 JsonNode historyListJSON = objectMapper.readTree(response);
-                if(historyListJSON.isArray()) {
-                    for(JsonNode history: historyListJSON) {
+                if (historyListJSON.isArray()) {
+                    for (JsonNode history : historyListJSON) {
                         JsonNode statusList = history.get("values_diff").get("status");
                         if (statusList != null && statusList.get(1).asText().equals("In progress")) {
                             LocalDateTime dateTime = LocalDateTime.parse(history.get("created_at").asText(),
@@ -129,12 +130,12 @@ public class CycleTimeService {
 
     public List<TaskDTO> getTaskCycleTime(Integer milestoneID) {
         String response = "";
-        try{
-            String endpoint = TAIGA_API_ENDPOINT +  "/tasks?milestone=" + milestoneID;
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/tasks?milestone=" + milestoneID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            request.setHeader("x-disable-pagination","True");
+            request.setHeader("x-disable-pagination", "True");
             HttpResponse httpResponse = httpClient.execute(request);
             int httpStatus = httpResponse.getStatusLine().getStatusCode();
             if (httpStatus < 200 || httpStatus >= 300) {
@@ -145,9 +146,9 @@ public class CycleTimeService {
             if (responseEntity != null) {
                 response = EntityUtils.toString(responseEntity);
                 JsonNode taskListJSON = objectMapper.readTree(response);
-                if(taskListJSON.isArray()){
-                    for(JsonNode taskJSON: taskListJSON){
-                        if(taskJSON.get("is_closed").asBoolean()) {
+                if (taskListJSON.isArray()) {
+                    for (JsonNode taskJSON : taskListJSON) {
+                        if (taskJSON.get("is_closed").asBoolean()) {
                             TaskDTO task = new TaskDTO();
                             task.setTaskID(taskJSON.get("id").asInt());
                             task.setClosed(taskJSON.get("is_closed").asBoolean());
@@ -155,11 +156,12 @@ public class CycleTimeService {
                                     DateTimeFormatter.ISO_DATE_TIME);
                             task.setClosedDate(dateTime.toLocalDate());
                             task.setCreatedDate(getInProgressDateTask(task.getTaskID()));
-                            if(task.getCreatedDate() == null){
+                            if (task.getCreatedDate() == null) {
                                 task.setCreatedDate(task.getClosedDate());
                             }
                             if (task.getCreatedDate() != null && task.getClosedDate() != null) {
-                                long cycleTimeInDays = ChronoUnit.DAYS.between(task.getCreatedDate(), task.getClosedDate());
+                                long cycleTimeInDays = ChronoUnit.DAYS.between(task.getCreatedDate(),
+                                        task.getClosedDate());
                                 if (cycleTimeInDays == 0) {
                                     cycleTimeInDays = 1;
                                 }
@@ -180,7 +182,7 @@ public class CycleTimeService {
     }
 
     public LocalDate getInProgressDateTask(Integer taskID) {
-        try{
+        try {
             String endpoint = TAIGA_API_ENDPOINT + "/history/task/" + taskID;
             HttpGet request = new HttpGet(endpoint);
             request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
@@ -194,8 +196,8 @@ public class CycleTimeService {
             if (responseEntity != null) {
                 String response = EntityUtils.toString(responseEntity);
                 JsonNode historyListJSON = objectMapper.readTree(response);
-                if(historyListJSON.isArray()) {
-                    for(JsonNode history: historyListJSON) {
+                if (historyListJSON.isArray()) {
+                    for (JsonNode history : historyListJSON) {
                         JsonNode statusList = history.get("values_diff").get("status");
                         if (statusList != null && statusList.get(1).asText().equals("In progress")) {
                             LocalDateTime dateTime = LocalDateTime.parse(history.get("created_at").asText(),
@@ -213,4 +215,121 @@ public class CycleTimeService {
         }
         return null;
     }
+
+    public List<UserStoryDTO> calculateUSCycleTimebyDates(Integer projectId, LocalDate startDate,
+            LocalDate endDate) {
+        // get all user stories
+        // filter in those that are closed and the closed date is between the start and
+        // end date
+        // for each story, get the in progress date
+        // for each story, calculate the cycle time
+        // http://localhost:8080/api/cycleTime/US/byTime/1521717?startDate=2023-03-20&endDate=2024-03-20
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/userstories?" + "project=" + projectId.toString();
+            HttpGet request = new HttpGet(endpoint);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            request.setHeader("x-disable-pagination", "True");
+            HttpResponse httpResponse = httpClient.execute(request);
+            int httpStatus = httpResponse.getStatusLine().getStatusCode();
+            if (httpStatus < 200 || httpStatus >= 300) {
+                throw new RuntimeException(httpResponse.getStatusLine().toString());
+            }
+            HttpEntity responseEntity = httpResponse.getEntity();
+            if (responseEntity != null) {
+                String response = EntityUtils.toString(responseEntity);
+                JsonNode userStoryListJSON = objectMapper.readTree(response);
+                if (userStoryListJSON.isArray()) {
+                    List<UserStoryDTO> userStoryList = new ArrayList<>();
+                    for (JsonNode us : userStoryListJSON) {
+                        if (us.get("is_closed").asBoolean()) {
+                            LocalDate inprogressDate = getInProgressDateUS(us.get("id").asInt());
+                            UserStoryDTO userStoryDTO = new UserStoryDTO();
+                            userStoryDTO.setUserStoryID(us.get("id").asInt());
+                            userStoryDTO.setClosed(us.get("is_closed").asBoolean());
+                            LocalDateTime dateTime = LocalDateTime.parse(us.get("finish_date").asText(),
+                                    DateTimeFormatter.ISO_DATE_TIME);
+                            userStoryDTO.setFinishDate(dateTime.toLocalDate());
+                            userStoryDTO.setCreatedDate(inprogressDate);
+                            if (userStoryDTO.getCreatedDate() == null) {
+                                userStoryDTO.setCreatedDate(userStoryDTO.getFinishDate());
+                            }
+                            if (userStoryDTO.getCreatedDate() != null && userStoryDTO.getFinishDate() != null) {
+                                long cycleTimeInDays = ChronoUnit.DAYS.between(userStoryDTO.getCreatedDate(),
+                                        userStoryDTO.getFinishDate());
+                                if (cycleTimeInDays == 0) {
+                                    cycleTimeInDays = 1;
+                                }
+                                userStoryDTO.setCycleTime(cycleTimeInDays);
+                            }
+                            if (userStoryDTO.getFinishDate().isAfter(startDate)
+                                    && userStoryDTO.getFinishDate().isBefore(endDate)) {
+                                userStoryList.add(userStoryDTO);
+                            }
+                        }
+                    }
+                    return userStoryList;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<TaskDTO> calculateTaskCycleTimebyDates(Integer projectId, LocalDate startDate,
+            LocalDate endDate) {
+        // http://localhost:8080/api/cycleTime/Task/byTime/1521717?startDate=2023-03-20&endDate=2024-03-20
+        try {
+            String endpoint = TAIGA_API_ENDPOINT + "/tasks?" + "project=" + projectId.toString();
+            HttpGet request = new HttpGet(endpoint);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            request.setHeader("x-disable-pagination", "True");
+            HttpResponse httpResponse = httpClient.execute(request);
+            int httpStatus = httpResponse.getStatusLine().getStatusCode();
+            if (httpStatus < 200 || httpStatus >= 300) {
+                throw new RuntimeException(httpResponse.getStatusLine().toString());
+            }
+            HttpEntity responseEntity = httpResponse.getEntity();
+            if (responseEntity != null) {
+                String response = EntityUtils.toString(responseEntity);
+                JsonNode taskListJSON = objectMapper.readTree(response);
+                if (taskListJSON.isArray()) {
+                    List<TaskDTO> tasks = new ArrayList<>();
+                    for (JsonNode taskJSON : taskListJSON) {
+                        if (taskJSON.get("is_closed").asBoolean()) {
+                            TaskDTO task = new TaskDTO();
+                            task.setTaskID(taskJSON.get("id").asInt());
+                            task.setClosed(taskJSON.get("is_closed").asBoolean());
+                            LocalDateTime dateTime = LocalDateTime.parse(taskJSON.get("finished_date").asText(),
+                                    DateTimeFormatter.ISO_DATE_TIME);
+                            task.setClosedDate(dateTime.toLocalDate());
+                            task.setCreatedDate(getInProgressDateTask(task.getTaskID()));
+                            if (task.getCreatedDate() == null) {
+                                task.setCreatedDate(task.getClosedDate());
+                            }
+                            if (task.getCreatedDate() != null && task.getClosedDate() != null) {
+                                long cycleTimeInDays = ChronoUnit.DAYS.between(task.getCreatedDate(),
+                                        task.getClosedDate());
+                                if (cycleTimeInDays == 0) {
+                                    cycleTimeInDays = 1;
+                                }
+                                task.setCycleTime(cycleTimeInDays);
+                            }
+                            if (task.getClosedDate().isAfter(startDate) && task.getClosedDate().isBefore(endDate)) {
+                                tasks.add(task);
+                            }
+                        }
+                    }
+                    return tasks;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
 }
