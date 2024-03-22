@@ -3,13 +3,13 @@ import Chart from 'chart.js/auto';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const GraphComponent = ({ sx = {}, parameter, milestoneId }) => {
+const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
 	const { projectId } = useParams();
 	const [milestone, setMilestone] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
 	const chartInstance = useRef(null); // Graph instance for all burndown charts
-	console.log('milestoneId: ', parameter);
-	const apiURL = `http://localhost:8080/api/burndownchart/${milestoneId}/${parameter}`;
+	console.log(milestoneIds)
+	const apiURL = `http://localhost:8080/api/burndownchart/${milestoneIds}/${parameter}`;
 
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
@@ -34,7 +34,7 @@ const GraphComponent = ({ sx = {}, parameter, milestoneId }) => {
 			}
 		};
 		fetchMilestoneDetails();
-	}, [parameter, milestoneId]);
+	}, [parameter, milestoneIds]);
 
   useEffect(() => {
   if(parameter === "businessValue" && milestone.totalSumValue){

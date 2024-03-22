@@ -3,7 +3,7 @@ import { ToggleButton,
 ToggleButtonGroup, Box } from '@mui/material'
 import GraphComponent from './GraphComponent'
 
-const Burndown = ({ milestone }) => {
+const Burndown = ({ milestones }) => {
     const [parameter, setParameter] = useState('')
     return (
         <Box>
@@ -23,7 +23,7 @@ const Burndown = ({ milestone }) => {
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
+            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} milestoneIds = {milestones}/>}
         </Box>
     )
 }

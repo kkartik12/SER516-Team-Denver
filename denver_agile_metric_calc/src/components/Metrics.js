@@ -4,7 +4,6 @@ import {
 	ListItem,
 	ListItemButton,
 	ListItemText,
-	Radio,
 	ToggleButton,
 	ToggleButtonGroup,
 	Checkbox
@@ -20,21 +19,33 @@ import FoundWorkChart from './FoundWorkChart';
 
 
 const MetricsSection = ({ project }) => {
-	const [selectedMetric, setSelectedMetric] = useState('');
-	const [selectedMilestone, setSelectedMilestone] = useState('');
-	const [checked, setChecked] = useState({});
+	const [selectedMetric, setSelectedMetric] = useState('')
+	const [selectedMilestone, setSelectedMilestone] = useState('')
+	const [checked, setChecked] = useState({})
+	const [milestones, setMilestones] = useState([])
 	const handleToggle = (milestone) => () => {
-		setChecked((prevChecked) =>
-			prevChecked.includes(milestone)
-				? prevChecked.filter((m) => m !== milestone)
-				: [...prevChecked, milestone]
-		);
-		setChecked((prev) => [...prev, milestone]);
+		setChecked((prevChecked) => ({
+		  ...prevChecked, // Keep existing key-value pairs
+		  [milestone]: !prevChecked[milestone] || false, // Toggle selection for the clicked milestone, set default to false
+		}));
 		const milestoneId = milestoneDict.find((m) => m.name === milestone)?.id; // Handle potential missing IDs
 		if (milestoneId) {
-			setSelectedMilestone(milestoneId);
-		}
-	};
+			setSelectedMilestone(milestoneId)
+			const isSelected = !checked[milestone] || false; // Get selection state
+		
+			setMilestones((prevMilestones) => {
+			  // Handle potential undefined state of prevMilestones
+			  return prevMilestones ? [...new Set([...prevMilestones, milestoneId])] : [milestoneId];
+			});
+		
+			if (!isSelected) {
+			  // Deselection: Filter out only if milestones exist (prevents errors)
+			  setMilestones((prevMilestones) =>
+				prevMilestones?.filter((id) => id !== milestoneId)
+			  );
+			}
+		  }
+	}
 	const handleMetricChange = (event, newMetric) => {
 		setSelectedMetric(newMetric);
 	};
@@ -130,13 +141,7 @@ const MetricsSection = ({ project }) => {
 				</ToggleButtonGroup>
 				<React.Fragment>
 					{selectedMetric === 'Burndown Chart' && (
-						<div>
-						{Object.entries(checked)
-						  .filter(([milestone, isSelected]) => isSelected) // Filter for selected milestones
-						  .map(([milestone]) => ( // Extract milestone name from filtered entries
-							<Burndown selectedMilestones={[milestone]} />
-						  ))}
-					  </div>
+						<Burndown milestones={milestones}/>
 					)}
 					{selectedMetric === 'Cycle Time' && (
 						<CycleTime milestone={selectedMilestone} />
