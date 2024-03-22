@@ -1,48 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, Box, Typography, CircularProgress } from '@mui/material';
-import moment from 'moment';
 import {
-	ScatterChart,
-	Scatter,
-	BarChart,
-	XAxis,
-	XAxisProps,
-	YAxis,
-	YAxisProps,
-	Tooltip,
-	Text,
-	Label,
+	Box,
+	Card,
+	CircularProgress,
+	FormControlLabel,
+	Grid,
+	Switch,
+	TextField,
+	Typography
+} from '@mui/material';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import {
 	CartesianGrid,
+	Label,
+	Scatter,
+	ScatterChart,
+	Tooltip,
+	XAxis,
+	YAxis
 } from 'recharts';
 
-// Ensure you also import the necessary charting library components (e.g., BarChart, Scatter)
-
-const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
+const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDate, projectId }) => {
 	const [milestone, setMilestone] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
-
+	const [isCustomDateRange, setIsCustomDateRange] = useState(false);
+	const [startDate, setStartDate] = useState(createdDate);
+	const [endDate, setEndDate] = useState(updatedDate);
+	const [dateError, setDateError] = useState('');
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
 			try {
 				setIsLoading(true);
-				const response = await fetch(
-					`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}`
-				);
+				console.log(isCustomDateRange)
+				let url = isCustomDateRange ? `http://localhost:8080/api/customleadTime/${parameter}?projectId=${projectId}&startDate=${startDate}&endDate=${endDate}` :`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}` 
+					
+					
+				const response = await fetch(url)
+				console.log(url)
 				if (!response.ok) {
 					throw new Error(`API Request Failed with Status ${response.status}`);
 				}
 				const data = await response.json();
+				console.log(data)
 				setMilestone(data);
 			} catch (error) {
 				setError(error.message);
 			} finally {
 				setIsLoading(false);
 			}
-		};
+		}
 
-		fetchMilestoneDetails();
-	}, []);
+		fetchMilestoneDetails()
+		const listener = () => {
+			fetchMilestoneDetails();
+		  };
+		
+	}, [isCustomDateRange, startDate, endDate, parameter, milestoneId])
+
+	const handleCustomDateRangeToggle = (event) => {
+		setIsCustomDateRange(event.target.checked);
+	};
+
+	const handleStartDateChange = (date) => {
+		if (endDate && moment(date).isAfter(endDate)) {
+			setDateError('Start date cannot be after end date');
+		} else {
+			setDateError('');
+			setStartDate(date);
+		}
+	};
+
+	const handleEndDateChange = (date) => {
+		if (startDate && moment(date).isBefore(startDate)) {
+			setDateError('End date cannot be before start date');
+		} else {
+			setDateError('');
+			setEndDate(date);
+		}
+	};
 
 	const leadTimeData = milestone?.map((item) => {
 		let closedDate;
@@ -78,7 +114,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			groupedData[date].push(item.leadTime);
 		});
 	}
-
+	
 	return (
 		<div>
 			{isLoading && (
@@ -88,6 +124,47 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			)}
 			{!isLoading && (
 				<Card sx={{ width: '100%', height: '100%' }}>
+					<Grid container alignItems="center" justifyContent="space-between" sx={{ m: 2, mr: 4 }}>
+						<FormControlLabel
+							control={<Switch checked={isCustomDateRange} onChange={handleCustomDateRangeToggle} />}
+							label="Add Custom Date Range"
+						/>
+						{isCustomDateRange && (
+							<Grid container spacing={2} alignItems="center">
+								<Grid item>
+									<TextField
+										id="startDate"
+										label="Start Date"
+										type="date"
+										value={startDate}
+										onChange={(e) => handleStartDateChange(e.target.value)}
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+								</Grid>
+								<Grid item>
+									<TextField
+										id="endDate"
+										label="End Date"
+										type="date"
+										value={endDate}
+										onChange={(e) => handleEndDateChange(e.target.value)}
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+								</Grid>
+								{dateError && (
+									<Grid item>
+										<Typography variant="body2" color="error">
+											{dateError}
+										</Typography>
+									</Grid>
+								)}
+							</Grid>
+						)}
+					</Grid>
 					<Box sx={{ display: 'flex' }}>
 						<ScatterChart width={500} height={400}>
 							<CartesianGrid strokeDasharray="3 3" />
