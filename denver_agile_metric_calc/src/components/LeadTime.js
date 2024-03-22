@@ -8,7 +8,7 @@ FormControlLabel } from '@mui/material'
 import LeadTimeGraph from './LeadTimeGraph'
 
 
-const LeadTime = ({ milestone, createdDate, updatedDate }) => {
+const LeadTime = ({ milestone, createdDate, updatedDate, projectId }) => {
     const [parameter, setParameter] = useState('')
     const [dates, setDates] = useState(null)
     const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +34,8 @@ const LeadTime = ({ milestone, createdDate, updatedDate }) => {
                 parameter={parameter} 
                 milestoneId = {milestone}
                 createdDate={createdDate}
-                updatedDate={updatedDate}/>}
+                updatedDate={updatedDate}
+                projectId={projectId}/>}
         </Box>
     )
 }

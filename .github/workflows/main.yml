@@ -23,20 +23,8 @@ jobs:
 
       
       - name: Install Maven dependencies 
-        run: mvn clean install  # Install Maven dependencies (replace with your build command)
+        run: mvn clean install  # Install Maven dependencies & Run Unit Tests
         
-      - name: Change directory
-        run: cd ./denver_agile_metric_calc  # Change directory to React project
 
-      - name: Set up Node.js environment
-        uses: actions/setup-node@v3  # Setup Node.js environment
-        with:
-          node-version: '16'  # Node.js version
-
-      - name: Install React dependencies
-        run: npm install  # Install React dependencies
-
-      - name: Build React app
-        run: npm run build  # Build the React application 
 
 

@@ -20,7 +20,7 @@ import {
 	YAxis
 } from 'recharts';
 
-const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDate }) => {
+const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDate, projectId }) => {
 	const [milestone, setMilestone] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -28,38 +28,38 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDa
 	const [startDate, setStartDate] = useState(createdDate);
 	const [endDate, setEndDate] = useState(updatedDate);
 	const [dateError, setDateError] = useState('');
-	console.log("createdDate:", createdDate)
-	console.log("updatedDate:", updatedDate)
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
 			try {
 				setIsLoading(true);
-				const response = await fetch(
-					`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}`
-				);
+				console.log(isCustomDateRange)
+				let url = isCustomDateRange ? `http://localhost:8080/api/customleadTime/${parameter}?projectId=${projectId}&startDate=${startDate}&endDate=${endDate}` :`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}` 
+					
+					
+				const response = await fetch(url)
+				console.log(url)
 				if (!response.ok) {
 					throw new Error(`API Request Failed with Status ${response.status}`);
 				}
 				const data = await response.json();
+				console.log(data)
 				setMilestone(data);
 			} catch (error) {
 				setError(error.message);
 			} finally {
 				setIsLoading(false);
 			}
-		};
+		}
 
-		fetchMilestoneDetails();
-	}, []);
+		fetchMilestoneDetails()
+		const listener = () => {
+			fetchMilestoneDetails();
+		  };
+		
+	}, [isCustomDateRange, startDate, endDate, parameter, milestoneId])
 
-	const fetchCustomDetails = async () => {
-
-	}
 	const handleCustomDateRangeToggle = (event) => {
 		setIsCustomDateRange(event.target.checked);
-		if(event.target.checked) {
-			fetchCustomDetails()
-		}
 	};
 
 	const handleStartDateChange = (date) => {
