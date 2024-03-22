@@ -3,22 +3,21 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { CartesianGrid, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 
-const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
+const CycleTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDate, projectId }) => {
     const [milestone, setMilestone] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isCustomDateRange, setIsCustomDateRange] = useState(false);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState(createdDate);
+    const [endDate, setEndDate] = useState(updatedDate);
     const [dateError, setDateError] = useState('');
 
     useEffect(() => {
         const fetchMilestoneDetails = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(
-                    `http://localhost:8080/api/cycleTime/${parameter}/${milestoneId}?startDate=${startDate}&endDate=${endDate}`
-                );
+                let url = isCustomDateRange ? `http://localhost:8080/api/cycleTime/${parameter}/byTime/${projectId}?startDate=${startDate}&endDate=${endDate}` :`http://localhost:8080/api/cycleTime/${parameter}/${milestoneId}?startDate=${startDate}&endDate=${endDate}`
+                const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error(`API Request Failed with Status ${response.status}`);
                 }
@@ -32,7 +31,10 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
         };
 
         fetchMilestoneDetails();
-    }, [startDate, endDate]);
+        const listener = () => {
+			fetchMilestoneDetails();
+		};
+    }, [isCustomDateRange, startDate, endDate, parameter, milestoneId]);
 
     const handleCustomDateRangeToggle = () => {
         setIsCustomDateRange(!isCustomDateRange);
@@ -56,10 +58,18 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
         }
     };
 
-    const cycleTimeData = milestone?.map((item) => ({
-        closedDate: item.finishDate,
-        cycleTime: item.cycleTime,
-    }));
+    const cycleTimeData = milestone?.map((item) => {
+        let closedDate;
+		if (parameter === 'US') {
+			closedDate = item.finishDate;
+		} else if (parameter === 'Task') {
+			closedDate = item.closedDate;
+		}
+		return {
+			closedDate,
+			cycleTime: item.cycleTime,
+		};
+    });
 
     if (cycleTimeData) {
         cycleTimeData.sort((a, b) => new Date(a.closedDate) - new Date(b.closedDate));

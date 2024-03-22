@@ -8,6 +8,7 @@ public class ProjectDTO {
     String projectName;
     String slug;
     LocalDate createdDate;
+    LocalDate updatedDate;
     String description;
     String owner;
     List<String> members;
@@ -36,6 +37,11 @@ public class ProjectDTO {
         return createdDate;
     }
 
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+
     public String getDescription() {
         return description;
     }
@@ -58,6 +64,10 @@ public class ProjectDTO {
 
     public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public void setDescription(String description) {
@@ -151,7 +161,7 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, String description,
+    public ProjectDTO(Integer projectID, String projectName, String slug, LocalDate createdDate, LocalDate updatedDate, String description,
             String owner, List<String> members, List<String> milestones){
 //            , List<String> milestoneIds,
 //            List<Boolean> isClosed) {
@@ -159,6 +169,7 @@ public class ProjectDTO {
         this.projectName = projectName;
         this.slug = slug;
         this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
         this.description = description;
         this.owner = owner;
         this.members = members;

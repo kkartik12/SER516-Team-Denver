@@ -1,13 +1,19 @@
 import {
   Box,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
+  Switch,
+  FormGroup,
+  FormControlLabel
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CycleTimeGraph from './CycleTimeGraph'
 
-const CycleTime = ({ milestone }) => {
+const CycleTime = ({ milestone, createdDate, updatedDate, projectId }) => {
   const [parameter, setParameter] = useState('')
+  const [dates, setDates] = useState(null)
+  const [isLoading, setIsLoading] = useState(true);	   
+  const [error, setError] = useState(null);
   return (
       <Box>
           <ToggleButtonGroup
@@ -24,7 +30,7 @@ const CycleTime = ({ milestone }) => {
                   Task
               </ToggleButton>
           </ToggleButtonGroup>
-          { parameter && <CycleTimeGraph  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
+          { parameter && <CycleTimeGraph  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone} createdDate={createdDate} updatedDate={updatedDate} projectId={projectId}/>}
       </Box>
   )
 }
