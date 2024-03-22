@@ -2,10 +2,11 @@ import { CircularProgress, Paper, Card, CardHeader, CardContent, Typography } fr
 import React, { useEffect, useRef, useState } from 'react';
 import { AreaChart, XAxis, YAxis, Tooltip, Area, CartesianGrid } from 'recharts';
 
-const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
+const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [milestones, setMilestones] = useState([])
 	const [error, setError] = useState(null)
+	console.log(parameters)
 	const chartInstance = useRef(null); // Graph instance for all burndown charts
 	useEffect(() => {
 		const fetchMilestones = async () => {
@@ -30,11 +31,11 @@ const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
 			setMilestones(data);
 	
 			if (parameter === 'totalRunningSum') {
-			  GraphComponent(data, chartInstance); // Assuming this function handles multiple charts
+			  GraphComponent(data, chartInstance); 
 			}
 		  } catch (error) {
 			setIsLoading(false);
-			setError(error.message); // Store error message for display
+			setError(error.message); 
 		  } finally {
 			setIsLoading(false);
 		  }
@@ -43,7 +44,7 @@ const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
 		fetchMilestones();
 	  }, [parameter, milestoneIds]);
 	  const getColor = (index) => {
-		const colors = ['#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#e377c2']; 
+		const colors = ['#cdb4db', '#bde0fe', '#c1121f', '#9467bd', '#e377c2']; 
 		return colors[index % colors.length];
 	  };
 	  return (

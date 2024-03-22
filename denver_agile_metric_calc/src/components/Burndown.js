@@ -5,13 +5,19 @@ import GraphComponent from './GraphComponent'
 
 const Burndown = ({ milestones }) => {
     const [parameter, setParameter] = useState('')
+    const [parameters, setParameters] = useState([])
+    const handleParameterChange = (event, newParameter) => {
+        setParameters(newParameter)
+    }
+    console.log(parameters)
     return (
         <Box>
             <ToggleButtonGroup
-                exclusive
+                exclusive={false}
+                multiple 
                 sx={{ mt: 2 }}
-                value={parameter}
-                onChange={(event, newParameter) => setParameter(newParameter)}
+                value={parameters}
+                onChange={handleParameterChange}
                 >
                 <ToggleButton key="partialRunningSum" value="partialRunningSum">
                     Partial Running Sum
@@ -23,7 +29,7 @@ const Burndown = ({ milestones }) => {
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} milestoneIds = {milestones}/>}
+            { parameter && <GraphComponent  sx = {{marginY: 2}} parameters={parameters} milestoneIds = {milestones}/>}
         </Box>
     )
 }
