@@ -7,6 +7,7 @@ import {
 	Radio,
 	ToggleButton,
 	ToggleButtonGroup,
+	Checkbox
 } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import React, { useState } from 'react';
@@ -21,15 +22,13 @@ import FoundWorkChart from './FoundWorkChart';
 const MetricsSection = ({ project }) => {
 	const [selectedMetric, setSelectedMetric] = useState('');
 	const [selectedMilestone, setSelectedMilestone] = useState('');
-	const [checked, setChecked] = useState([]);
-
+	const [checked, setChecked] = useState({});
 	const handleToggle = (milestone) => () => {
 		setChecked((prevChecked) =>
 			prevChecked.includes(milestone)
 				? prevChecked.filter((m) => m !== milestone)
 				: [...prevChecked, milestone]
 		);
-		setChecked([]);
 		setChecked((prev) => [...prev, milestone]);
 		const milestoneId = milestoneDict.find((m) => m.name === milestone)?.id; // Handle potential missing IDs
 		if (milestoneId) {
@@ -57,7 +56,7 @@ const MetricsSection = ({ project }) => {
 				}}
 			>
 				<h4>Milestones:</h4>
-				<List
+				{/* <List
 					sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
 				>
 					{project.milestones.map((milestone) => {
@@ -66,7 +65,6 @@ const MetricsSection = ({ project }) => {
 							<ListItem key={milestone} disablePadding>
 								<ListItemButton onClick={handleToggle(milestone)} dense>
 									<ListItemIcon>
-										{/* Replace Checkbox with Radio */}
 										<Radio
 											edge="start"
 											checked={checked.indexOf(milestone) !== -1}
@@ -79,6 +77,26 @@ const MetricsSection = ({ project }) => {
 							</ListItem>
 						);
 					})}
+				</List> */}
+				<List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+				{project.milestones.map((milestone) => {
+					const labelId = `checkbox-label-${milestone}`; // Change the label ID
+					return (
+					<ListItem key={milestone} disablePadding dense>
+						<ListItemButton onClick={handleToggle(milestone)}>
+						<ListItemIcon>
+							<Checkbox
+							edge="start"
+							checked={checked[milestone] || false} // Set default to false
+							tabIndex={-1}
+							inputProps={{ 'aria-labelledby': labelId }}
+							/>
+						</ListItemIcon>
+						<ListItemText id={labelId} primary={milestone} />
+						</ListItemButton>
+					</ListItem>
+					);
+				})}
 				</List>
 			</Box>
 			<Box
@@ -112,7 +130,13 @@ const MetricsSection = ({ project }) => {
 				</ToggleButtonGroup>
 				<React.Fragment>
 					{selectedMetric === 'Burndown Chart' && (
-						<Burndown milestone={selectedMilestone} />
+						<div>
+						{Object.entries(checked)
+						  .filter(([milestone, isSelected]) => isSelected) // Filter for selected milestones
+						  .map(([milestone]) => ( // Extract milestone name from filtered entries
+							<Burndown selectedMilestones={[milestone]} />
+						  ))}
+					  </div>
 					)}
 					{selectedMetric === 'Cycle Time' && (
 						<CycleTime milestone={selectedMilestone} />
