@@ -1,12 +1,18 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { ToggleButton,
 ToggleButtonGroup, 
-Box } from '@mui/material'
+Box, 
+Switch,
+FormGroup,
+FormControlLabel } from '@mui/material'
 import LeadTimeGraph from './LeadTimeGraph'
 
 
-const LeadTime = ({ milestone }) => {
+const LeadTime = ({ milestone, createdDate, updatedDate, projectId }) => {
     const [parameter, setParameter] = useState('')
+    const [dates, setDates] = useState(null)
+    const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState(null);
     return (
         <Box>
             <ToggleButtonGroup
@@ -22,7 +28,14 @@ const LeadTime = ({ milestone }) => {
                     Task
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <LeadTimeGraph  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
+
+            { parameter && <LeadTimeGraph  
+                sx = {{marginY: 2}} 
+                parameter={parameter} 
+                milestoneId = {milestone}
+                createdDate={createdDate}
+                updatedDate={updatedDate}
+                projectId={projectId}/>}
         </Box>
     )
 }

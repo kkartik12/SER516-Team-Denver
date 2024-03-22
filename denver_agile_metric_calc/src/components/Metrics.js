@@ -22,7 +22,6 @@ const MetricsSection = ({ project }) => {
 	const [selectedMetric, setSelectedMetric] = useState('');
 	const [selectedMilestone, setSelectedMilestone] = useState('');
 	const [checked, setChecked] = useState([]);
-
 	const handleToggle = (milestone) => () => {
 		setChecked((prevChecked) =>
 			prevChecked.includes(milestone)
@@ -118,7 +117,10 @@ const MetricsSection = ({ project }) => {
 						<CycleTime milestone={selectedMilestone} />
 					)}
 					{selectedMetric === 'Lead Time' && (
-						<LeadTime milestone={selectedMilestone} />
+						<LeadTime milestone={selectedMilestone} 
+						createdDate={project.createdDate}
+						updatedDate={project.updatedDate}
+						projectId={project.projectID}/>
 					)}
 					{selectedMetric === 'Delivery on Time' && (
 						<DeliveryOnTime milestones={project.milestoneDetails}
