@@ -1,321 +1,75 @@
-import { CircularProgress, Paper } from '@mui/material';
-import Chart from 'chart.js/auto';
+import { CircularProgress, Paper, Card, CardHeader, CardContent, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { AreaChart, XAxis, YAxis, Tooltip, Area, CartesianGrid } from 'recharts';
 
-const GraphComponent = ({ sx = {}, parameter, milestoneId }) => {
-	const { projectId } = useParams();
-	const [milestone, setMilestone] = useState({});
+const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
 	const [isLoading, setIsLoading] = useState(true);
+	const [milestones, setMilestones] = useState([])
+	const [error, setError] = useState(null)
 	const chartInstance = useRef(null); // Graph instance for all burndown charts
-	console.log('milestoneId: ', parameter);
-	const apiURL = `http://localhost:8080/api/burndownchart/${milestoneId}/${parameter}`;
-
 	useEffect(() => {
-		const fetchMilestoneDetails = async () => {
-			try {
-				setIsLoading(true);
-				const response = await fetch(apiURL);
-				if (!response.ok) {
-					const errorMessage = await response.text();
-					throw new Error(
-						`API Request Failed with Status ${response.status}: ${errorMessage}`
-					);
-				}
-				const data = await response.json();
-				setMilestone(data);
-				setIsLoading(false);
-				if (parameter === 'totalRunningSum') {
-					totalRunningSumGraph(data, chartInstance);
-				}
-			} catch (error) {
-				setIsLoading(false);
-				console.error('Error fetching milestone details: ', error.message);
-			}
-		};
-		fetchMilestoneDetails();
-	}, [parameter, milestoneId]);
-
-  useEffect(() => {
-  if(parameter === "businessValue" && milestone.totalSumValue){
-    const uniqueDatesMap = new Map();
-    milestone.totalSumValue.forEach(entry => {
-      const currentValue = uniqueDatesMap.get(entry.date);
-      if (currentValue === undefined || entry.value > currentValue) {
-        uniqueDatesMap.set(entry.date, entry.value);
-      }
-    });
-    const labels = Array.from(uniqueDatesMap.keys());
-    const values = Array.from(uniqueDatesMap.values());
-    const graphData = {
-      labels: labels,
-      datasets: [{
-        label: 'Burn "UP" Chart Business Value',
-        data: values,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-        fill: false
-      }]
-    };
-    const ctx = document.getElementById('burndownChart');
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
-    if (ctx) {
-      chartInstance.current = new Chart(ctx, {
-        type: 'line',
-        data: graphData,
-        options: {
-          scales: {
-            x: {
-              ticks: {
-                autoSkip: true,
-                maxTicksLimit: 5,
-              },
-              title: {
-                display: true,
-                text: 'Dates'
-              }
-            },
-            y: {
-              min: 0,
-              max: 20,
-              ticks: {
-                stepSize: 2
-              },
-              title: {
-                display: true,
-                text: 'Business Value'
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-  else if(parameter === "totalRunningSum" && milestone.totalSumValue){
-    console.log("Graph for Total running sum")
-    const uniqueDatesMap = new Map();
-    if(milestone) {
-      milestone.totalSumValue.forEach(entry => {
-        const currentValue = uniqueDatesMap.get(entry.date);
-        if (currentValue === undefined || entry.value < currentValue.value) {
-          uniqueDatesMap.set(entry.date, entry);
-        }
-      });
-    }
-    // Extract labels (dates) and values from the map
-    const labels = Array.from(uniqueDatesMap.keys());
-    const values = Array.from(uniqueDatesMap.values()).map(entry => entry.value);
-
-
-			// Render the chart
-			const prsCtx = document.getElementById('burndownChart');
-			if (prsCtx) {
-				if (chartInstance.current) {
-					chartInstance.current.destroy();
-				}
-
-				chartInstance.current = new Chart(prsCtx, {
-					type: 'line',
-					data: {
-						labels: labels,
-						datasets: [
-							{
-								label: 'Total Running Sum Chart',
-								data: values,
-								borderColor: 'rgba(255, 99, 132, 1)',
-								borderWidth: 1,
-								fill: false,
-							},
-						],
-					},
-					options: {
-						scales: {
-							x: {
-								ticks: {
-									autoSkip: true,
-									maxTicksLimit: 5,
-								},
-								title: {
-									display: true,
-									text: 'Dates',
-								},
-							},
-							y: {
-								min: 0,
-								title: {
-									display: true,
-									text: 'Total Running Sum',
-								},
-							},
-						},
-					},
-				});
-			} else {
-				console.error('Total Running Sum Chart canvas element not found');
-			}
-		} else if (parameter === 'partialRunningSum' && milestone.partialSumValue) {
-			// Filter and keep only the entry with the lowest value for each date
-			const uniqueDatesMap = new Map();
-			milestone.partialSumValue.forEach((entry) => {
-				const currentValue = uniqueDatesMap.get(entry.date);
-				if (currentValue === undefined || entry.value < currentValue.value) {
-					uniqueDatesMap.set(entry.date, entry);
-				}
+		const fetchMilestones = async () => {
+		  try {
+			setIsLoading(true);
+			setError(null);
+	
+			const promises = milestoneIds.map((milestoneId) => {
+			  const apiURL = `http://localhost:8080/api/burndownchart/${milestoneId}/${parameter}`;
+			  return fetch(apiURL);
 			});
-
-			// Extract labels (dates) and values from the map
-			const labels = Array.from(uniqueDatesMap.keys());
-			const values = Array.from(uniqueDatesMap.values()).map(
-				(entry) => entry.value
-			);
-
-			// Render the chart
-			const prsCtx = document.getElementById('burndownChart');
-			if (prsCtx) {
-				if (chartInstance.current) {
-					chartInstance.current.destroy();
-				}
-
-				chartInstance.current = new Chart(prsCtx, {
-					type: 'line',
-					data: {
-						labels: labels,
-						datasets: [
-							{
-								label: 'Partial Running Sum Chart',
-								data: values,
-								borderColor: 'rgba(255, 99, 132, 1)',
-								borderWidth: 1,
-								fill: false,
-							},
-						],
-					},
-					options: {
-						scales: {
-							x: {
-								ticks: {
-									autoSkip: true,
-									maxTicksLimit: 5,
-								},
-								title: {
-									display: true,
-									text: 'Dates',
-								},
-							},
-							y: {
-								min: 0,
-								title: {
-									display: true,
-									text: 'Partial Running Sum',
-								},
-							},
-						},
-					},
-				});
-			} else {
-				console.error('Partial Running Sum Chart canvas element not found');
+	
+			const responses = await Promise.all(promises);
+			const parsedMilestones = responses.map((response) => {
+			  if (!response.ok) {
+				throw new Error(`API Request Failed with Status ${response.status}`);
+			  }
+			  return response.json();
+			});
+	
+			const data = await Promise.all(parsedMilestones);
+			setMilestones(data);
+	
+			if (parameter === 'totalRunningSum') {
+			  GraphComponent(data, chartInstance); // Assuming this function handles multiple charts
 			}
-		} else {
-			console.log('no graph');
-		}
-	}, [parameter, milestone.totalSumValue]);
-
-	return (
-		<div>
-			{isLoading && (
-				<div style={{ display: 'flex', justifyContent: 'center' }}>
-					<CircularProgress />
-				</div>
-			)}
-			{!isLoading && (
-				<Paper sx={{ ...sx, ...styles.container }}>
-					<canvas id="burndownChart"></canvas>
-				</Paper>
-			)}
-		</div>
-	);
-};
-
-const styles = {
-	container: {
-		width: '100%',
-		maxWidth: '60%',
-		height: '300px',
-		background: '#f5f5f5',
-		borderRadius: 4,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		overflow: 'hidden',
-	},
+		  } catch (error) {
+			setIsLoading(false);
+			setError(error.message); // Store error message for display
+		  } finally {
+			setIsLoading(false);
+		  }
+		};
+	
+		fetchMilestones();
+	  }, [parameter, milestoneIds]);
+	  const getColor = (index) => {
+		const colors = ['#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#e377c2']; 
+		return colors[index % colors.length];
+	  };
+	  return (
+		<Card sx={{mt: 2}}>
+			<CardHeader title={parameter}/>
+			{milestones.map((milestone, index) => (
+				<CardContent>	
+					<Typography variant="h6" gutterBottom component="div">{milestone.milestoneName}</Typography>
+					<AreaChart width={730} height={250} data={parameter == "partialRunningSum" ? milestone.partialSumValue : milestone.totalSumValue}
+					margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+					<defs>
+					<linearGradient id={`colorUv-${index}`} x1="0" y1="0" x2="0" y2="1">
+						<stop offset="5%" stopColor={getColor(index)} stopOpacity={0.8}/>
+						<stop offset="95%" stopColor={getColor(index)} stopOpacity={0}/>
+					</linearGradient>
+					</defs>
+					<XAxis dataKey="date" />
+					<YAxis />
+					<CartesianGrid strokeDasharray="3 3" />
+					<Tooltip />
+					<Area type="monotone" dataKey="value" stopColor={getColor(index)} fillOpacity={1} fill={`url(#colorUv-${index})`} />
+				</AreaChart>
+			  </CardContent>
+			))}
+		</Card>
+	  )
 };
 
 export default GraphComponent;
-
-const totalRunningSumGraph = (milestone, chartInstance) => {
-	console.log('Graph for Total running sum');
-	console.log(milestone.totalSumValue);
-	// Filter and keep only the entry with the lowest value for each date
-	const uniqueDatesMap = new Map();
-	milestone.totalSumValue.forEach((entry) => {
-		const currentValue = uniqueDatesMap.get(entry.date);
-		if (currentValue === undefined || entry.value < currentValue.value) {
-			uniqueDatesMap.set(entry.date, entry);
-		}
-	});
-
-	// Extract labels (dates) and values from the map
-	const labels = Array.from(uniqueDatesMap.keys());
-	const values = Array.from(uniqueDatesMap.values()).map(
-		(entry) => entry.value
-	);
-
-	// Render the chart
-	const prsCtx = document.getElementById('burndownChart');
-	if (prsCtx) {
-		if (chartInstance.current) {
-			chartInstance.current.destroy();
-		}
-
-		chartInstance.current = new Chart(prsCtx, {
-			type: 'line',
-			data: {
-				labels: labels,
-				datasets: [
-					{
-						label: 'Total Running Sum Chart',
-						data: values,
-						borderColor: 'rgba(255, 99, 132, 1)',
-						borderWidth: 1,
-						fill: false,
-					},
-				],
-			},
-			options: {
-				scales: {
-					x: {
-						ticks: {
-							autoSkip: true,
-							maxTicksLimit: 5,
-						},
-						title: {
-							display: true,
-							text: 'Dates',
-						},
-					},
-					y: {
-						min: 0,
-						title: {
-							display: true,
-							text: 'Total Running Sum',
-						},
-					},
-				},
-			},
-		});
-	} else {
-		console.error('Total Running Sum Chart canvas element not found');
-	}
-};
