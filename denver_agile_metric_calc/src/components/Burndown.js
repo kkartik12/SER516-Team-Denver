@@ -29,7 +29,7 @@ const Burndown = ({ milestones }) => {
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <GraphComponent  sx = {{marginY: 2}} parameters={parameters} milestoneIds = {milestones}/>}
+            { parameters && <GraphComponent  sx = {{marginY: 2}} parameters={parameters} milestoneIds = {milestones}/>}
         </Box>
     )
 }

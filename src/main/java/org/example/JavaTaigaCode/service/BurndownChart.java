@@ -277,16 +277,18 @@ public class BurndownChart {
                 }
                 Collections.sort(userStories, Comparator.comparing(UserStoryDTO::getFinishDate));
                 List<BurndownChartDTO> totalSumValue = new ArrayList<>();
+                List<BurndownChartDTO> totalSumBV = new ArrayList<>();
                 Integer runningSum = 0;
                 for (UserStoryDTO userStory : userStories) {
                     runningSum += userStory.getBusinessValue();
-                    totalSumValue.add(new BurndownChartDTO(userStory.getFinishDate(), runningSum.doubleValue()));
+                    totalSumBV.add(new BurndownChartDTO(userStory.getFinishDate(), runningSum.doubleValue()));
                 }
-
                 MilestoneDTO milestone = new MilestoneDTO(milestoneID, node.get("name").asText(),
                         estimatedStart,
                         estimatedFinish,
-                        totalSumValue, null, totalSumValue.get(totalSumValue.size() - 1).getValue());
+                        totalSumValue,
+                        totalSumBV, 
+                        null, totalSumValue.get(totalSumValue.size() - 1).getValue());
                 return milestone;
             }
 
