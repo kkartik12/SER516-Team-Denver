@@ -276,7 +276,7 @@ public class BurndownChart {
                     }
                 }
                 Collections.sort(userStories, Comparator.comparing(UserStoryDTO::getFinishDate));
-                List<BurndownChartDTO> totalSumValue = new ArrayList<>();
+//                List<BurndownChartDTO> totalSumValue = new ArrayList<>();
                 List<BurndownChartDTO> totalSumBV = new ArrayList<>();
                 Integer runningSum = 0;
                 for (UserStoryDTO userStory : userStories) {
@@ -286,9 +286,9 @@ public class BurndownChart {
                 MilestoneDTO milestone = new MilestoneDTO(milestoneID, node.get("name").asText(),
                         estimatedStart,
                         estimatedFinish,
-                        totalSumValue,
+                        null,
                         totalSumBV, 
-                        null, totalSumValue.get(totalSumValue.size() - 1).getValue());
+                        null, totalSumBV.get(totalSumBV.size() - 1).getValue());
                 return milestone;
             }
 
