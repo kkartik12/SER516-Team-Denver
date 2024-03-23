@@ -2,10 +2,11 @@ import { CircularProgress, Paper, Card, CardHeader, CardContent, Typography } fr
 import React, { useEffect, useRef, useState } from 'react';
 import { AreaChart, XAxis, YAxis, Tooltip, Area, CartesianGrid } from 'recharts';
 
-const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
+const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [milestones, setMilestones] = useState([])
 	const [error, setError] = useState(null)
+	console.log(milestoneIds)
 	const chartInstance = useRef(null); // Graph instance for all burndown charts
 	useEffect(() => {
 		const fetchMilestones = async () => {
@@ -13,42 +14,50 @@ const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
 			setIsLoading(true);
 			setError(null);
 	
-			const promises = milestoneIds.map((milestoneId) => {
-			  const apiURL = `http://localhost:8080/api/burndownchart/${milestoneId}/${parameter}`;
-			  return fetch(apiURL);
+			const allPromises = [];
+			milestoneIds.forEach((milestoneId) => {
+			  parameters.forEach((parameter) => {
+				const apiURL = `http://localhost:8080/api/burndownchart/${milestoneId}/${parameter}`;
+				allPromises.push(fetch(apiURL));
+			  });
 			});
 	
-			const responses = await Promise.all(promises);
-			const parsedMilestones = responses.map((response) => {
-			  if (!response.ok) {
-				throw new Error(`API Request Failed with Status ${response.status}`);
+			const allResponses = await Promise.all(allPromises);
+			const parsedMilestones = [];
+	
+			for (let i = 0; i < milestoneIds.length; i++) {
+			  const milestoneData = {
+				milestoneID: milestoneIds[i],
+			  };
+			  for (let j = 0; j < parameters.length; j++) {
+				const response = allResponses[i * parameters.length + j];
+				if (!response.ok) {
+				  throw new Error(`API Request Failed with Status ${response.status}`);
+				}
+				const parsedData = await response.json();
+				milestoneData[parameters[j]] = parsedData[parameters[j]];
 			  }
-			  return response.json();
-			});
-	
-			const data = await Promise.all(parsedMilestones);
-			setMilestones(data);
-	
-			if (parameter === 'totalRunningSum') {
-			  GraphComponent(data, chartInstance); // Assuming this function handles multiple charts
+			  parsedMilestones.push(milestoneData);
 			}
+	
+			setMilestones(parsedMilestones);
 		  } catch (error) {
 			setIsLoading(false);
-			setError(error.message); // Store error message for display
+			setError(error.message);
 		  } finally {
 			setIsLoading(false);
 		  }
 		};
 	
 		fetchMilestones();
-	  }, [parameter, milestoneIds]);
+	  }, [parameters, milestoneIds]);
 	  const getColor = (index) => {
-		const colors = ['#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#e377c2']; 
+		const colors = ['#cdb4db', '#bde0fe', '#c1121f', '#9467bd', '#e377c2']; 
 		return colors[index % colors.length];
 	  };
 	  return (
 		<Card sx={{mt: 2}}>
-			<CardHeader title={parameter}/>
+			{/* <CardHeader title={parameter}/>
 			{milestones.map((milestone, index) => (
 				<CardContent>	
 					<Typography variant="h6" gutterBottom component="div">{milestone.milestoneName}</Typography>
@@ -67,7 +76,7 @@ const GraphComponent = ({ sx = {}, parameter, milestoneIds }) => {
 					<Area type="monotone" dataKey="value" stopColor={getColor(index)} fillOpacity={1} fill={`url(#colorUv-${index})`} />
 				</AreaChart>
 			  </CardContent>
-			))}
+			))} */}
 		</Card>
 	  )
 };

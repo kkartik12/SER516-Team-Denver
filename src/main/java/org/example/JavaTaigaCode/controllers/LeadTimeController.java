@@ -38,7 +38,7 @@ public class LeadTimeController {
     //     return taskService.calculateLeadTimeUSbyTime(projectId, startDate, endDate);
     // }
 
-    // @Cacheable(value="leadTimeUSbyTime")
+    @Cacheable(value="leadTimeUSbyTime")
     @GetMapping("/customleadTime/US")
     @ResponseBody
     public List<UserStoryDTO> getLeadTimeUSbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
@@ -52,7 +52,7 @@ public class LeadTimeController {
     //     return taskService.calculateLeadTimeTaskbyTime(projectId, startDate, endDate);
     // }
 
-    // @Cacheable(value="leadTimeTaskbyTime")
+    @Cacheable(value="leadTimeTaskbyTime")
     @GetMapping("/customleadTime/Task")
     @ResponseBody
     public List<TaskDTO> getLeadTimeTaskbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
