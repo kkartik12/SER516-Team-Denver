@@ -13,7 +13,6 @@ const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 		  try {
 			setIsLoading(true);
 			setError(null);
-	
 			const allPromises = [];
 			milestoneIds.forEach((milestoneId) => {
 			  parameters.forEach((parameter) => {
@@ -21,26 +20,18 @@ const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 				allPromises.push(fetch(apiURL));
 			  });
 			});
-	
+			
 			const allResponses = await Promise.all(allPromises);
 			const parsedMilestones = [];
-	
-			for (let i = 0; i < milestoneIds.length; i++) {
-			  const milestoneData = {
-				milestoneID: milestoneIds[i],
-			  };
-			  for (let j = 0; j < parameters.length; j++) {
-				const response = allResponses[i * parameters.length + j];
+			for (let i = 0; i < allResponses.length; i++) {
+				const response = allResponses[i];
 				if (!response.ok) {
-				  throw new Error(`API Request Failed with Status ${response.status}`);
+					throw new Error(`API Request Failed with Status ${response.status}`);
 				}
-				const parsedData = await response.json();
-				milestoneData[parameters[j]] = parsedData[parameters[j]];
-			  }
-			  parsedMilestones.push(milestoneData);
+			const parsedData = await response.json();
+				parsedMilestones.push(parsedData);
 			}
-	
-			setMilestones(parsedMilestones);
+        	setMilestones(parsedMilestones);
 		  } catch (error) {
 			setIsLoading(false);
 			setError(error.message);
@@ -51,13 +42,22 @@ const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 	
 		fetchMilestones();
 	  }, [parameters, milestoneIds]);
+	  console.log(milestones)
+	  const groupedMilestones = {};
+	milestones?.forEach((milestone) => {
+	if (!groupedMilestones[milestone.milestoneID]) {
+		groupedMilestones[milestone.milestoneID] = [];
+	}
+	groupedMilestones[milestone.milestoneID].push(milestone);
+	});
+	  
 	  const getColor = (index) => {
 		const colors = ['#cdb4db', '#bde0fe', '#c1121f', '#9467bd', '#e377c2']; 
 		return colors[index % colors.length];
 	  };
 	  return (
 		<Card sx={{mt: 2}}>
-			{/* <CardHeader title={parameter}/>
+			<CardHeader title={parameter}/>
 			{milestones.map((milestone, index) => (
 				<CardContent>	
 					<Typography variant="h6" gutterBottom component="div">{milestone.milestoneName}</Typography>
@@ -76,7 +76,7 @@ const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 					<Area type="monotone" dataKey="value" stopColor={getColor(index)} fillOpacity={1} fill={`url(#colorUv-${index})`} />
 				</AreaChart>
 			  </CardContent>
-			))} */}
+			))}
 		</Card>
 	  )
 };
