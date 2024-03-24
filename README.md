@@ -15,26 +15,13 @@ This project is a Java application for interacting with the Taiga API to perform
    cd SER516-Team-Denver
    ```
 
-### 2) Compile and Run the application
+### 2) Run the application
 
-#### Compile and Run the backend
-Go to the project root and compile the Maven project
+Go to the project root and run the JAR file
 
 ```bash
-   mvn compile spring-boot:run
-   ```
-
-#### Run the frontend
-Download the required dependancies
-```bash
-   npm install
+java -jar target/JavaTaigaCode-1.0-SNAPSHOT.jar
 ```
-
-Open another terminal 
-```bash
-   cd denver_agile_metric_calc
-   npm start
-   ```
 
 IMPORTANT NOTE: 
 Some metrics like Partial running sum and cycle time take some time to load, so please wait for 10-15 seconds for those metrics to be displayed properly.
