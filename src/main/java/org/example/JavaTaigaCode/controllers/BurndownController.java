@@ -13,31 +13,35 @@ public class BurndownController {
     @Autowired
     BurndownChart burndownChart;
 
-//    @GetMapping("/projects/{projectID}/businessValue/{userStoryID}")
-//    @ResponseBody
-//    public Integer getBusinessValueForUserStory(@PathVariable("userStoryID") Integer userStoryID) {
-//        return burndownChart.getBusinessValueForUserStory(userStoryID);
-//
-//    }
-
-    @Cacheable(value="burnDownBV", key = "#milestoneID")
-    @GetMapping("/burndownchart/{milestoneID}/businessValue")
+    @Cacheable(value="burnDown")
+    @GetMapping("/burndownchart/{milestoneID}")
     @ResponseBody
-    public MilestoneDTO getTotalBusinessValue(@PathVariable("milestoneID") Integer milestoneID) {
-        return burndownChart.getTotalBusinessValue(milestoneID);
+    public MilestoneDTO getBurndownValues(@PathVariable("milestoneID") Integer milestoneID,
+                                          @RequestParam Boolean totalSum, @RequestParam Boolean partialSum,
+                                          @RequestParam Boolean BVSum) {
+        MilestoneDTO milestoneDTO = null;
+        if(totalSum) {
+            milestoneDTO = burndownChart.calculateTotalRunningSum(milestoneID);
+        }
+        if(partialSum) {
+            if(milestoneDTO == null) {
+                milestoneDTO = burndownChart.calculatePartialRunningSum(milestoneID);
+            } else {
+               MilestoneDTO partialSumDTO =  burndownChart.calculatePartialRunningSum(milestoneID);
+               milestoneDTO.setPartialSumValue(partialSumDTO.getPartialSumValue());
+            }
+        }
+        if(BVSum) {
+            if(milestoneDTO == null) {
+                milestoneDTO = burndownChart.getTotalBusinessValue(milestoneID);
+            } else {
+                MilestoneDTO BVSumDTO =  burndownChart.getTotalBusinessValue(milestoneID);
+                milestoneDTO.setTotalSumBV(BVSumDTO.getTotalSumBV());
+                milestoneDTO.setBvTotal(BVSumDTO.getTotalPoints().intValue());
+            }
+        }
+
+        return milestoneDTO;
     }
 
-    @Cacheable(value="burnDownPartialRunningSum", key = "#milestoneID")
-    @GetMapping("/burndownchart/{milestoneID}/partialRunningSum")
-    @ResponseBody
-    public MilestoneDTO getPartialRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
-        return burndownChart.calculatePartialRunningSum(milestoneID);
-    }
-
-    @Cacheable(value="burnDownTotalRunningSum", key = "#milestoneID")
-    @GetMapping("/burndownchart/{milestoneID}/totalRunningSum")
-    @ResponseBody
-    public MilestoneDTO getTotalRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
-        return burndownChart.calculateTotalRunningSum(milestoneID);
-    }
 }
