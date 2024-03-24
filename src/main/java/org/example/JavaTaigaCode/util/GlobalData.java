@@ -13,7 +13,7 @@ public class GlobalData {
         try (InputStream input = Main.class.getClassLoader().getResourceAsStream("config.properties")) {
             if (input == null) {
                 System.out.println("Sorry, unable to find config.properties");
-                return "default_taiga_url";
+                return "https://api.taiga.io/api/v1";
             }
 
             Properties properties = new Properties();
