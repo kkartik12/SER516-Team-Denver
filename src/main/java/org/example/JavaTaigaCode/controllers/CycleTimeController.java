@@ -31,7 +31,7 @@ public class CycleTimeController {
         return cycleTimeService.getTaskCycleTime(milestoneID);
     }
 
-    @Cacheable(value = "USCycleTimeByDates", key = "#projectId")
+    @Cacheable(value = "USCycleTimeByDates")
     @GetMapping("/cycleTime/US/byTime/{projectId}")
     @ResponseBody
     public List<UserStoryDTO> getUSCycleTimebyDates(@PathVariable Integer projectId, @RequestParam LocalDate startDate,
@@ -39,7 +39,7 @@ public class CycleTimeController {
         return cycleTimeService.calculateUSCycleTimebyDates(projectId, startDate, endDate);
     }
 
-    @Cacheable(value = "taskCycleTimeByDates", key = "#projectId")
+    @Cacheable(value = "taskCycleTimeByDates")
     @GetMapping("/cycleTime/Task/byTime/{projectId}")
     @ResponseBody
     public List<TaskDTO> getTaskCycleTimebyDates(@PathVariable Integer projectId, @RequestParam LocalDate startDate,
