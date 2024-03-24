@@ -9,7 +9,6 @@ const Burndown = ({ milestones }) => {
     const handleParameterChange = (event, newParameter) => {
         setParameters(newParameter)
     }
-    console.log(parameters)
     return (
         <Box>
             <ToggleButtonGroup
@@ -19,13 +18,13 @@ const Burndown = ({ milestones }) => {
                 value={parameters}
                 onChange={handleParameterChange}
                 >
-                <ToggleButton key="partialRunningSum" value="partialRunningSum">
+                <ToggleButton key="partialSum" value="partialSum">
                     Partial Running Sum
                 </ToggleButton>
-                <ToggleButton key="totalRunningSum" value="totalRunningSum">
+                <ToggleButton key="totalSum" value="totalSum">
                     Total Running Sum
                 </ToggleButton>
-                <ToggleButton key="businessValue" value="businessValue">
+                <ToggleButton key="BVSum" value="BVSum">
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
