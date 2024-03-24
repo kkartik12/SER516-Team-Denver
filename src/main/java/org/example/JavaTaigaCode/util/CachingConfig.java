@@ -31,6 +31,8 @@ public class CachingConfig {
                 "leadTimeTask",
                 "burnDown",
                 "USCycleTimeByDates",
-                "taskCycleTimeByDates");
+                "taskCycleTimeByDates",
+                "leadTimeUSbyTime",
+                "leadTimeTaskbyTime");
     }
 }
