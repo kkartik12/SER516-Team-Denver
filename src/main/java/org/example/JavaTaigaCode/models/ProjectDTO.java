@@ -40,11 +40,6 @@ public class ProjectDTO {
         return updatedDate;
     }
 
-    public LocalDate getUpdatedDate() {
-        return updatedDate;
-    }
-
-
     public String getDescription() {
         return description;
     }
@@ -68,10 +63,6 @@ public class ProjectDTO {
     public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
-    public void setUpdatedDate(LocalDate updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
     public void setUpdatedDate(LocalDate updatedDate) {
         this.updatedDate = updatedDate;
     }
