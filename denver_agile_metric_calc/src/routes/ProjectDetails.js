@@ -81,7 +81,7 @@ const ProjectDetails = () => {
   return (
     <Box>
       <Header title = {project.projectName}/>
-        <Box sx = {{ml: 2}}>
+        <Box sx = {{ml: 2, maxWidth: '100%', overflowX: 'auto', marginTop: 2}}>
           <h2>Members:</h2>          
             <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
               {project.members.map((member) => (

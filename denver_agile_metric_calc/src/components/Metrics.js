@@ -144,7 +144,7 @@ const MetricsSection = ({ project }) => {
 						<Burndown milestones={milestones}/>
 					)}
 					{selectedMetric === 'Cycle Time' && (
-						<CycleTime milestone={selectedMilestone} />
+						<CycleTime milestone={selectedMilestone} createdDate={project.createdDate} updatedDate={project.updatedDate} projectId={project.projectID}/>
 					)}
 					{selectedMetric === 'Lead Time' && (
 						<LeadTime milestone={selectedMilestone} 

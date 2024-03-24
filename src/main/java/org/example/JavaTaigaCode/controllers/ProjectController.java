@@ -1,10 +1,7 @@
 package org.example.JavaTaigaCode.controllers;
 
-import org.example.JavaTaigaCode.models.MilestoneDTO;
 import org.example.JavaTaigaCode.models.ProjectDTO;
-import org.example.JavaTaigaCode.service.BurndownChart;
 import org.example.JavaTaigaCode.service.ProjectService;
-import org.example.JavaTaigaCode.service.Tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +14,6 @@ import java.util.List;
 public class ProjectController {
     @Autowired
     ProjectService projectService;
-
-    @Autowired
-    BurndownChart burndownChart;
-
-    @Autowired
-    Tasks taskService;
 
     @Cacheable(value="projectList", key = "#memberID")
     @GetMapping("/projectList/{memberID}")
@@ -64,31 +55,5 @@ public class ProjectController {
         return project;
     }
 
-    @GetMapping("/projects/{projectID}/businessValue/{userStoryID}")
-    @ResponseBody
-    public Integer getBusinessValueForUserStory(@PathVariable("userStoryID") Integer userStoryID) {
-        return burndownChart.getBusinessValueForUserStory(userStoryID);
-        
-    }
 
-    @Cacheable(value="burnDownBV", key = "#milestoneID")
-    @GetMapping("/burndownchart/{milestoneID}/businessValue")
-    @ResponseBody
-    public MilestoneDTO getTotalBusinessValue(@PathVariable("milestoneID") Integer milestoneID) {
-        return burndownChart.getTotalBusinessValue(milestoneID);
-    }
-
-    @Cacheable(value="burnDownPartialRunningSum", key = "#milestoneID")
-    @GetMapping("/burndownchart/{milestoneID}/partialRunningSum")
-    @ResponseBody
-    public MilestoneDTO getPartialRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
-        return burndownChart.calculatePartialRunningSum(milestoneID);
-    }
-
-    @Cacheable(value="burnDownTotalRunningSum", key = "#milestoneID")
-    @GetMapping("/burndownchart/{milestoneID}/totalRunningSum")
-    @ResponseBody
-    public MilestoneDTO getTotalRunningSum(@PathVariable("milestoneID") Integer milestoneID) {
-        return burndownChart.calculateTotalRunningSum(milestoneID);
-    }
 }
