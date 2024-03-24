@@ -4,9 +4,9 @@ import {
 	ListItem,
 	ListItemButton,
 	ListItemText,
-	Radio,
 	ToggleButton,
 	ToggleButtonGroup,
+	Checkbox
 } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import React, { useState } from 'react';
@@ -19,23 +19,33 @@ import FoundWorkChart from './FoundWorkChart';
 
 
 const MetricsSection = ({ project }) => {
-	const [selectedMetric, setSelectedMetric] = useState('');
-	const [selectedMilestone, setSelectedMilestone] = useState('');
-	const [checked, setChecked] = useState([]);
-
+	const [selectedMetric, setSelectedMetric] = useState('')
+	const [selectedMilestone, setSelectedMilestone] = useState('')
+	const [checked, setChecked] = useState({})
+	const [milestones, setMilestones] = useState([])
 	const handleToggle = (milestone) => () => {
-		setChecked((prevChecked) =>
-			prevChecked.includes(milestone)
-				? prevChecked.filter((m) => m !== milestone)
-				: [...prevChecked, milestone]
-		);
-		setChecked([]);
-		setChecked((prev) => [...prev, milestone]);
+		setChecked((prevChecked) => ({
+		  ...prevChecked, // Keep existing key-value pairs
+		  [milestone]: !prevChecked[milestone] || false, // Toggle selection for the clicked milestone, set default to false
+		}));
 		const milestoneId = milestoneDict.find((m) => m.name === milestone)?.id; // Handle potential missing IDs
 		if (milestoneId) {
-			setSelectedMilestone(milestoneId);
-		}
-	};
+			setSelectedMilestone(milestoneId)
+			const isSelected = !checked[milestone] || false; // Get selection state
+		
+			setMilestones((prevMilestones) => {
+			  // Handle potential undefined state of prevMilestones
+			  return prevMilestones ? [...new Set([...prevMilestones, milestoneId])] : [milestoneId];
+			});
+		
+			if (!isSelected) {
+			  // Deselection: Filter out only if milestones exist (prevents errors)
+			  setMilestones((prevMilestones) =>
+				prevMilestones?.filter((id) => id !== milestoneId)
+			  );
+			}
+		  }
+	}
 	const handleMetricChange = (event, newMetric) => {
 		setSelectedMetric(newMetric);
 	};
@@ -57,7 +67,7 @@ const MetricsSection = ({ project }) => {
 				}}
 			>
 				<h4>Milestones:</h4>
-				<List
+				{/* <List
 					sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
 				>
 					{project.milestones.map((milestone) => {
@@ -66,7 +76,6 @@ const MetricsSection = ({ project }) => {
 							<ListItem key={milestone} disablePadding>
 								<ListItemButton onClick={handleToggle(milestone)} dense>
 									<ListItemIcon>
-										{/* Replace Checkbox with Radio */}
 										<Radio
 											edge="start"
 											checked={checked.indexOf(milestone) !== -1}
@@ -79,6 +88,26 @@ const MetricsSection = ({ project }) => {
 							</ListItem>
 						);
 					})}
+				</List> */}
+				<List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+				{project.milestones.map((milestone) => {
+					const labelId = `checkbox-label-${milestone}`; // Change the label ID
+					return (
+					<ListItem key={milestone} disablePadding dense>
+						<ListItemButton onClick={handleToggle(milestone)}>
+						<ListItemIcon>
+							<Checkbox
+							edge="start"
+							checked={checked[milestone] || false} // Set default to false
+							tabIndex={-1}
+							inputProps={{ 'aria-labelledby': labelId }}
+							/>
+						</ListItemIcon>
+						<ListItemText id={labelId} primary={milestone} />
+						</ListItemButton>
+					</ListItem>
+					);
+				})}
 				</List>
 			</Box>
 			<Box
@@ -112,13 +141,16 @@ const MetricsSection = ({ project }) => {
 				</ToggleButtonGroup>
 				<React.Fragment>
 					{selectedMetric === 'Burndown Chart' && (
-						<Burndown milestone={selectedMilestone} />
+						<Burndown milestones={milestones}/>
 					)}
 					{selectedMetric === 'Cycle Time' && (
 						<CycleTime milestone={selectedMilestone} createdDate={project.createdDate} updatedDate={project.updatedDate} projectId={project.projectID}/>
 					)}
 					{selectedMetric === 'Lead Time' && (
-						<LeadTime milestone={selectedMilestone} />
+						<LeadTime milestone={selectedMilestone} 
+						createdDate={project.createdDate}
+						updatedDate={project.updatedDate}
+						projectId={project.projectID}/>
 					)}
 					{selectedMetric === 'Delivery on Time' && (
 						<DeliveryOnTime milestones={project.milestoneDetails}

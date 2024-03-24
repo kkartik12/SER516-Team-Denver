@@ -3,15 +3,21 @@ import { ToggleButton,
 ToggleButtonGroup, Box } from '@mui/material'
 import GraphComponent from './GraphComponent'
 
-const Burndown = ({ milestone }) => {
+const Burndown = ({ milestones }) => {
     const [parameter, setParameter] = useState('')
+    const [parameters, setParameters] = useState([])
+    const handleParameterChange = (event, newParameter) => {
+        setParameters(newParameter)
+    }
+    console.log(parameters)
     return (
         <Box>
             <ToggleButtonGroup
-                exclusive
+                exclusive={false}
+                multiple 
                 sx={{ mt: 2 }}
-                value={parameter}
-                onChange={(event, newParameter) => setParameter(newParameter)}
+                value={parameters}
+                onChange={handleParameterChange}
                 >
                 <ToggleButton key="partialRunningSum" value="partialRunningSum">
                     Partial Running Sum
@@ -23,7 +29,7 @@ const Burndown = ({ milestone }) => {
                     BV Running Sum
                 </ToggleButton>
             </ToggleButtonGroup>
-            { parameter && <GraphComponent  sx = {{marginY: 2}} parameter={parameter} milestoneId = {milestone}/>}
+            { parameters && <GraphComponent  sx = {{marginY: 2}} parameters={parameters} milestoneIds = {milestones}/>}
         </Box>
     )
 }

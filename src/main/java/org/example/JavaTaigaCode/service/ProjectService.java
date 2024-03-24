@@ -145,7 +145,7 @@ public class ProjectService {
                 project.setCreatedDate(
                         LocalDate.parse(projectJSON.get("created_date").asText(), DateTimeFormatter.ISO_DATE_TIME));
                 project.setUpdatedDate(
-                        LocalDate.parse(projectJSON.get("totals_updated_datetime").asText(), DateTimeFormatter.ISO_DATE_TIME));    
+                        LocalDate.parse(projectJSON.get("totals_updated_datetime").asText(), DateTimeFormatter.ISO_DATE_TIME));
                 JsonNode owner = projectJSON.get("owner");
                 project.setOwner(owner.get("full_name_display").asText());
                 JsonNode membersJSON = projectJSON.get("members");

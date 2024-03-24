@@ -52,6 +52,7 @@ public class DeliveryOnTimeServiceTest {
         milestoneDTO2.setMilestoneID(2);
         milestoneDTO2.setMilestoneName("Milestone 2");
 
+        projectDTO.setMilestoneDetails(List.of(milestoneDTO1, milestoneDTO2));
         when(projectService.getPojectDetails(anyInt())).thenReturn(projectDTO);
         when(deliveryOnTimeService.getMilestondeDetails(1)).thenReturn(milestoneDTO1);
         when(deliveryOnTimeService.getMilestondeDetails(2)).thenReturn(milestoneDTO2);

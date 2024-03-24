@@ -20,39 +20,46 @@ import {
 	YAxis
 } from 'recharts';
 
-const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
+const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDate, projectId }) => {
 	const [milestone, setMilestone] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [isCustomDateRange, setIsCustomDateRange] = useState(false);
-	const [startDate, setStartDate] = useState('');
-	const [endDate, setEndDate] = useState('');
+	const [startDate, setStartDate] = useState(createdDate);
+	const [endDate, setEndDate] = useState(updatedDate);
 	const [dateError, setDateError] = useState('');
-
 	useEffect(() => {
 		const fetchMilestoneDetails = async () => {
 			try {
 				setIsLoading(true);
-				const response = await fetch(
-					`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}`
-				);
+				console.log(isCustomDateRange)
+				let url = isCustomDateRange ? `http://localhost:8080/api/customleadTime/${parameter}?projectId=${projectId}&startDate=${startDate}&endDate=${endDate}` :`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}` 
+					
+					
+				const response = await fetch(url)
+				console.log(url)
 				if (!response.ok) {
 					throw new Error(`API Request Failed with Status ${response.status}`);
 				}
 				const data = await response.json();
+				console.log(data)
 				setMilestone(data);
 			} catch (error) {
 				setError(error.message);
 			} finally {
 				setIsLoading(false);
 			}
-		};
+		}
 
-		fetchMilestoneDetails();
-	}, []);
+		fetchMilestoneDetails()
+		const listener = () => {
+			fetchMilestoneDetails();
+		  };
+		
+	}, [isCustomDateRange, startDate, endDate, parameter, milestoneId])
 
-	const handleCustomDateRangeToggle = () => {
-		setIsCustomDateRange(!isCustomDateRange);
+	const handleCustomDateRangeToggle = (event) => {
+		setIsCustomDateRange(event.target.checked);
 	};
 
 	const handleStartDateChange = (date) => {
@@ -107,7 +114,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId }) => {
 			groupedData[date].push(item.leadTime);
 		});
 	}
-
+	
 	return (
 		<div>
 			{isLoading && (
