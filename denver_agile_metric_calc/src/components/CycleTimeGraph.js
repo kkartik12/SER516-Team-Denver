@@ -16,7 +16,7 @@ const CycleTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedD
         const fetchMilestoneDetails = async () => {
             try {
                 setIsLoading(true);
-                let url = isCustomDateRange ? `http://localhost:8080/api/cycleTime/${parameter}/byTime/${projectId}?startDate=${startDate}&endDate=${endDate}` :`http://localhost:8080/api/cycleTime/${parameter}/${milestoneId}?startDate=${startDate}&endDate=${endDate}`
+                let url = isCustomDateRange ? `${process.env.REACT_APP_API_URL}/api/cycleTime/${parameter}/byTime/${projectId}?startDate=${startDate}&endDate=${endDate}` :`${process.env.REACT_APP_API_URL}/api/cycleTime/${parameter}/${milestoneId}?startDate=${startDate}&endDate=${endDate}`
                 const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error(`API Request Failed with Status ${response.status}`);

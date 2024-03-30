@@ -33,7 +33,7 @@ const LeadTimeGraph = ({ sx = {}, parameter, milestoneId, createdDate, updatedDa
 			try {
 				setIsLoading(true);
 				console.log(isCustomDateRange)
-				let url = isCustomDateRange ? `http://localhost:8080/api/customleadTime/${parameter}?projectId=${projectId}&startDate=${startDate}&endDate=${endDate}` :`http://localhost:8080/api/leadTime/${parameter}/${milestoneId}` 
+				let url = isCustomDateRange ? `${process.env.REACT_APP_API_URL}/api/customleadTime/${parameter}?projectId=${projectId}&startDate=${startDate}&endDate=${endDate}` :`${process.env.REACT_APP_API_URL}/api/leadTime/${parameter}/${milestoneId}` 
 					
 					
 				const response = await fetch(url)

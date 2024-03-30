@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://54.89.25.90:8080"})
 @RequestMapping("/api")
 public class CycleTimeController {
     @Autowired

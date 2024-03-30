@@ -22,9 +22,9 @@ const TimelineChart = () => {
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     let apiURL;
 	if (projectId) {
-		apiURL = `http://localhost:8080/api/DoT/${projectId}/BV`; 
+		apiURL = `${process.env.REACT_APP_API_URL}/api/DoT/${projectId}/BV`; 
 	} else if (slug) {
-		apiURL = `http://localhost:8080/api/DoT/by-slug/${slug}/BV`; 
+		apiURL = `${process.env.REACT_APP_API_URL}/api/DoT/by-slug/${slug}/BV`; 
 	}
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10; 

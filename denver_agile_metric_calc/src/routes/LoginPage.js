@@ -27,7 +27,7 @@ function AuthenticationForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const loginUrl = `http://localhost:8080/api/login?username=${username}&password=${password}`;
+    const loginUrl = `${process.env.REACT_APP_API_URL}/api/login?username=${username}&password=${password}`;
     const loginResponse = await fetch(loginUrl, { method: 'POST' });
     if (loginResponse.ok) {
       const memberID = await loginResponse.text();

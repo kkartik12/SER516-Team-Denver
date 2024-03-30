@@ -26,13 +26,13 @@ const ProjectsPage = () => {
     const getProjects = async () => {
       try {
         setLoading(true); // Set loading to true before starting the fetch
-        const projectsUrl = `http://localhost:8080/api/projectList/${memberID}`;
+        const projectsUrl = `${process.env.REACT_APP_API_URL}/api/projectList/${memberID}`;
         const projectsResponse = await fetch(projectsUrl, { method: 'GET' });
         if (projectsResponse.ok) {
           const projects = await projectsResponse.json();
           const projectsWithDetails = await Promise.all(
             projects.map(async (project) => {
-              const response = await fetch(`http://localhost:8080/api/projects/${project.projectID}`);
+              const response = await fetch(`${process.env.REACT_APP_API_URL}/api/projects/${project.projectID}`);
               if (response.ok) {
                 const projectDetails = await response.json();
                 return { ...project, details: projectDetails };
