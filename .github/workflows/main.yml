@@ -7,7 +7,7 @@ on:
 
 # Jobs section defines the tasks to be executed
 jobs:
-  build-test-coverage:
+  backend-test-coverage:
     runs-on: ubuntu-latest  # Runs on Ubuntu virtual machine
 
     # Define steps to be executed
@@ -19,12 +19,25 @@ jobs:
         uses: actions/setup-java@v3
         with:
             java-version: '17' 
-            distribution: 'adopt'  
+            distribution: 'adopt'
 
-      
       - name: Install Maven dependencies 
         run: mvn clean install  # Install Maven dependencies & Run Unit Tests
-        
 
+  frontend-test:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Change this according to your node version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run frontend tests
+        run: npm test
