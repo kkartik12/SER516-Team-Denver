@@ -14,7 +14,7 @@ const GraphComponent = ({ sx = {}, parameters, milestoneIds }) => {
 			setError(null)
 			const allPromises = []
 			milestoneIds.forEach((milestoneId) => {
-				const apiURL = `http://localhost:8080/api/burndownchart/${milestoneId}?partialSum=${parameters.includes("partialSum")}&totalSum=${parameters.includes("totalSum")}&BVSum=${parameters.includes("BVSum")}`
+				const apiURL = `${process.env.REACT_APP_API_URL}/api/burndownchart/${milestoneId}?partialSum=${parameters.includes("partialSum")}&totalSum=${parameters.includes("totalSum")}&BVSum=${parameters.includes("BVSum")}`
 				console.log(apiURL)
 				allPromises.push(fetch(apiURL))
 			})

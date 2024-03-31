@@ -25,9 +25,9 @@ const ProjectDetails = () => {
   const { projectId , slug} = useParams();
   let apiURL;
   if (projectId) {
-    apiURL = `http://localhost:8080/api/projects/${projectId}`; // Use projectId if available
+    apiURL = `${process.env.REACT_APP_API_URL}/api/projects/${projectId}`; // Use projectId if available
   } else if (slug) {
-    apiURL = `http://localhost:8080/api/projects/by-slug/${slug}`; // Use slug if not
+    apiURL = `${process.env.REACT_APP_API_URL}/api/projects/by-slug/${slug}`; // Use slug if not
   }
   useEffect(() => {
     const fetchProjectDetails = async () => {

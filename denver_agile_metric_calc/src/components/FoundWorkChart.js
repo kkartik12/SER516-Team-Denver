@@ -15,7 +15,7 @@ const FoundWorkChart = ({ milestoneId }) => {
 	const [foundwork, setFoundwork] = useState([]);
 	console.log(milestoneId);
 	const [isloading, setIsloading] = useState(true);
-	const apiURL = `http://localhost:8080/api/foundWork/${milestoneId}`;
+	const apiURL = `${process.env.REACT_APP_API_URL}/api/foundWork/${milestoneId}`;
 	useEffect(() => {
 		(async () => {
 			try {

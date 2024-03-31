@@ -14,7 +14,7 @@ const AdoptedWork = ({ projectID }) => {
 	const [adoptedWork, setAdoptedWork] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const apiURL = `http://localhost:8080/api/adoptedWork/project/${projectID}`;
+	const apiURL = `${process.env.REACT_APP_API_URL}/api/adoptedWork/project/${projectID}`;
 	useEffect(() => {
 		(async () => {
 			try {

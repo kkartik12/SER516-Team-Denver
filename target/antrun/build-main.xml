@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="maven-antrun-" default="main">
   <target name="main">
-    <copy todir="C:\Users\kvvid\Desktop\Denver\SER516-Team-Denver\target/classes/public">
-      <fileset dir="C:\Users\kvvid\Desktop\Denver\SER516-Team-Denver/denver_agile_metric_calc/build" />
+    <copy todir="D:\Course_Materials\Agile\Project\SER516-Team-Denver\target/classes/public">
+      <fileset dir="D:\Course_Materials\Agile\Project\SER516-Team-Denver/denver_agile_metric_calc/build" />
     </copy>
   </target>
 </project>
