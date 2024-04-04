@@ -25,6 +25,15 @@ jobs:
     - name: Install Maven dependencies
       run: mvn clean install # Install Maven dependencies & Run Unit Tests
 
+    - name: Generate JaCoCo Code Coverage Report
+      run: mvn clean verify
+
+    - name: Archive code coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: jacoco-report
+        path: target/site/jacoco/index.html
+
   test-frontend:
     runs-on: ubuntu-latest # Runs on Ubuntu virtual machine
 
