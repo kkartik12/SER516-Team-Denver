@@ -14,6 +14,7 @@ import org.apache.http.util.EntityUtils;
 // import org.example.JavaTaigaCode.models.TaskDTO;
 // import org.example.JavaTaigaCode.util.GlobalData;
 import found_work.models.TaskDTO;
+import found_work.util.GlobalData;
 
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class FoundWorkService {
   private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
   String datePattern = "yyyy-MM-dd";
+  String token;
   DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
   HttpClient httpClient = HttpClients.createDefault();  
 
@@ -40,7 +42,8 @@ public class FoundWorkService {
         String response = "";
         String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
         HttpGet request = new HttpGet(endpoint);
-        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        // request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpResponse httpResponse = httpClient.execute(request);
         int httpStatus = httpResponse.getStatusLine().getStatusCode();
@@ -60,7 +63,8 @@ public class FoundWorkService {
         //https://api.taiga.io/api/v1/tasks?milestone=376605&created_date__gt=2024-02-20
         endpoint = TAIGA_API_ENDPOINT + "/tasks?milestone=" + milestoneID + "&created_date__gt=" + sprintStartDate.plusDays(1);
         request = new HttpGet(endpoint);
-        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        // request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         httpResponse = httpClient.execute(request);
         httpStatus = httpResponse.getStatusLine().getStatusCode();
