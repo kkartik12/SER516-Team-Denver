@@ -8,7 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
-import org.example.JavaTaigaCode.util.GlobalData;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -16,12 +16,11 @@ import java.io.InputStreamReader;
 
 @Service
 public class AuthService {
-    private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
-    public static Integer memberID;
 
-    public static String authToken;
-    public Integer authenticate(String username, String password) {
+    @Value("${taiga_api_endpoint}")
+    private String TAIGA_API_ENDPOINT;
 
+    public AuthModel authenticate(String username, String password) {
         // Endpoint to authenticate taiga's username and password
         String authEndpoint = TAIGA_API_ENDPOINT + "/auth";
 
@@ -47,20 +46,20 @@ public class AuthService {
             return parseAuthToken(result.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
-    Integer parseAuthToken(String responseJson) {
+    AuthModel parseAuthToken(String responseJson) throws Exception{
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseJson);
-            memberID = rootNode.path("id").asInt();
-            authToken = rootNode.path("auth_token").asText();
-            return memberID;
+            Integer memberID = rootNode.path("id").asInt();
+            String authToken = rootNode.path("auth_token").asText();
+            return new AuthModel(memberID, authToken);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
