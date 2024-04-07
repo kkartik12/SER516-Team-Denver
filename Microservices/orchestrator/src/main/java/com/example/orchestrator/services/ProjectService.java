@@ -10,7 +10,7 @@ import java.net.URI;
 public class ProjectService {
     WebClient webClient;
 
-    String authUrl = "http://auth:8080/api";
+    String authUrl = "http://project:8080/api";
 
     public ProjectService() {
         this.webClient = WebClient.create();

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class CycleTimeService {
     WebClient webClient;
 
-    String authUrl = "http://cycletime:8080/api";
+    String authUrl = "http://cycle_time:8080/api";
 
     public CycleTimeService() {
         this.webClient = WebClient.create();

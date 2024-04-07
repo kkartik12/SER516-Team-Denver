@@ -34,8 +34,8 @@ public class Controller {
     AdoptedWorkService adoptedWorkService;
 //    @Autowired
 //    DeliveryOnTimeService deliveryOnTimeService;
-//    @Autowired
-//    FoundWorkService foundWorkService;
+    @Autowired
+    FoundWorkService foundWorkService;
 
 
     @PostMapping("/login")
@@ -161,10 +161,10 @@ public class Controller {
 //        return deliveryOnTimeService.getClosedMilestonesbySlug(slug);
 //    }
 //
-//    @GetMapping("/foundWork/{milestoneID}")
-//    @ResponseBody
-//    public Object getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID) {
-//        return foundWorkService.getFoundWork(milestoneID);
-//    }
+    @GetMapping("/foundWork/{milestoneID}")
+    @ResponseBody
+    public Object getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID) {
+        return foundWorkService.getFoundWork(milestoneID);
+    }
 
 }
