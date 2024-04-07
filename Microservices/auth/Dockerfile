@@ -7,6 +7,6 @@ RUN mvn clean install
 
 FROM openjdk:latest
 WORKDIR /app
-COPY --from=build /app/target/auth-0.0.1-SNAPSHOT.jar /app/auth.jar
+COPY --from=build /app/target/*.jar /app/auth.jar
 
 CMD ["java", "-jar", "auth.jar"]
