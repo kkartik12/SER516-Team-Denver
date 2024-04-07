@@ -7,11 +7,12 @@ import found_work.service.FoundWorkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://54.89.25.90:8080"}) // Allow access from frontend server (React)
+@CrossOrigin 
 @RequestMapping("/api")
 public class FoundWorkController {
 
@@ -21,8 +22,9 @@ public class FoundWorkController {
   @Cacheable(value="foundWork", key = "#milestoneID")
   @GetMapping("/foundWork/{milestoneID}")
   @ResponseBody
-  public List<TaskDTO> getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID) {
-      return foundWorkService.getFoundWork(milestoneID);
+  public List<TaskDTO> getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID, HttpServletRequest request) {
+    String token = request.getHeader("token");  
+    return foundWorkService.getFoundWork(milestoneID, token);
   }
 
 }

@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 // import org.example.JavaTaigaCode.models.TaskDTO;
 // import org.example.JavaTaigaCode.util.GlobalData;
 import found_work.models.TaskDTO;
@@ -30,14 +31,16 @@ public class FoundWorkService {
   .registerModule(new JavaTimeModule())
   .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-  private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
+//   private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
+
+  @Value("${taiga_api_endpoint}")
+  private String TAIGA_API_ENDPOINT;
 
   String datePattern = "yyyy-MM-dd";
-  String token;
   DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
   HttpClient httpClient = HttpClients.createDefault();  
 
-  public List<TaskDTO> getFoundWork(Integer milestoneID) {
+  public List<TaskDTO> getFoundWork(Integer milestoneID, String token) {
     try{
         String response = "";
         String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
