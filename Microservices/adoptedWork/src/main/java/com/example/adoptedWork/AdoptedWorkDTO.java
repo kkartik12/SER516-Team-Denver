@@ -1,4 +1,4 @@
-package org.example.adoptedWork;
+package com.example.adoptedWork;
 
 public class AdoptedWorkDTO {
     Integer adoptedWork;
@@ -12,26 +12,6 @@ public class AdoptedWorkDTO {
 
     public void setAdoptedWork(Integer adoptedWork) {
         this.adoptedWork = adoptedWork;
-    }
-
-    public Integer getSprintTotalPoints() {
-        return sprintTotalPoints;
-    }
-
-    public void setSprintTotalPoints(Integer sprintTotalPoints) {
-        this.sprintTotalPoints = sprintTotalPoints;
-    }
-
-    public Integer getMilestoneID() {
-        return milestoneID;
-    }
-
-    public void setMilestoneID(Integer milestoneID) {
-        this.milestoneID = milestoneID;
-    }
-    
-    public String getMilestoneName() {
-        return milestoneName;
     }
 
     public void setMilestoneName(String milestoneName) {

@@ -1,4 +1,4 @@
-package org.example.adoptedWork;
+package com.example.adoptedWork;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +12,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,12 +22,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class AdoptedWorkService {
+    @Value("${taiga_api_endpoint}") private String TAIGA_API_ENDPOINT;
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    private final String TAIGA_API_ENDPOINT = GlobalData.getTaigaURL();
 
-    public AdoptedWorkDTO getUSAddedAfterSprintPlanning(Integer milestoneID) {
+    public AdoptedWorkDTO getUSAddedAfterSprintPlanning(Integer milestoneID, String token) {
         // percentage of adopted work
         // sum of original estimate of stories added after sprint planning /
         // sum of original forecast for the sprint
@@ -34,7 +35,7 @@ public class AdoptedWorkService {
             String endpoint = TAIGA_API_ENDPOINT + "/milestones/" + milestoneID;
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(endpoint);
-            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Authentication.authToken);
+            request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
             request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             request.setHeader("x-disable-pagination", "True");
 
@@ -55,7 +56,7 @@ public class AdoptedWorkService {
                 LocalDate sprintEstimatedStart = LocalDate.parse(milestoneJSON.get("estimated_start").asText(),
                         dateFormatter);
                 Integer sprintTotalPoints = milestoneJSON.get("total_points").asInt();
-                Integer adoptedWork = 0;
+                int adoptedWork = 0;
 
                 if (userStories.isArray()) {
                     for (JsonNode userStoryNode : userStories) {
@@ -76,18 +77,17 @@ public class AdoptedWorkService {
         }
     }
 
-    public List<AdoptedWorkDTO> getAdoptedWorkForAllSprints(Integer projectId) {
+    public List<AdoptedWorkDTO> getAdoptedWorkForAllSprints(Integer projectId, String token) {
         try {
             ProjectService projectService = new ProjectService();
-            List<MilestoneDTO> milestones = projectService.getPojectDetails(projectId).getMilestoneDetails();
+            List<MilestoneDTO> milestones = projectService.getProjectDetails(projectId, token).getMilestoneDetails();
             List<AdoptedWorkDTO> adoptedWorkList = new ArrayList<>();
 
             for (MilestoneDTO milestone : milestones) {
-                AdoptedWorkDTO adoptedWork = getUSAddedAfterSprintPlanning(milestone.getMilestoneID());
+                AdoptedWorkDTO adoptedWork = getUSAddedAfterSprintPlanning(milestone.getMilestoneID(), token);
                 adoptedWork.setMilestoneName(milestone.getMilestoneName());
-                if (adoptedWork != null) {
-                    adoptedWorkList.add(adoptedWork);
-                }
+                adoptedWorkList.add(adoptedWork);
+
             }
             return adoptedWorkList;
 
@@ -95,6 +95,5 @@ public class AdoptedWorkService {
             e.printStackTrace();
             return null;
         }
-
     }
 }
