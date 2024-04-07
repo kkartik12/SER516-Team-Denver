@@ -30,8 +30,8 @@ public class Controller {
     CycleTimeService cycleTimeService;
     @Autowired
     TaskService taskService;
-//    @Autowired
-//    AdoptedWorkService adoptedWorkService;
+    @Autowired
+    AdoptedWorkService adoptedWorkService;
 //    @Autowired
 //    DeliveryOnTimeService deliveryOnTimeService;
 //    @Autowired
@@ -126,18 +126,19 @@ public class Controller {
         return taskService.calculateLeadTimeTaskbyTime(projectId, startDate, endDate, token);
     }
 
-//    @GetMapping("/adoptedWork/{milestoneID}")
-//    @ResponseBody
-//    public Object getUSAddedAfterSprintPlanning(@PathVariable("milestoneID") Integer milestoneID) {
-//        return adoptedWorkService.getUSAddedAfterSprintPlanning(milestoneID);
-//    }
-//    @Cacheable(value = "adoptedWorkByProject", key = "#projectID")
-//    @GetMapping("/adoptedWork/project/{projectID}")
-//    @ResponseBody
-//    public Object getAdoptedWorkForAllSprints(@PathVariable("projectID") Integer projectID) {
-//        return adoptedWorkService.getAdoptedWorkForAllSprints(projectID);
-//    }
-//
+    @GetMapping("/adoptedWork/{milestoneID}")
+    @ResponseBody
+    public Object getUSAddedAfterSprintPlanning(@PathVariable("milestoneID") Integer milestoneID) {
+        return adoptedWorkService.getUSAddedAfterSprintPlanning(milestoneID, token);
+    }
+
+    @Cacheable(value = "adoptedWorkByProject", key = "#projectID")
+    @GetMapping("/adoptedWork/project/{projectID}")
+    @ResponseBody
+    public Object getAdoptedWorkForAllSprints(@PathVariable("projectID") Integer projectID) {
+        return adoptedWorkService.getAdoptedWorkForAllSprints(projectID, token);
+    }
+
 //    @GetMapping("/DoT/{projectID}")
 //    @ResponseBody
 //    public Object getClosedMilestonesbyID(@PathVariable("projectID") Integer projectID) {
