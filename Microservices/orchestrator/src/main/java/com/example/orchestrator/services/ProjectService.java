@@ -18,7 +18,7 @@ public class ProjectService {
 
     public Object getProjectList(Integer memberID, String token) {
         URI uri = URI.create(authUrl + "/projectList/" + memberID);
-        return webClient.post()
+        return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
@@ -27,7 +27,7 @@ public class ProjectService {
 
     public Object getPojectDetails(Integer projectID, String token) {
         URI uri = URI.create(authUrl + "/projects/" + projectID);
-        return webClient.post()
+        return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
@@ -36,7 +36,7 @@ public class ProjectService {
 
     public Object getProjectDetailsSlug(String slug, String token) {
         URI uri = URI.create(authUrl + "/projects/by-slug/" + slug);
-        return webClient.post()
+        return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()

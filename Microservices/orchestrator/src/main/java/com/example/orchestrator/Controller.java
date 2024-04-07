@@ -3,6 +3,7 @@ package com.example.orchestrator;
 import com.example.orchestrator.models.AuthModel;
 import com.example.orchestrator.services.AuthService;
 import com.example.orchestrator.services.BurndownChart;
+import com.example.orchestrator.services.CycleTimeService;
 import com.example.orchestrator.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,8 +29,8 @@ public class Controller {
     ProjectService projectService;
     @Autowired
     BurndownChart burndownChart;
-//    @Autowired
-//    CycleTimeService cycleTimeService;
+    @Autowired
+    CycleTimeService cycleTimeService;
 //    @Autowired
 //    Tasks taskService;
 //    @Autowired
@@ -77,33 +78,33 @@ public class Controller {
         return burndownChart.getBurndownValues(milestoneID, totalSum, partialSum, BVSum, token);
 
     }
-//
-//    @GetMapping("/cycleTime/US/{milestoneID}")
-//    @ResponseBody
-//    public Object getUSCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
-//        return cycleTimeService.getUSCycleTime(milestoneID);
-//    }
-//
-//    @GetMapping("/cycleTime/Task/{milestoneID}")
-//    @ResponseBody
-//    public Object getTaskCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
-//        return cycleTimeService.getTaskCycleTime(milestoneID);
-//    }
-//
-//    @GetMapping("/cycleTime/US/byTime/{projectId}")
-//    @ResponseBody
-//    public Object getUSCycleTimebyDates(@PathVariable Integer projectId, @RequestParam LocalDate startDate,
-//                                                    @RequestParam LocalDate endDate) {
-//        return cycleTimeService.calculateUSCycleTimebyDates(projectId, startDate, endDate);
-//    }
-//
-//    @GetMapping("/cycleTime/Task/byTime/{projectId}")
-//    @ResponseBody
-//    public Object getTaskCycleTimebyDates(@PathVariable Integer projectId, @RequestParam LocalDate startDate,
-//                                           @RequestParam LocalDate endDate) {
-//        return cycleTimeService.calculateTaskCycleTimebyDates(projectId, startDate, endDate);
-//    }
-//
+
+    @GetMapping("/cycleTime/US/{milestoneID}")
+    @ResponseBody
+    public Object getUSCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
+        return cycleTimeService.getUSCycleTime(milestoneID, token);
+    }
+
+    @GetMapping("/cycleTime/Task/{milestoneID}")
+    @ResponseBody
+    public Object getTaskCycleTime(@PathVariable("milestoneID") Integer milestoneID) {
+        return cycleTimeService.getTaskCycleTime(milestoneID, token);
+    }
+
+    @GetMapping("/cycleTime/US/byTime/{projectId}")
+    @ResponseBody
+    public Object getUSCycleTimebyDates(@PathVariable Integer projectId, @RequestParam LocalDate startDate,
+                                                    @RequestParam LocalDate endDate) {
+        return cycleTimeService.calculateUSCycleTimebyDates(projectId, startDate, endDate, token);
+    }
+
+    @GetMapping("/cycleTime/Task/byTime/{projectId}")
+    @ResponseBody
+    public Object getTaskCycleTimebyDates(@PathVariable Integer projectId, @RequestParam LocalDate startDate,
+                                           @RequestParam LocalDate endDate) {
+        return cycleTimeService.calculateTaskCycleTimebyDates(projectId, startDate, endDate, token);
+    }
+
 //    @GetMapping("/leadTime/US/{milestoneID}")
 //    @ResponseBody
 //    public Object getLeadTimeUS(@PathVariable("milestoneID") Integer  milestoneID) {

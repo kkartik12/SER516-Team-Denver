@@ -28,7 +28,7 @@ public class BurndownChart {
                 + "?totalSum=" + totalSum
                 + "&partialSum=" + partialSum
                 + "&BVSum=" + BVSum);
-        return webClient.post()
+        return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
