@@ -1,10 +1,7 @@
 package com.example.orchestrator;
 
 import com.example.orchestrator.models.AuthModel;
-import com.example.orchestrator.services.AuthService;
-import com.example.orchestrator.services.BurndownChart;
-import com.example.orchestrator.services.CycleTimeService;
-import com.example.orchestrator.services.ProjectService;
+import com.example.orchestrator.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -31,8 +28,8 @@ public class Controller {
     BurndownChart burndownChart;
     @Autowired
     CycleTimeService cycleTimeService;
-//    @Autowired
-//    Tasks taskService;
+    @Autowired
+    TaskService taskService;
 //    @Autowired
 //    AdoptedWorkService adoptedWorkService;
 //    @Autowired
@@ -105,30 +102,30 @@ public class Controller {
         return cycleTimeService.calculateTaskCycleTimebyDates(projectId, startDate, endDate, token);
     }
 
-//    @GetMapping("/leadTime/US/{milestoneID}")
-//    @ResponseBody
-//    public Object getLeadTimeUS(@PathVariable("milestoneID") Integer  milestoneID) {
-//        return taskService.calculateLeadTimeUS(milestoneID);
-//    }
-//
-//    @GetMapping("/leadTime/Task/{milestoneID}")
-//    @ResponseBody
-//    public Object getLeadTimeTask(@PathVariable("milestoneID") Integer  milestoneID) {
-//        return taskService.calculateLeadTimeTask(milestoneID);
-//    }
-//
-//    @GetMapping("/customleadTime/US")
-//    @ResponseBody
-//    public Object getLeadTimeUSbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-//        return taskService.calculateLeadTimeUSbyTime(projectId, startDate, endDate);
-//    }
-//
-//    @GetMapping("/customleadTime/Task")
-//    @ResponseBody
-//    public Object getLeadTimeTaskbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-//        return taskService.calculateLeadTimeTaskbyTime(projectId, startDate, endDate);
-//    }
-//
+    @GetMapping("/leadTime/US/{milestoneID}")
+    @ResponseBody
+    public Object getLeadTimeUS(@PathVariable("milestoneID") Integer  milestoneID) {
+        return taskService.calculateLeadTimeUS(milestoneID, token);
+    }
+
+    @GetMapping("/leadTime/Task/{milestoneID}")
+    @ResponseBody
+    public Object getLeadTimeTask(@PathVariable("milestoneID") Integer  milestoneID) {
+        return taskService.calculateLeadTimeTask(milestoneID, token);
+    }
+
+    @GetMapping("/customleadTime/US")
+    @ResponseBody
+    public Object getLeadTimeUSbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        return taskService.calculateLeadTimeUSbyTime(projectId, startDate, endDate, token);
+    }
+
+    @GetMapping("/customleadTime/Task")
+    @ResponseBody
+    public Object getLeadTimeTaskbyTime(@RequestParam Integer projectId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        return taskService.calculateLeadTimeTaskbyTime(projectId, startDate, endDate, token);
+    }
+
 //    @GetMapping("/adoptedWork/{milestoneID}")
 //    @ResponseBody
 //    public Object getUSAddedAfterSprintPlanning(@PathVariable("milestoneID") Integer milestoneID) {
