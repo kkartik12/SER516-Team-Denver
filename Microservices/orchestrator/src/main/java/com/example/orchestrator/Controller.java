@@ -2,6 +2,7 @@ package com.example.orchestrator;
 
 import com.example.orchestrator.models.AuthModel;
 import com.example.orchestrator.services.AuthService;
+import com.example.orchestrator.services.BurndownChart;
 import com.example.orchestrator.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,8 +26,8 @@ public class Controller {
 
     @Autowired
     ProjectService projectService;
-//    @Autowired
-//    BurndownChart burndownChart;
+    @Autowired
+    BurndownChart burndownChart;
 //    @Autowired
 //    CycleTimeService cycleTimeService;
 //    @Autowired
@@ -68,14 +69,14 @@ public class Controller {
         return projectService.getProjectDetailsSlug(Slug, token);
     }
 
-//    @GetMapping("/burndownchart/{milestoneID}")
-//    @ResponseBody
-//    public Object getBurndownValues(@PathVariable("milestoneID") Integer milestoneID,
-//                                          @RequestParam Boolean totalSum, @RequestParam Boolean partialSum,
-//                                          @RequestParam Boolean BVSum) {
-//
-//
-//    }
+    @GetMapping("/burndownchart/{milestoneID}")
+    @ResponseBody
+    public Object getBurndownValues(@PathVariable("milestoneID") Integer milestoneID,
+                                          @RequestParam Boolean totalSum, @RequestParam Boolean partialSum,
+                                          @RequestParam Boolean BVSum) {
+        return burndownChart.getBurndownValues(milestoneID, totalSum, partialSum, BVSum, token);
+
+    }
 //
 //    @GetMapping("/cycleTime/US/{milestoneID}")
 //    @ResponseBody
