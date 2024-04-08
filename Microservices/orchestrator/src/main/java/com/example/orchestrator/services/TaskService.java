@@ -11,31 +11,31 @@ import java.time.LocalDate;
 public class TaskService {
     WebClient webClient;
 
-    String authUrl = "http://lead_time:8080/api";
+    String authUrl = "http://leadtime:8080/api";
 
     public TaskService() {
         this.webClient = WebClient.create();
     }
 
-    public Object calculateLeadTimeUS(Integer milestoneID, String token) {
+    public String calculateLeadTimeUS(Integer milestoneID, String token) {
         URI uri = URI.create(authUrl + "/leadTime/US/" + milestoneID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object calculateLeadTimeTask(Integer milestoneID, String token) {
+    public String calculateLeadTimeTask(Integer milestoneID, String token) {
         URI uri = URI.create(authUrl + "/leadTime/Task/" + milestoneID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object calculateLeadTimeUSbyTime(Integer projectId,
+    public String calculateLeadTimeUSbyTime(Integer projectId,
                                             LocalDate startDate,
                                             LocalDate endDate,
                                             String token) {
@@ -47,10 +47,10 @@ public class TaskService {
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object calculateLeadTimeTaskbyTime(Integer projectId,
+    public String calculateLeadTimeTaskbyTime(Integer projectId,
                                             LocalDate startDate,
                                             LocalDate endDate,
                                             String token) {
@@ -62,6 +62,6 @@ public class TaskService {
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 }

@@ -18,7 +18,7 @@ public class BurndownChart {
         this.webClient = WebClient.create();
     }
 
-    public Object getBurndownValues(Integer milestoneID,
+    public String getBurndownValues(Integer milestoneID,
                                     Boolean totalSum,
                                     Boolean partialSum,
                                     Boolean BVSum,
@@ -32,7 +32,7 @@ public class BurndownChart {
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
 }

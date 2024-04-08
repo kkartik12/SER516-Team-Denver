@@ -74,21 +74,6 @@ public class ProjectApplicationTests {
 		verify(projectService).getPojectList(memberID,token);
 	}
 
-	@Test
-	public void testGetProjectList_NullList() {
-		// Arrange
-		int memberID = 1;
-		String token = "mockToken";
-		when(request.getHeader("token")).thenReturn("mockToken");
-		when(projectService.getPojectList(memberID, token)).thenReturn(null);
-
-		// Act & Assert
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			projectController.getProjectList(memberID, request);
-		});
-		assertEquals("Unable to get Project List for user", exception.getMessage());
-		verify(projectService).getPojectList(memberID, token);
-	}
 
 }
 

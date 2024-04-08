@@ -22,7 +22,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class AdoptedWorkService {
-    @Value("${taiga_api_endpoint}") private String TAIGA_API_ENDPOINT;
+    @Value("${taiga_api_endpoint}")
+    private String TAIGA_API_ENDPOINT;
+
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -82,7 +84,7 @@ public class AdoptedWorkService {
             ProjectService projectService = new ProjectService();
             List<MilestoneDTO> milestones = projectService.getProjectDetails(projectId, token).getMilestoneDetails();
             List<AdoptedWorkDTO> adoptedWorkList = new ArrayList<>();
-
+            
             for (MilestoneDTO milestone : milestones) {
                 AdoptedWorkDTO adoptedWork = getUSAddedAfterSprintPlanning(milestone.getMilestoneID(), token);
                 adoptedWork.setMilestoneName(milestone.getMilestoneName());

@@ -9,27 +9,27 @@ import java.net.URI;
 public class AdoptedWorkService {
     WebClient webClient;
 
-    String authUrl = "http://adopted_work:8080/api";
+    String authUrl = "http://adoptedwork:8080/api";
 
     public AdoptedWorkService() {
         this.webClient = WebClient.create();
     }
 
-    public Object getUSAddedAfterSprintPlanning(Integer milestoneID, String token) {
+    public String getUSAddedAfterSprintPlanning(Integer milestoneID, String token) {
         URI uri = URI.create(authUrl + "/adoptedWork/" + milestoneID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getAdoptedWorkForAllSprints(Integer projectID, String token) {
+    public String getAdoptedWorkForAllSprints(Integer projectID, String token) {
         URI uri = URI.create(authUrl + "/adoptedWork/project/" + projectID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 }

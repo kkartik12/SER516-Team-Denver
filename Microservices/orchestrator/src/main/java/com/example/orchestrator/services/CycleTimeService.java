@@ -13,31 +13,31 @@ import java.time.LocalDate;
 public class CycleTimeService {
     WebClient webClient;
 
-    String authUrl = "http://cycle_time:8080/api";
+    String authUrl = "http://cycletime:8080/api";
 
     public CycleTimeService() {
         this.webClient = WebClient.create();
     }
 
-    public Object getUSCycleTime(Integer milestoneID, String token) {
+    public String getUSCycleTime(Integer milestoneID, String token) {
         URI uri = URI.create(authUrl + "/cycleTime/US/" + milestoneID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getTaskCycleTime(Integer milestoneID, String token) {
+    public String getTaskCycleTime(Integer milestoneID, String token) {
         URI uri = URI.create(authUrl + "/cycleTime/Task/" + milestoneID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object calculateUSCycleTimebyDates(Integer projectId,
+    public String calculateUSCycleTimebyDates(Integer projectId,
                                         LocalDate startDate,
                                         LocalDate endDate,
                                         String token) {
@@ -49,10 +49,10 @@ public class CycleTimeService {
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object calculateTaskCycleTimebyDates(Integer projectId,
+    public String calculateTaskCycleTimebyDates(Integer projectId,
                                               LocalDate startDate,
                                               LocalDate endDate,
                                               String token) {
@@ -64,7 +64,7 @@ public class CycleTimeService {
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
 }

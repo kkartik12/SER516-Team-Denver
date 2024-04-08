@@ -9,27 +9,27 @@ import java.net.URI;
 public class DeliveryOnTimeService {
     WebClient webClient;
 
-    String authUrl = "http://deliveryOnTime:8080/api";
+    String authUrl = "http://deliveryontime:8080/api";
 
     public DeliveryOnTimeService() {
         this.webClient = WebClient.create();
     }
 
-    public Object getClosedMilestonesbyIDForBV(Integer projectID, String token) {
+    public String getClosedMilestonesbyIDForBV(Integer projectID, String token) {
         URI uri = URI.create(authUrl + "DoT/"+projectID+"/BV");
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getClosedMilestonesbySlugForBV(String slug, String token) {
+    public String getClosedMilestonesbySlugForBV(String slug, String token) {
         URI uri = URI.create(authUrl + "DoT/by-slug/"+slug+"/BV");
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 }

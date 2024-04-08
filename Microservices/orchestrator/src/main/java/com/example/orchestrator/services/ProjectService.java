@@ -16,48 +16,48 @@ public class ProjectService {
         this.webClient = WebClient.create();
     }
 
-    public Object getProjectList(Integer memberID, String token) {
+    public String getProjectList(Integer memberID, String token) {
         URI uri = URI.create(authUrl + "/projectList/" + memberID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getPojectDetails(Integer projectID, String token) {
+    public String getPojectDetails(Integer projectID, String token) {
         URI uri = URI.create(authUrl + "/projects/" + projectID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getProjectDetailsSlug(String slug, String token) {
+    public String getProjectDetailsSlug(String slug, String token) {
         URI uri = URI.create(authUrl + "/projects/by-slug/" + slug);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getClosedMilestonesbyID(Integer projectID, String token) {
+    public String getClosedMilestonesbyID(Integer projectID, String token) {
         URI uri = URI.create(authUrl + "/DoT/" + projectID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 
-    public Object getClosedMilestonesbySlug(String slug, String token) {
+    public String getClosedMilestonesbySlug(String slug, String token) {
         URI uri = URI.create(authUrl + "/DoT/by-slug/" + slug);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 }

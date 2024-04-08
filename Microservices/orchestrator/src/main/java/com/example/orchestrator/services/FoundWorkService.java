@@ -10,18 +10,18 @@ import java.net.URI;
 public class FoundWorkService {
     WebClient webClient;
 
-    String authUrl = "http://found_work:8080/api";
+    String authUrl = "http://foundwork:8080/api";
 
     public FoundWorkService() {
         this.webClient = WebClient.create();
     }
 
-    public Object getFoundWork(Integer milestoneID, String token) {
+    public String getFoundWork(Integer milestoneID, String token) {
         URI uri = URI.create(authUrl + "/foundWork/" + milestoneID);
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
                 .retrieve()
-                .bodyToMono(Object.class).block();
+                .bodyToMono(String.class).block();
     }
 }

@@ -37,7 +37,7 @@ services:
     networks:
       - denver
 
-  cycle_time:
+  cycletime:
     build:
       context: /cycletime
       dockerfile: Dockerfile
@@ -46,7 +46,7 @@ services:
     networks:
       - denver
   
-  lead_time:
+  leadtime:
     build:
       context: /leadtime
       dockerfile: Dockerfile
@@ -55,7 +55,7 @@ services:
     networks:
       - denver
 
-  adopted_work:
+  adoptedwork:
     build:
       context: /adoptedwork
       dockerfile: Dockerfile
@@ -64,7 +64,7 @@ services:
     networks:
       - denver
   
-  found_work:
+  foundwork:
     build:
       context: /found_work
       dockerfile: Dockerfile
@@ -72,6 +72,15 @@ services:
       - "8087:8080"
     networks:
       - denver
+    
+  deliveryontime:
+    build:
+      context: /dot
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8080"
+    networks:
+      - denver
 
 networks:
-  task4:
+  denver:
