@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class TaskService {
     WebClient webClient;
 
-    String authUrl = "http://tasks:8080/api";
+    String authUrl = "http://lead_time:8080/api";
 
     public TaskService() {
         this.webClient = WebClient.create();
