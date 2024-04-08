@@ -1,5 +1,5 @@
 
-package com.example.project;
+package com.example.dot;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +11,9 @@ public class MilestoneDTO {
     private LocalDate start_date;
     private LocalDate end_date;
     private Boolean isClosed;
+    private List<BurndownChartDTO> totalSumValue;
+    private List<BurndownChartDTO> partialSumValue;
+    private List<BurndownChartDTO> totalSumBV;
     private Double totalPoints;
     private Integer bvTotal;
     private Integer bvCompleted;
@@ -39,6 +42,28 @@ public class MilestoneDTO {
 
     public void setClosed(Boolean isClosed) {
         this.isClosed = isClosed;
+    }
+
+    public List<BurndownChartDTO> getTotalSumValue() {
+        return totalSumValue;
+    }
+    public List<BurndownChartDTO> getTotalSumBV() {
+        return totalSumBV;
+    }
+
+    public void setTotalSumValue(List<BurndownChartDTO> totalSumValue) {
+        this.totalSumValue = totalSumValue;
+    }
+    public void setTotalSumBV(List<BurndownChartDTO> totalSumBV) {
+        this.totalSumBV = totalSumBV;
+    }
+
+    public List<BurndownChartDTO> getPartialSumValue() {
+        return partialSumValue;
+    }
+
+    public void setPartialSumValue(List<BurndownChartDTO> partialSumValue) {
+        this.partialSumValue = partialSumValue;
     }
 
     public Double getTotalPoints() {
@@ -100,8 +125,15 @@ public class MilestoneDTO {
     public MilestoneDTO() {
     }
 
-    public MilestoneDTO(Integer milestoneID, String milestoneName) {
+    public MilestoneDTO(Integer milestoneID, String milestoneName, LocalDate start_date, LocalDate end_date,
+                        List<BurndownChartDTO> totalSumValue, List<BurndownChartDTO> totalSumBV,  List<BurndownChartDTO> partialSumValue, Double totalPoints) {
         this.milestoneID = milestoneID;
         this.milestoneName = milestoneName;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.totalSumValue = totalSumValue;
+        this.totalSumBV = totalSumBV;
+        this.partialSumValue = partialSumValue;
+        this.totalPoints = totalPoints;
     }
 }
