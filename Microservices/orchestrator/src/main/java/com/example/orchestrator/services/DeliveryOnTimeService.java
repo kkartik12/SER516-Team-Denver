@@ -6,17 +6,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URI;
 
 @Service
-public class AdoptedWorkService {
+public class DeliveryOnTimeService {
     WebClient webClient;
 
-    String authUrl = "http://adopted_work:8080/api";
+    String authUrl = "http://deliveryOnTime:8080/api";
 
-    public AdoptedWorkService() {
+    public DeliveryOnTimeService() {
         this.webClient = WebClient.create();
     }
 
-    public Object getUSAddedAfterSprintPlanning(Integer milestoneID, String token) {
-        URI uri = URI.create(authUrl + "/adoptedWork/" + milestoneID);
+    public Object getClosedMilestonesbyIDForBV(Integer projectID, String token) {
+        URI uri = URI.create(authUrl + "DoT/"+projectID+"/BV");
         return webClient.get()
                 .uri(uri)
                 .header("token", token)
@@ -24,8 +24,8 @@ public class AdoptedWorkService {
                 .bodyToMono(Object.class).block();
     }
 
-    public Object getAdoptedWorkForAllSprints(Integer projectID, String token) {
-        URI uri = URI.create(authUrl + "/adoptedWork/project/" + projectID);
+    public Object getClosedMilestonesbySlugForBV(String slug, String token) {
+        URI uri = URI.create(authUrl + "DoT/by-slug/"+slug+"/BV");
         return webClient.get()
                 .uri(uri)
                 .header("token", token)

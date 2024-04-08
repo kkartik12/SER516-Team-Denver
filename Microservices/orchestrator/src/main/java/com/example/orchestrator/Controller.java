@@ -32,8 +32,8 @@ public class Controller {
     TaskService taskService;
     @Autowired
     AdoptedWorkService adoptedWorkService;
-//    @Autowired
-//    DeliveryOnTimeService deliveryOnTimeService;
+    @Autowired
+    DeliveryOnTimeService deliveryOnTimeService;
     @Autowired
     FoundWorkService foundWorkService;
 
@@ -139,32 +139,32 @@ public class Controller {
         return adoptedWorkService.getAdoptedWorkForAllSprints(projectID, token);
     }
 
-//    @GetMapping("/DoT/{projectID}")
-//    @ResponseBody
-//    public Object getClosedMilestonesbyID(@PathVariable("projectID") Integer projectID) {
-//        return projectService.getClosedMilestonesbyID(projectID);
-//    }
-//
-//    @GetMapping("/DoT/by-slug/{Slug}")
-//    @ResponseBody
-//    public Object getClosedMilestonesbySlug(@PathVariable("Slug") String Slug) {
-//        return projectService.getClosedMilestonesbySlug(Slug);
-//    }
-//
-//    @GetMapping("DoT/{projectID}/BV")
-//    public @ResponseBody Object getClosedMilestonesforBV(@PathVariable("projectID") Integer projectID) {
-//        return deliveryOnTimeService.getClosedMilestonesbyID(projectID);
-//    }
-//
-//    @GetMapping("DoT/by-slug/{Slug}/BV")
-//    public @ResponseBody Object getClosedMilestonesforBV(@PathVariable("Slug") String slug) {
-//        return deliveryOnTimeService.getClosedMilestonesbySlug(slug);
-//    }
-//
+    @GetMapping("/DoT/{projectID}")
+    @ResponseBody
+    public Object getClosedMilestonesbyID(@PathVariable("projectID") Integer projectID) {
+        return projectService.getClosedMilestonesbyID(projectID, token);
+    }
+
+    @GetMapping("/DoT/by-slug/{Slug}")
+    @ResponseBody
+    public Object getClosedMilestonesbySlug(@PathVariable("Slug") String Slug) {
+        return projectService.getClosedMilestonesbySlug(Slug, token);
+    }
+
+    @GetMapping("DoT/{projectID}/BV")
+    public @ResponseBody Object getClosedMilestonesforBV(@PathVariable("projectID") Integer projectID) {
+        return deliveryOnTimeService.getClosedMilestonesbyIDForBV(projectID, token);
+    }
+
+    @GetMapping("DoT/by-slug/{Slug}/BV")
+    public @ResponseBody Object getClosedMilestonesforBV(@PathVariable("Slug") String slug) {
+        return deliveryOnTimeService.getClosedMilestonesbySlugForBV(slug, token);
+    }
+
     @GetMapping("/foundWork/{milestoneID}")
     @ResponseBody
     public Object getFoundWorkByID(@PathVariable("milestoneID") Integer milestoneID) {
-        return foundWorkService.getFoundWork(milestoneID);
+        return foundWorkService.getFoundWork(milestoneID, token);
     }
 
 }

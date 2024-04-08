@@ -42,4 +42,22 @@ public class ProjectService {
                 .retrieve()
                 .bodyToMono(Object.class).block();
     }
+
+    public Object getClosedMilestonesbyID(Integer projectID, String token) {
+        URI uri = URI.create(authUrl + "/DoT/" + projectID);
+        return webClient.get()
+                .uri(uri)
+                .header("token", token)
+                .retrieve()
+                .bodyToMono(Object.class).block();
+    }
+
+    public Object getClosedMilestonesbySlug(String slug, String token) {
+        URI uri = URI.create(authUrl + "/DoT/by-slug/" + slug);
+        return webClient.get()
+                .uri(uri)
+                .header("token", token)
+                .retrieve()
+                .bodyToMono(Object.class).block();
+    }
 }
