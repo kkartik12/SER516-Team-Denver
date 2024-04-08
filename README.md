@@ -4,6 +4,7 @@
 
 This project is a Java application for interacting with the Taiga API to perform various task and calculating metrics.
 
+## Application is deployed as a whole on - http://54.89.25.90:8080/
 
 ## Setting up the application
 
@@ -14,20 +15,23 @@ This project is a Java application for interacting with the Taiga API to perform
    cd SER516-Team-Denver
    ```
 
-### 2) Run the jar file
+### 2) Run docker-compose
 
 Go to the project root and run the JAR file
 
 ```bash
-java -jar target/JavaTaigaCode-1.0-SNAPSHOT.jar
+cd Microservices
+docker-compose up
 ```
 
-### 3) Running the application
+### 3) Run the frontend
 
-Open a web browser and type
+Open another terminal and go to denver_agile_metric_calc
 
 ```bash
-http://localhost:8080/
+cd denver_agile_metric_calc
+npm install
+npm start
 ```
 
 IMPORTANT NOTE: 
