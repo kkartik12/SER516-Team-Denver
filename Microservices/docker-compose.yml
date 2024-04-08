@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  orchestrator:
+    build:
+      context: /orchestrator
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - denver
+
+  auth:
+    build:
+      context: /auth
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    networks:
+      - denver
+
+  project:
+    build:
+      context: /project
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    networks:
+      - denver
+
+  burndown:
+    build:
+      context: /burndown
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    networks:
+      - denver
+
+  cycletime:
+    build:
+      context: /cycletime
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8080"
+    networks:
+      - denver
+  
+  leadtime:
+    build:
+      context: /leadtime
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8080"
+    networks:
+      - denver
+
+  adoptedwork:
+    build:
+      context: /adoptedwork
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8080"
+    networks:
+      - denver
+  
+  foundwork:
+    build:
+      context: /found_work
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8080"
+    networks:
+      - denver
+    
+  deliveryontime:
+    build:
+      context: /dot
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8080"
+    networks:
+      - denver
+
+networks:
+  denver:

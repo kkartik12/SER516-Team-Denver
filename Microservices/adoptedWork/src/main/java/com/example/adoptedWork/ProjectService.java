@@ -21,7 +21,9 @@ import java.util.List;
 
 @Service
 public class ProjectService {
-    @Value("${taiga_api_endpoint}") private String TAIGA_API_ENDPOINT;
+//    @Value("${taiga_api_endpoint}")
+    private String TAIGA_API_ENDPOINT = "https://api.taiga.io/api/v1";
+
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
