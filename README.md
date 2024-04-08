@@ -24,5 +24,15 @@ cd Microservices
 docker-compose up
 ```
 
+### 3) Run the frontend
+
+Open another terminal and go to denver_agile_metric_calc
+
+```bash
+cd denver_agile_metric_calc
+npm install
+npm start
+```
+
 IMPORTANT NOTE: 
 Some metrics like Partial running sum and cycle time take some time to load, so please wait for 10-15 seconds for those metrics to be displayed properly.
